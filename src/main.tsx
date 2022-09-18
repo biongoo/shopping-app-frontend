@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
-import './index.css';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ErrorPage } from './pages';
+import { Theme } from './theme';
 
 const router = createBrowserRouter([
   {
@@ -14,6 +14,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.querySelector('#root') as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Theme>
+      <RouterProvider router={router} />
+    </Theme>
   </React.StrictMode>
 );
