@@ -19,11 +19,11 @@
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
     "react/react-in-jsx-scope": "off",
-    "unicorn/filename-case": "off",
     "prettier/prettier": [
       "error",
       {
-        "endOfLine": "auto"
+        "endOfLine": "auto",
+        "trailingComma": "es5"
       }
     ]
   }
