@@ -4,7 +4,7 @@ import {
   PaletteMode,
   ThemeProvider,
 } from '@mui/material';
-import { amber, deepOrange } from '@mui/material/colors';
+import { amber, orange } from '@mui/material/colors';
 import React, { ReactNode } from 'react';
 
 type Properties = {
@@ -21,7 +21,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
         }
       : {
           // dark mode
-          primary: deepOrange,
+          primary: orange,
           background: {
             default: '#161c24',
             paper: '#161c24',
