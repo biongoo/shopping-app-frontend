@@ -1,8 +1,11 @@
-import Lottie from 'lottie-react';
-import error from '~/assets/lotties/error.json';
 import { Stack, Typography } from '@mui/material';
+import Lottie from 'lottie-react';
+import { useTranslation } from 'react-i18next';
+import error from '~/assets/lotties/error.json';
 
 export const ErrorPage = () => {
+  const { t } = useTranslation();
+
   return (
     <Stack
       direction="column"
@@ -14,9 +17,9 @@ export const ErrorPage = () => {
       <Lottie
         animationData={error}
         loop={true}
-        style={{ maxHeight: '80vh', maxWidth: '95vw' }}
+        style={{ maxHeight: '80vh', maxWidth: '90vw' }}
       />
-      <Typography variant="h6">Go back</Typography>
+      <Typography variant="h6">{t('goBack')}</Typography>
     </Stack>
   );
 };
