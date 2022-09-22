@@ -5,7 +5,8 @@ import {
   ThemeProvider,
 } from '@mui/material';
 import { amber, orange } from '@mui/material/colors';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
+import { useUiStore } from '~/stores';
 
 type Properties = {
   children: ReactNode;
@@ -31,8 +32,8 @@ const getDesignTokens = (mode: PaletteMode) => ({
 });
 
 export const Theme = ({ children }: Properties) => {
-  const mode = 'dark';
-  const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
+  const mode = useUiStore((store) => store.mode);
+  const theme = createTheme(getDesignTokens(mode));
 
   return (
     <ThemeProvider theme={theme}>

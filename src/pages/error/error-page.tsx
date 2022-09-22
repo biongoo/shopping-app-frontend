@@ -1,4 +1,4 @@
-import { Stack, Typography, Link } from '@mui/material';
+import { Link, Stack, Typography } from '@mui/material';
 import Lottie from 'lottie-react';
 import { useTranslation } from 'react-i18next';
 import { Link as LinkRR } from 'react-router-dom';
