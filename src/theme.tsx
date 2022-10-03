@@ -25,7 +25,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
           primary: orange,
           background: {
             default: '#161c24',
-            paper: '#161c24',
+            paper: '#212b36',
           },
         }),
   },
