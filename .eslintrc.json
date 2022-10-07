@@ -18,6 +18,8 @@
   },
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
+    "unicorn/prevent-abbreviations": "off",
+    "unicorn/no-null": "off",
     "react/react-in-jsx-scope": "off",
     "prettier/prettier": [
       "error",

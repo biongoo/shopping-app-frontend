@@ -1,6 +1,6 @@
+import { PaletteMode } from '@mui/material';
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
-import { PaletteMode } from '@mui/material';
 
 type Ui = {
   mode: PaletteMode;

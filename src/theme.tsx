@@ -2,6 +2,7 @@ import {
   createTheme,
   CssBaseline,
   PaletteMode,
+  ThemeOptions,
   ThemeProvider,
 } from '@mui/material';
 import { amber, orange } from '@mui/material/colors';
@@ -12,7 +13,7 @@ type Properties = {
   children: ReactNode;
 };
 
-const getDesignTokens = (mode: PaletteMode) => ({
+const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
   palette: {
     mode,
     ...(mode === 'light'
@@ -28,6 +29,9 @@ const getDesignTokens = (mode: PaletteMode) => ({
             paper: '#212b36',
           },
         }),
+  },
+  shape: {
+    borderRadius: 8,
   },
 });
 
