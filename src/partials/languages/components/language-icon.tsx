@@ -11,8 +11,8 @@ export const LanguageIcon = (props: Props) => {
       src={props.src}
       alt=""
       sx={{
-        width: 28,
-        height: 22,
+        width: 26,
+        height: 20,
         borderRadius: 1,
         boxShadow: 4,
         textIndent: '100%',

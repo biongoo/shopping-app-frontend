@@ -1,11 +1,11 @@
 import {
+  Color,
   createTheme,
   CssBaseline,
   PaletteMode,
   ThemeOptions,
   ThemeProvider,
 } from '@mui/material';
-import { amber, orange } from '@mui/material/colors';
 import { ReactNode } from 'react';
 import { useUiStore } from '~/stores';
 
@@ -13,31 +13,65 @@ type Properties = {
   children: ReactNode;
 };
 
-const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
+const getDesignTokens = (mode: PaletteMode, color: Color): ThemeOptions => ({
   palette: {
     mode,
     ...(mode === 'light'
       ? {
           // light mode
-          primary: amber,
+          text: {
+            primary: '#2a343d',
+          },
+          icon: {
+            primary: '#6d7b87',
+          },
+          background: {
+            default: '#f0f6fa',
+            paper: '#f0f6fa',
+          },
+          action: {
+            selectedOpacity: 0.25,
+            hoverOpacity: 0.15,
+          },
+          backgroundDefault: {
+            light: '#f0f6fa',
+            dark: '#161c24',
+          },
+          primary: color,
         }
       : {
           // dark mode
-          primary: orange,
+          text: {
+            primary: '#edf0f2',
+          },
+          icon: {
+            primary: '#6d7b87',
+          },
           background: {
             default: '#161c24',
             paper: '#212b36',
           },
+          backgroundDefault: {
+            light: '#f0f6fa',
+            dark: '#161c24',
+          },
+          action: {
+            selectedOpacity: 0.25,
+            hoverOpacity: 0.15,
+          },
+          primary: color,
         }),
   },
   shape: {
-    borderRadius: 8,
+    borderRadius: 4,
   },
 });
 
 export const Theme = ({ children }: Properties) => {
   const mode = useUiStore((store) => store.mode);
-  const theme = createTheme(getDesignTokens(mode));
+  const color = useUiStore((store) => store.color);
+
+  const theme = createTheme(getDesignTokens(mode, color));
 
   return (
     <ThemeProvider theme={theme}>

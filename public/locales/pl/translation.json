@@ -1,4 +1,8 @@
 {
   "goBack": "Wróć",
-  "language": "Język"
+  "language": "Język",
+  "themeSettings": "Ustawienia motywu",
+  "mode": "Tryb",
+  "color": "Kolor",
+  "eof": "eof"
 }

@@ -1,4 +1,8 @@
 {
   "goBack": "Go back",
-  "language": "Language"
+  "language": "Language",
+  "themeSettings": "Theme settings",
+  "mode": "Mode",
+  "color": "Color",
+  "eof": "eof"
 }

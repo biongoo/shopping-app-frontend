@@ -3,12 +3,13 @@ import { ComponentProps, ReactNode, useState } from 'react';
 import { IconButton } from '../button/icon-button';
 
 type Props = {
-  iconProps: ComponentProps<typeof IconButton>;
+  iconProps: Omit<ComponentProps<typeof IconButton>, 'open'>;
   children: ReactNode;
 };
 
 export const IconMenu = (props: Props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const isOpen = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -20,10 +21,10 @@ export const IconMenu = (props: Props) => {
 
   return (
     <>
-      <IconButton {...props.iconProps} onClick={handleClick} />
+      <IconButton {...props.iconProps} onClick={handleClick} open={isOpen} />
       <Menu
+        open={isOpen}
         anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
         onClose={handleClose}
         onClick={handleClose}
         PaperProps={{

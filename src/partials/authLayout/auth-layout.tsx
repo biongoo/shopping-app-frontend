@@ -1,8 +1,9 @@
-import { Box, Paper } from '@mui/material';
+import { Box, Paper, Stack } from '@mui/material';
 import Lottie from 'lottie-react';
 import { Outlet } from 'react-router-dom';
 import welcome from '../../assets/lotties/welcome.json';
 import { Languages } from '../languages';
+import { Theme } from '../theme';
 
 export const AuthLayout = () => (
   <Box
@@ -23,14 +24,16 @@ export const AuthLayout = () => (
         width: '30%',
         padding: '.5rem',
         boxShadow: 8,
+        borderRadius: (theme) => theme.shape.borderRadius,
       }}
     >
       <Lottie animationData={welcome} loop={true} style={{ width: '400px' }} />
     </Paper>
     <Box sx={{ display: 'flex', flexGrow: 1, flexDirection: 'column' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+      <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+        <Theme />
         <Languages />
-      </Box>
+      </Stack>
       <Outlet />
     </Box>
   </Box>
