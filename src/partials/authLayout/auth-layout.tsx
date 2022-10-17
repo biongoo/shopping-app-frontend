@@ -24,17 +24,32 @@ export const AuthLayout = () => (
         width: '30%',
         padding: '.5rem',
         boxShadow: 8,
-        borderRadius: (theme) => theme.shape.borderRadius,
+        borderRadius: (theme) => theme.shape.borderRadius * 0.5,
       }}
     >
       <Lottie animationData={welcome} loop={true} style={{ width: '400px' }} />
     </Paper>
     <Box sx={{ display: 'flex', flexGrow: 1, flexDirection: 'column' }}>
-      <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+      <Stack
+        direction="row"
+        justifyContent="flex-end"
+        spacing={0.5}
+        height="5vh"
+      >
         <Theme />
         <Languages />
       </Stack>
-      <Outlet />
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: 1,
+        }}
+      >
+        <Outlet />
+      </Box>
+      <Box height="5vh" />
     </Box>
   </Box>
 );

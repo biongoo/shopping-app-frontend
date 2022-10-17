@@ -63,7 +63,7 @@ const getDesignTokens = (mode: PaletteMode, color: Color): ThemeOptions => ({
         }),
   },
   shape: {
-    borderRadius: 4,
+    borderRadius: 5,
   },
 });
 

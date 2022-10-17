@@ -21,8 +21,8 @@ export const ThemeDrawer = (props: Props) => {
           height: '96vh',
           marginTop: '2vh',
           backgroundImage: 'none',
-          borderTopLeftRadius: (theme) => theme.shape.borderRadius * 4,
-          borderBottomLeftRadius: (theme) => theme.shape.borderRadius * 4,
+          borderTopLeftRadius: (theme) => theme.shape.borderRadius * 2.5,
+          borderBottomLeftRadius: (theme) => theme.shape.borderRadius * 2.5,
         },
       }}
     >

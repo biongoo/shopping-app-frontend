@@ -4,26 +4,32 @@ import { MouseEventHandler, PropsWithChildren } from 'react';
 type Props = PropsWithChildren & {
   title: string;
   open: boolean;
+  edge?: false | 'end' | 'start';
+  scale?: number;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
-export const IconButton = (props: Props) => (
-  <Tooltip title={props.title} arrow>
-    <IconButtonMui
-      color="primary"
-      onClick={props.onClick}
-      sx={{
-        padding: 0,
-        width: 44,
-        height: 44,
-      }}
-    >
-      <Box
-        color={props.open ? 'primary.main' : 'icon.primary'}
-        sx={{ display: 'flex' }}
+export const IconButton = (props: Props) => {
+  const size = props.scale ? props.scale * 44 : 44;
+
+  return (
+    <Tooltip title={props.title} arrow>
+      <IconButtonMui
+        onClick={props.onClick}
+        edge={props.edge}
+        sx={{
+          padding: 0,
+          width: size,
+          height: size,
+        }}
       >
-        {props.children}
-      </Box>
-    </IconButtonMui>
-  </Tooltip>
-);
+        <Box
+          color={props.open ? 'primary.main' : 'icon.primary'}
+          sx={{ display: 'flex' }}
+        >
+          {props.children}
+        </Box>
+      </IconButtonMui>
+    </Tooltip>
+  );
+};

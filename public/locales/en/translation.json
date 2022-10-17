@@ -4,5 +4,15 @@
   "themeSettings": "Theme settings",
   "mode": "Mode",
   "color": "Color",
+  "signIn": "Sign in to {{appName}}",
+  "enterYourDetails": "Enter your details",
+  "email": "E-mail",
+  "minLengthField": "The minimum length of the field is {{minLength}}",
+  "maxLengthField": "The maximum length of the field is {{maxLength}}",
+  "requiredField": "The field is required",
+  "invalidField": "Field is invalid",
+  "password": "Password",
+  "hidePassword": "Hide Password",
+  "showPassword": "Show Password",
   "eof": "eof"
 }
