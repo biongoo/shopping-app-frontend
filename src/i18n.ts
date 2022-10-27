@@ -17,12 +17,15 @@ export const langs = [
   },
 ];
 
+const missingKeys = new Set();
+
 i18n
   .use(Backend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     debug: true,
+    saveMissing: true,
     fallbackLng: 'en',
     load: 'languageOnly',
     detection: {
@@ -30,6 +33,24 @@ i18n
     },
     interpolation: {
       escapeValue: false,
+    },
+    missingKeyHandler(langs, ns, key) {
+      langs;
+      ns;
+
+      if (missingKeys.has(key)) {
+        return;
+      }
+
+      missingKeys.add(key);
+
+      fetch(`${import.meta.env.VITE_BASE_URL}translation/report`, {
+        method: 'POST',
+        body: JSON.stringify({ key }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
     },
   });
 
