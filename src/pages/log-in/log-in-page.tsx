@@ -30,7 +30,7 @@ export const LogInPage = () => {
     >
       <Box>
         <Typography variant="h5">
-          {t('signIn', { appName: import.meta.env.VITE_APP_TITLE })}
+          {t('signInTo', { appName: import.meta.env.VITE_APP_TITLE })}
         </Typography>
         <Typography variant="subtitle2" color="text.secondary">
           {t('enterYourDetails')}
@@ -50,7 +50,9 @@ export const LogInPage = () => {
         type="password"
       />
       <Button text={t('logIn')} variant="contained" type="submit" />
-      <Divider>{t('or')}</Divider>
+      <Divider>
+        <Typography variant="body2">{t('or').toLocaleUpperCase()}</Typography>
+      </Divider>
       <Button
         text={t('signUp')}
         variant="contained"

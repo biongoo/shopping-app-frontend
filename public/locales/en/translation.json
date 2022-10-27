@@ -1,10 +1,10 @@
 {
-  "goBack": "Go back",
+  "goBack": "Go Back",
   "language": "Language",
-  "themeSettings": "Theme settings",
+  "themeSettings": "Theme Settings",
   "mode": "Mode",
   "color": "Color",
-  "signIn": "Sign in to {{appName}}",
+  "signInTo": "Sign in to {{appName}}",
   "enterYourDetails": "Enter your details",
   "email": "E-mail",
   "minLengthField": "The minimum length of the field is {{minLength}}",
@@ -14,5 +14,9 @@
   "password": "Password",
   "hidePassword": "Hide Password",
   "showPassword": "Show Password",
+  "logIn": "Log In",
+  "or": "Or",
+  "signUp": "Sign Up",
+  "getStartedAbsolutelyFree": "Get Started Absolutely Free",
   "eof": "eof"
 }

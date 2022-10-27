@@ -1,10 +1,10 @@
 {
   "goBack": "Wróć",
   "language": "Język",
-  "themeSettings": "Ustawienia motywu",
+  "themeSettings": "Ustawienia Motywu",
   "mode": "Tryb",
   "color": "Kolor",
-  "signIn": "Zaloguj się do {{appName}}",
+  "signInTo": "Zaloguj się do {{appName}}",
   "enterYourDetails": "Wprowadź swoje dane",
   "email": "E-mail",
   "minLengthField": "Minimalna długość pola to {{minLength}}",
@@ -14,5 +14,9 @@
   "password": "Hasło",
   "hidePassword": "Ukryj hasło",
   "showPassword": "Pokaż hasło",
+  "logIn": "Zaloguj",
+  "or": "Lub",
+  "signUp": "Sign up",
+  "getStartedAbsolutelyFree": "Get Started Absolutely Free",
   "eof": "eof"
 }

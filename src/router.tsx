@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { ErrorPage, LogInPage, signIn } from './pages';
+import { ErrorPage, LogInPage, SignUpPage } from './pages';
 import { AuthLayout } from './partials';
 
 export function loader() {
@@ -7,7 +7,7 @@ export function loader() {
 }
 
 export function loader3() {
-  console.log('signIn');
+  console.log('signUp');
 }
 
 export function loader2() {
@@ -26,8 +26,8 @@ export const router = createBrowserRouter([
         loader: loader,
       },
       {
-        path: 'sign-in',
-        element: <signIn.SignInPage />,
+        path: 'sign-up',
+        element: <SignUpPage />,
         loader: loader3,
       },
     ],
