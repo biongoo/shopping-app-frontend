@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { ReactNode } from 'react';
 import { useUiStore } from '~/stores';
+import { Alert } from './partials';
 
 type Properties = {
   children: ReactNode;
@@ -77,6 +78,7 @@ export const Theme = ({ children }: Properties) => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       {children}
+      <Alert />
     </ThemeProvider>
   );
 };

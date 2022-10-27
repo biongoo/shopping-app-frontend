@@ -6,6 +6,7 @@ type Props = PropsWithChildren & {
   open: boolean;
   edge?: false | 'end' | 'start';
   scale?: number;
+  color?: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
@@ -24,7 +25,7 @@ export const IconButton = (props: Props) => {
         }}
       >
         <Box
-          color={props.open ? 'primary.main' : 'icon.primary'}
+          color={props.color ?? (props.open ? 'primary.main' : 'icon.primary')}
           sx={{ display: 'flex' }}
         >
           {props.children}
