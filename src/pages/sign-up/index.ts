@@ -1,1 +1,1 @@
-export * from './sign-up-page';
+export * as signUpPage from './sub-pages';

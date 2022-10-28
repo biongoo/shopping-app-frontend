@@ -4,19 +4,43 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, IconButton, Input } from '~/bits';
+import { useUiStore } from '~/stores';
 import { Stepper } from '../components/stepper';
 
 type SignUpFirstInputs = {
   email: string;
 };
 
-export const SignUpFirstStep = () => {
+const emailRegex =
+  // eslint-disable-next-line unicorn/no-unsafe-regex, unicorn/better-regex
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+export const SignUpFirstPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { control, handleSubmit } = useForm<SignUpFirstInputs>();
+  const showAlert = useUiStore((store) => store.showAlert);
+  const { control, handleSubmit, setError, reset } =
+    useForm<SignUpFirstInputs>();
 
   const onSubmit = (data: SignUpFirstInputs) => {
-    console.log(data);
+    if (!emailRegex.test(data.email)) {
+      setError('email', { type: 'email' });
+      return;
+    }
+
+    reset();
+    showAlert({
+      time: 60,
+      variant: 'success',
+      titleKey: 'success',
+      bodyKey: 'successSendEmail',
+    });
+    /* showAlert({
+      time: 60,
+      variant: 'warning',
+      title: 'Warning',
+      body: "An e-mail confirming the first stage of registration has already been sent. Don't worry, we sent it again and extended the time for confirmation.",
+    }); */
   };
 
   return (
@@ -50,7 +74,7 @@ export const SignUpFirstStep = () => {
         control={control}
         defaultValue=""
       />
-      <Button text={t('signUp')} variant="contained" type="submit" />
+      <Button text={t('continue')} variant="contained" type="submit" />
       <Stepper activeStep={1} />
     </Stack>
   );

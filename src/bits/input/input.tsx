@@ -23,14 +23,24 @@ type InputProps<T extends FieldValues> = {
   defaultValue: PathValue<T, Path<T>>;
   sx?: SxProps;
   type?: 'password';
+  disabled?: boolean;
   onlyNumbers?: boolean;
 };
 
 type Props<T extends FieldValues> = UseControllerProps<T> & InputProps<T>;
 
 export const Input = <T extends FieldValues>(props: Props<T>) => {
-  const { name, label, control, defaultValue, sx, type, rules, onlyNumbers } =
-    props;
+  const {
+    name,
+    label,
+    control,
+    defaultValue,
+    sx,
+    type,
+    rules,
+    disabled,
+    onlyNumbers,
+  } = props;
 
   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
@@ -50,8 +60,11 @@ export const Input = <T extends FieldValues>(props: Props<T>) => {
       case 'minLength': {
         return t('minLengthField', { minLength });
       }
+      case 'email': {
+        return t('invalidEmail');
+      }
       default: {
-        return t('invalidField');
+        return x.message ? t(x.message) : t('invalidField');
       }
     }
   };
@@ -73,6 +86,7 @@ export const Input = <T extends FieldValues>(props: Props<T>) => {
           sx={sx}
           id={name}
           label={label}
+          disabled={disabled}
           type={isPassword && !isVisible ? 'password' : undefined}
           error={Boolean(error)}
           helperText={error && getErrorText(error)}
