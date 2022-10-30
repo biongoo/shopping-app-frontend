@@ -4,7 +4,7 @@
   "themeSettings": "Theme Settings",
   "mode": "Mode",
   "color": "Color",
-  "signInTo": "Sign in to {{appName}}",
+  "signInTo": "Log in to {{appName}}",
   "enterYourDetails": "Enter your details",
   "email": "E-mail",
   "minLengthField": "The minimum length of the field is {{minLength}}",

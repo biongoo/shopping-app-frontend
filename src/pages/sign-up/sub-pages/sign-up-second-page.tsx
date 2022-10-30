@@ -1,9 +1,11 @@
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { Box, Stack, Typography } from '@mui/material';
+import Lottie from 'lottie-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import confetti from '~/assets/lotties/confetti.json';
 import { Button, IconButton, Input } from '~/bits';
 /* import { useUiStore } from '~/stores'; */
 import { Stepper } from '../components/stepper';
@@ -94,23 +96,31 @@ const SignUpThirdStep = () => {
   const navigate = useNavigate();
 
   return (
-    <Stack width={1} spacing={2.5} maxWidth={500}>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Box>
-          <Typography variant="h5">{t('successfullyRegistered')}</Typography>
-          <Typography variant="subtitle2" color="text.secondary">
-            {t('letsDoShopping')}
-          </Typography>
-        </Box>
-        <IconButton
-          open={true}
-          title={t('goBack')}
-          onClick={() => navigate('/')}
-        >
-          <ArrowBackIosNewIcon />
-        </IconButton>
-      </Stack>
-      <Button text={t('logIn')} variant="contained" />
+    <Stack width={1} spacing={2.5} maxWidth={500} position="relative">
+      <Box>
+        <Typography variant="h5">{t('successfullyRegistered')}</Typography>
+        <Typography variant="subtitle2" color="text.secondary">
+          {t('letsDoShopping')}
+        </Typography>
+      </Box>
+      <Button
+        text={t('logIn')}
+        variant="contained"
+        onClick={() => navigate('/')}
+      />
+      <Lottie
+        animationData={confetti}
+        loop={false}
+        style={{
+          height: '80vh',
+          width: 'inherit',
+          position: 'absolute',
+          left: '50%',
+          top: '40%',
+          zIndex: -1,
+          transform: 'translate(-50%, -50%)',
+        }}
+      />
       <Stepper activeStep={3} />
     </Stack>
   );
