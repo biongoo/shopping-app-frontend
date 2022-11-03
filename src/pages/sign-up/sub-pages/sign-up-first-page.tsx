@@ -1,9 +1,12 @@
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { Box, Stack, Typography } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { createRegistrationUser } from '~/api';
 import { Button, IconButton, Input } from '~/bits';
+import { ApiError } from '~/models';
 import { useUiStore } from '~/stores';
 import { Stepper } from '../components/stepper';
 
@@ -22,25 +25,35 @@ export const SignUpFirstPage = () => {
   const { control, handleSubmit, setError, reset } =
     useForm<SignUpFirstInputs>();
 
+  const mutation = useMutation<undefined, ApiError, SignUpFirstInputs>({
+    mutationFn: createRegistrationUser,
+    onSuccess: () => {
+      reset();
+      showAlert({
+        time: 60,
+        variant: 'success',
+        titleKey: 'success',
+        bodyKey: 'successSendEmail',
+      });
+    },
+    onError: (apiError) => {
+      for (const error of apiError.inputErrors) {
+        if (error.inputName) {
+          setError(error.inputName as keyof SignUpFirstInputs, {
+            message: error.key,
+          });
+        }
+      }
+    },
+  });
+
   const onSubmit = (data: SignUpFirstInputs) => {
     if (!emailRegex.test(data.email)) {
       setError('email', { type: 'email' });
       return;
     }
 
-    reset();
-    showAlert({
-      time: 60,
-      variant: 'success',
-      titleKey: 'success',
-      bodyKey: 'successSendEmail',
-    });
-    /* showAlert({
-      time: 60,
-      variant: 'warning',
-      title: 'Warning',
-      body: "An e-mail confirming the first stage of registration has already been sent. Don't worry, we sent it again and extended the time for confirmation.",
-    }); */
+    mutation.mutate(data);
   };
 
   return (

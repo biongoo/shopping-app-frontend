@@ -44,7 +44,7 @@ i18n
 
       missingKeys.add(key);
 
-      fetch(`${import.meta.env.VITE_BASE_URL}translation/report`, {
+      fetch(`${import.meta.env.VITE_BACKEND_URL}translation/report`, {
         method: 'POST',
         body: JSON.stringify({ key }),
         headers: {
