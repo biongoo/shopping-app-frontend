@@ -7,54 +7,24 @@ import { useNavigate } from 'react-router-dom';
 import { createRegistrationUser } from '~/api';
 import { Button, IconButton, Input } from '~/bits';
 import { ApiError } from '~/models';
-import { useUiStore } from '~/stores';
+import { generateOnError, generateOnSuccess } from '~/utils';
 import { Stepper } from '../components/stepper';
 
 type SignUpFirstInputs = {
   email: string;
 };
 
-const emailRegex =
-  // eslint-disable-next-line unicorn/no-unsafe-regex, unicorn/better-regex
-  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
 export const SignUpFirstPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const showAlert = useUiStore((store) => store.showAlert);
   const { control, handleSubmit, setError, reset } =
     useForm<SignUpFirstInputs>();
 
   const mutation = useMutation<undefined, ApiError, SignUpFirstInputs>({
     mutationFn: createRegistrationUser,
-    onSuccess: () => {
-      reset();
-      showAlert({
-        time: 60,
-        variant: 'success',
-        titleKey: 'success',
-        bodyKey: 'successSendEmail',
-      });
-    },
-    onError: (apiError) => {
-      for (const error of apiError.inputErrors) {
-        if (error.inputName) {
-          setError(error.inputName as keyof SignUpFirstInputs, {
-            message: error.key,
-          });
-        }
-      }
-    },
+    onSuccess: generateOnSuccess('successSendEmail', reset),
+    onError: generateOnError(setError),
   });
-
-  const onSubmit = (data: SignUpFirstInputs) => {
-    if (!emailRegex.test(data.email)) {
-      setError('email', { type: 'email' });
-      return;
-    }
-
-    mutation.mutate(data);
-  };
 
   return (
     <Stack
@@ -64,7 +34,7 @@ export const SignUpFirstPage = () => {
       component="form"
       noValidate
       autoComplete="off"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit((x) => mutation.mutate(x))}
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Box>
@@ -86,8 +56,19 @@ export const SignUpFirstPage = () => {
         label={t('email')}
         control={control}
         defaultValue=""
+        patternErrorMessage="invalidEmail"
+        rules={{
+          pattern:
+            // eslint-disable-next-line unicorn/no-unsafe-regex, unicorn/better-regex
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        }}
       />
-      <Button text={t('continue')} variant="contained" type="submit" />
+      <Button
+        text={t('continue')}
+        variant="contained"
+        type="submit"
+        loading={mutation.isLoading}
+      />
       <Stepper activeStep={1} />
     </Stack>
   );

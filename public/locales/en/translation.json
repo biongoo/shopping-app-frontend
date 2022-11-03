@@ -30,5 +30,10 @@
   "successfullyRegistered": "Successfully registered",
   "successSendEmail": "We have sent a confirmation to the given e-mail. Click on the link in the email within one hour to complete your registration",
   "passwordsDoNotMatch": "Passwords do not match",
+  "error": "Error",
+  "userAlreadyExists": "The e-mail address is already taken",
+  "unknownApiError": "Error connecting to the server",
+  "emailJustSent": "Wait a minute to try resending the email",
+  "emailNotSent": "There was a problem sending your e-mail. Wait for a while and try again",
   "eof": "eof"
 }

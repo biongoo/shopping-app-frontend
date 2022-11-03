@@ -25,6 +25,7 @@ type InputProps<T extends FieldValues> = {
   type?: 'password';
   disabled?: boolean;
   onlyNumbers?: boolean;
+  patternErrorMessage?: string;
 };
 
 type Props<T extends FieldValues> = UseControllerProps<T> & InputProps<T>;
@@ -40,6 +41,7 @@ export const Input = <T extends FieldValues>(props: Props<T>) => {
     rules,
     disabled,
     onlyNumbers,
+    patternErrorMessage,
   } = props;
 
   const { t } = useTranslation();
@@ -60,11 +62,11 @@ export const Input = <T extends FieldValues>(props: Props<T>) => {
       case 'minLength': {
         return t('minLengthField', { minLength });
       }
-      case 'email': {
-        return t('invalidEmail');
+      case 'pattern': {
+        return t(patternErrorMessage ?? 'invalidField');
       }
       default: {
-        return x.message ? t(x.message) : t('invalidField');
+        return t(x.message ?? 'invalidField');
       }
     }
   };
