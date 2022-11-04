@@ -35,5 +35,8 @@
   "unknownApiError": "Error connecting to the server",
   "emailJustSent": "Wait a minute to try resending the email",
   "emailNotSent": "There was a problem sending your e-mail. Wait for a while and try again",
+  "invalidKey": "The given link has expired",
+  "invalidLengthOfPassword": "Invalid length of password",
+  "serverError": "Internal server error",
   "eof": "eof"
 }

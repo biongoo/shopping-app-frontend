@@ -1,11 +1,13 @@
-import { ApiError } from '~/models';
+import { ApiData, ApiError } from '~/models';
 
-type ConnectApiProps<T> = Omit<RequestInit, 'url' | 'body'> & {
+type ConnectApiProps<Req> = Omit<RequestInit, 'url' | 'body'> & {
   endpoint: string;
-  body?: T;
+  body?: Req;
 };
 
-export const connectApi = async <T>(props: ConnectApiProps<T>) => {
+export const connectApi = async <Req, Res = never>(
+  props: ConnectApiProps<Req>
+) => {
   try {
     const response = await fetch(
       `${import.meta.env.VITE_BACKEND_URL}${props.endpoint}`,
@@ -20,7 +22,7 @@ export const connectApi = async <T>(props: ConnectApiProps<T>) => {
       }
     );
 
-    const { data, message, error } = await response.json();
+    const { status, data, message, error } = await response.json();
 
     if (!response.ok) {
       if (
@@ -35,7 +37,7 @@ export const connectApi = async <T>(props: ConnectApiProps<T>) => {
       }
     }
 
-    return data;
+    return new ApiData(status, message, data as Res);
   } catch (error) {
     throw error instanceof ApiError ? error : new ApiError('unknownApiError');
   }

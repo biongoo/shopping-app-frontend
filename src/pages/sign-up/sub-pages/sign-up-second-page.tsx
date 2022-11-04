@@ -1,13 +1,15 @@
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, CircularProgress, Stack, Typography } from '@mui/material';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import Lottie from 'lottie-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { createUser, verifyRegistrationKey } from '~/api';
 import confetti from '~/assets/lotties/confetti.json';
 import { Button, IconButton, Input } from '~/bits';
-/* import { useUiStore } from '~/stores'; */
+import { generateOnError, generateOnSuccess } from '~/utils';
 import { Stepper } from '../components/stepper';
 
 type SignUpSecondInputs = {
@@ -20,22 +22,44 @@ const SignUpSecondStep = (props: { onNext: () => void }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { email, key } = useParams();
-  /* const showAlert = useUiStore((store) => store.showAlert); */
   const { control, handleSubmit, setError } = useForm<SignUpSecondInputs>();
+
+  if (!email || !key) {
+    return <Navigate to="/" />;
+  }
+
+  const { isInitialLoading } = useQuery({
+    queryKey: ['signUp', email, key],
+    queryFn: () => verifyRegistrationKey({ email, key }),
+    onError: generateOnError({ fn: () => navigate('/sign-up') }),
+    retry: 0,
+  });
+
+  const mutation = useMutation({
+    mutationFn: createUser,
+    onSuccess: generateOnSuccess({ fn: () => props.onNext() }),
+    onError: generateOnError({
+      setError,
+      fn: (apiError) => {
+        if (apiError?.mainError?.key === 'invalidKey') {
+          navigate('/sign-up');
+        }
+      },
+    }),
+  });
 
   const onSubmit = (data: SignUpSecondInputs) => {
     if (data.password !== data.confirmPassword) {
       setError('confirmPassword', { message: 'passwordsDoNotMatch' });
       return;
     }
-    /* showAlert({
-      time: 60,
-      variant: 'warning',
-      title: 'Warning',
-      body: "An e-mail confirming the first stage of registration has already been sent. Don't worry, we sent it again and extended the time for confirmation.",
-    }); */
-    props.onNext();
+
+    mutation.mutate({ email, key, password: data.password });
   };
+
+  if (isInitialLoading) {
+    return <CircularProgress />;
+  }
 
   return (
     <Stack
@@ -75,7 +99,7 @@ const SignUpSecondStep = (props: { onNext: () => void }) => {
         control={control}
         defaultValue=""
         type="password"
-        rules={{ minLength: 6 }}
+        rules={{ minLength: 8 }}
       />
       <Input
         name="confirmPassword"
@@ -83,7 +107,7 @@ const SignUpSecondStep = (props: { onNext: () => void }) => {
         control={control}
         defaultValue=""
         type="password"
-        rules={{ minLength: 6 }}
+        rules={{ minLength: 8 }}
       />
       <Button text={t('continue')} variant="contained" type="submit" />
       <Stepper activeStep={2} />

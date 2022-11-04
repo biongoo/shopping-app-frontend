@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { createRegistrationUser } from '~/api';
 import { Button, IconButton, Input } from '~/bits';
-import { ApiError } from '~/models';
 import { generateOnError, generateOnSuccess } from '~/utils';
 import { Stepper } from '../components/stepper';
 
@@ -20,10 +19,10 @@ export const SignUpFirstPage = () => {
   const { control, handleSubmit, setError, reset } =
     useForm<SignUpFirstInputs>();
 
-  const mutation = useMutation<undefined, ApiError, SignUpFirstInputs>({
+  const mutation = useMutation({
     mutationFn: createRegistrationUser,
-    onSuccess: generateOnSuccess('successSendEmail', reset),
-    onError: generateOnError(setError),
+    onSuccess: generateOnSuccess({ reset }),
+    onError: generateOnError({ setError }),
   });
 
   return (

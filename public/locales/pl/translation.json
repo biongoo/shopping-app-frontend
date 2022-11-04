@@ -35,5 +35,8 @@
   "unknownApiError": "Błąd podczas łączenia się z serwerem",
   "emailJustSent": "Poczekaj minutę, aby spróbować ponownie wysłać wiadomość",
   "emailNotSent": "Nastąpił problem z wysyłaniem wiadomości e mail. Poczekaj chwilę i spróbuj ponownie",
+  "invalidKey": "Podany link wygasł",
+  "invalidLengthOfPassword": "Nieprawidłowa długość hasła",
+  "serverError": "Wewętrzny błąd serwera",
   "eof": "eof"
 }
