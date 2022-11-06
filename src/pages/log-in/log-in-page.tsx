@@ -1,29 +1,43 @@
-import {
-  Box,
-  Checkbox,
-  Divider,
-  FormControlLabel,
-  Link,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, Divider, Link, Stack, Typography } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link as LinkRR, useNavigate } from 'react-router-dom';
-import { Button, Input } from '~/bits';
+import { logIn } from '~/api';
+import { Button, Checkbox, Input } from '~/bits';
+import { useAuthStore } from '~/stores';
+import { generateOnError, generateOnSuccess } from '~/utils';
 
 type LoginInputs = {
   email: string;
   password: string;
+  rememberMe: boolean;
 };
 
 export const LogInPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { control, handleSubmit } = useForm<LoginInputs>();
+  const logInStore = useAuthStore((state) => state.logIn);
+  const { control, handleSubmit, reset, setError } = useForm<LoginInputs>();
+
+  const mutation = useMutation({
+    mutationFn: logIn,
+    onSuccess: generateOnSuccess({
+      reset,
+      fn: (res, req) => {
+        logInStore(
+          req.rememberMe ? 'local' : 'session',
+          res.data.accessToken,
+          res.data.refreshToken
+        );
+      },
+    }),
+    onError: generateOnError({ setError }),
+  });
 
   const onSubmit = (data: LoginInputs) => {
     console.log(data);
+    mutation.mutate(data);
   };
 
   return (
@@ -49,6 +63,12 @@ export const LogInPage = () => {
         label={t('email')}
         control={control}
         defaultValue=""
+        patternErrorMessage="invalidEmail"
+        rules={{
+          pattern:
+            // eslint-disable-next-line unicorn/no-unsafe-regex, unicorn/better-regex
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        }}
       />
       <Input
         name="password"
@@ -56,6 +76,7 @@ export const LogInPage = () => {
         control={control}
         defaultValue=""
         type="password"
+        rules={{ minLength: 8 }}
       />
       <Stack
         direction="row"
@@ -63,9 +84,11 @@ export const LogInPage = () => {
         alignItems="center"
         spacing={2}
       >
-        <FormControlLabel
-          control={<Checkbox defaultChecked />}
+        <Checkbox
+          name="rememberMe"
           label={t('rememberMe')}
+          control={control}
+          defaultValue={true}
         />
         <Link component={LinkRR} to="/forgot" color="inherit">
           <Typography variant="body1">{t('forgotPasswordQuestion')}</Typography>

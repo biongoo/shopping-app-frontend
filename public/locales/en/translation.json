@@ -45,5 +45,6 @@
   "passwordChangedSuccessfully": "Password changed successfully",
   "rememberMe": "Remember me",
   "forgotPasswordQuestion": "Forgot password?",
+  "invalidEmailOrPassword": "Invalid email or password",
   "eof": "eof"
 }

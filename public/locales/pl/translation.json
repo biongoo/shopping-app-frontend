@@ -45,5 +45,6 @@
   "passwordChangedSuccessfully": "Pomyślnie zmieniono hasło",
   "rememberMe": "Zapamiętaj mnie",
   "forgotPasswordQuestion": "Zapomniałeś hasła?",
+  "invalidEmailOrPassword": "Nieprawidłowy e-mail lub hasło",
   "eof": "eof"
 }
