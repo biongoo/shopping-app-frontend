@@ -4,26 +4,35 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { createRegistrationUser } from '~/api';
+import { createForgotUser, createRegistrationUser } from '~/api';
 import { Button, IconButton, Input } from '~/bits';
 import { generateOnError, generateOnSuccess } from '~/utils';
 import { Stepper } from '../components/stepper';
 
-type SignUpFirstInputs = {
+type Props = {
+  type: 'signUp' | 'forgot';
+};
+
+type FirstSubInputs = {
   email: string;
 };
 
-export const SignUpFirstPage = () => {
+export const FirstSubPage = ({ type }: Props) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { control, handleSubmit, setError, reset } =
-    useForm<SignUpFirstInputs>();
+  const { control, handleSubmit, setError, reset } = useForm<FirstSubInputs>();
+
+  const mutationFn =
+    type === 'signUp' ? createRegistrationUser : createForgotUser;
 
   const mutation = useMutation({
-    mutationFn: createRegistrationUser,
+    mutationFn,
     onSuccess: generateOnSuccess({ reset }),
     onError: generateOnError({ setError }),
   });
+
+  const title =
+    type === 'signUp' ? 'getStartedAbsolutelyFree' : 'resetYourPassword';
 
   return (
     <Stack
@@ -37,7 +46,7 @@ export const SignUpFirstPage = () => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Box>
-          <Typography variant="h5">{t('getStartedAbsolutelyFree')}</Typography>
+          <Typography variant="h5">{t(title)}</Typography>
           <Typography variant="subtitle2" color="text.secondary">
             {t('enterYourDetails')}
           </Typography>

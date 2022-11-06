@@ -1,6 +1,7 @@
 import { QueryClient } from '@tanstack/react-query';
 import { createBrowserRouter } from 'react-router-dom';
-import { ErrorPage, LogInPage, signUpPage } from './pages';
+import { ErrorPage, LogInPage, SignUpPage } from './pages';
+import { ForgotPage } from './pages/sign-up/forgot-page';
 import { AuthLayout } from './partials';
 
 export const router = (queryClient: QueryClient) =>
@@ -19,11 +20,24 @@ export const router = (queryClient: QueryClient) =>
           children: [
             {
               index: true,
-              element: <signUpPage.SignUpFirstPage />,
+              element: <SignUpPage step={1} />,
             },
             {
               path: ':email/:key',
-              element: <signUpPage.SignUpSecondPage />,
+              element: <SignUpPage step={2} />,
+            },
+          ],
+        },
+        {
+          path: 'forgot',
+          children: [
+            {
+              index: true,
+              element: <ForgotPage step={1} />,
+            },
+            {
+              path: ':email/:key',
+              element: <ForgotPage step={2} />,
             },
           ],
         },

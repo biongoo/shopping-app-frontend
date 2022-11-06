@@ -6,49 +6,71 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import { createUser, verifyRegistrationKey } from '~/api';
+import {
+  createUser,
+  updateUser,
+  verifyForgotKey,
+  verifyRegistrationKey,
+} from '~/api';
 import confetti from '~/assets/lotties/confetti.json';
 import { Button, IconButton, Input } from '~/bits';
 import { generateOnError, generateOnSuccess } from '~/utils';
 import { Stepper } from '../components/stepper';
 
-type SignUpSecondInputs = {
+type Props = {
+  type: 'signUp' | 'forgot';
+};
+
+type SecondStepProps = Props & {
+  onNext: () => void;
+};
+
+type SecondStepInputs = {
   email: string;
   password: string;
   confirmPassword: string;
 };
 
-const SignUpSecondStep = (props: { onNext: () => void }) => {
+const SecondStep = ({ type, onNext }: SecondStepProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { email, key } = useParams();
-  const { control, handleSubmit, setError } = useForm<SignUpSecondInputs>();
+  const { control, handleSubmit, setError } = useForm<SecondStepInputs>();
 
   if (!email || !key) {
     return <Navigate to="/" />;
   }
 
+  const queryFn =
+    type === 'signUp'
+      ? () => verifyRegistrationKey({ email, key })
+      : () => verifyForgotKey({ email, key });
+
+  const mutationFn = type === 'signUp' ? createUser : updateUser;
+
+  const url = type === 'signUp' ? '/sign-up' : '/forgot';
+
   const { isInitialLoading } = useQuery({
-    queryKey: ['signUp', email, key],
-    queryFn: () => verifyRegistrationKey({ email, key }),
-    onError: generateOnError({ fn: () => navigate('/sign-up') }),
     retry: 0,
+    queryKey: [type, email, key],
+    queryFn,
+    onError: generateOnError({ fn: () => navigate(url) }),
   });
 
   const mutation = useMutation({
-    mutationFn: createUser,
-    onSuccess: generateOnSuccess({ fn: () => props.onNext() }),
+    mutationFn,
+    onSuccess: generateOnSuccess({ fn: () => onNext() }),
     onError: generateOnError({
       setError,
       fn: (apiError) => {
         if (apiError?.mainError?.key === 'invalidKey') {
-          navigate('/sign-up');
+          navigate(url);
         }
       },
     }),
   });
 
-  const onSubmit = (data: SignUpSecondInputs) => {
+  const onSubmit = (data: SecondStepInputs) => {
     if (data.password !== data.confirmPassword) {
       setError('confirmPassword', { message: 'passwordsDoNotMatch' });
       return;
@@ -60,6 +82,8 @@ const SignUpSecondStep = (props: { onNext: () => void }) => {
   if (isInitialLoading) {
     return <CircularProgress />;
   }
+
+  const passwordInput = type === 'signUp' ? 'password' : 'newPassword';
 
   return (
     <Stack
@@ -95,7 +119,7 @@ const SignUpSecondStep = (props: { onNext: () => void }) => {
       />
       <Input
         name="password"
-        label={t('password')}
+        label={t(passwordInput)}
         control={control}
         defaultValue=""
         type="password"
@@ -109,20 +133,30 @@ const SignUpSecondStep = (props: { onNext: () => void }) => {
         type="password"
         rules={{ minLength: 8 }}
       />
-      <Button text={t('continue')} variant="contained" type="submit" />
+      <Button
+        text={t('continue')}
+        variant="contained"
+        type="submit"
+        loading={mutation.isLoading}
+      />
       <Stepper activeStep={2} />
     </Stack>
   );
 };
 
-const SignUpThirdStep = () => {
+const ThirdStep = ({ type }: Props) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const passwordInput =
+    type === 'signUp'
+      ? 'successfullyRegistered'
+      : 'passwordChangedSuccessfully';
 
   return (
     <Stack width={1} spacing={2.5} maxWidth={500} position="relative">
       <Box>
-        <Typography variant="h5">{t('successfullyRegistered')}</Typography>
+        <Typography variant="h5">{t(passwordInput)}</Typography>
         <Typography variant="subtitle2" color="text.secondary">
           {t('letsDoShopping')}
         </Typography>
@@ -150,7 +184,7 @@ const SignUpThirdStep = () => {
   );
 };
 
-export const SignUpSecondPage = () => {
+export const SecondSubPage = (props: Props) => {
   const [step, setStep] = useState<2 | 3>(2);
 
   const handleNextStep = () => {
@@ -159,10 +193,10 @@ export const SignUpSecondPage = () => {
 
   switch (step) {
     case 2: {
-      return <SignUpSecondStep onNext={handleNextStep} />;
+      return <SecondStep type={props.type} onNext={handleNextStep} />;
     }
     case 3: {
-      return <SignUpThirdStep />;
+      return <ThirdStep type={props.type} />;
     }
     default: {
       return <Navigate to="/" />;

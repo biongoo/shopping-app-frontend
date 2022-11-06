@@ -28,7 +28,8 @@
   "letsDoShopping": "Zróbmy wspólnie Twoje zakupy!",
   "invalidEmail": "Nieprawidłowy email",
   "successfullyRegistered": "Zarejestrowano pomyślnie",
-  "successSendEmail": "Na podanego maila wysłaliśmy potwierdzenie. Kliknij w link zawarty w wiadomości w ciągu jednej godziny aby dokończyć rejestrację",
+  "successSendRegistrationEmail": "Na podanego maila wysłaliśmy potwierdzenie. Kliknij w link zawarty w wiadomości w ciągu jednej godziny aby dokończyć rejestrację",
+  "successSendForgotEmail": "Na podanego maila wysłaliśmy potwierdzenie. Kliknij w link zawarty w wiadomości w ciągu jednej godziny aby dokończyć zmianę hasła",
   "passwordsDoNotMatch": "Hasła się nie zgadzają",
   "error": "Błąd",
   "userAlreadyExists": "Adres e-mail jest już zajęty",
@@ -38,5 +39,11 @@
   "invalidKey": "Podany link wygasł",
   "invalidLengthOfPassword": "Nieprawidłowa długość hasła",
   "serverError": "Wewętrzny błąd serwera",
+  "resetYourPassword": "Zresetuj swoje hasło",
+  "userNotExists": "Użytkownik nie istnieje",
+  "newPassword": "Nowe hasło",
+  "passwordChangedSuccessfully": "Pomyślnie zmieniono hasło",
+  "rememberMe": "Zapamiętaj mnie",
+  "forgotPasswordQuestion": "Zapomniałeś hasła?",
   "eof": "eof"
 }

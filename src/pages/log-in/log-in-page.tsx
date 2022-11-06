@@ -1,7 +1,15 @@
-import { Box, Stack, Typography, Divider } from '@mui/material';
+import {
+  Box,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  Link,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { Link as LinkRR, useNavigate } from 'react-router-dom';
 import { Button, Input } from '~/bits';
 
 type LoginInputs = {
@@ -49,6 +57,20 @@ export const LogInPage = () => {
         defaultValue=""
         type="password"
       />
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        spacing={2}
+      >
+        <FormControlLabel
+          control={<Checkbox defaultChecked />}
+          label={t('rememberMe')}
+        />
+        <Link component={LinkRR} to="/forgot" color="inherit">
+          <Typography variant="body1">{t('forgotPasswordQuestion')}</Typography>
+        </Link>
+      </Stack>
       <Button text={t('logIn')} variant="contained" type="submit" />
       <Divider>
         <Typography variant="body2">{t('or').toLocaleUpperCase()}</Typography>

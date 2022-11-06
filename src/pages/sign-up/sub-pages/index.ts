@@ -1,2 +1,2 @@
-export * from './sign-up-first-page';
-export * from './sign-up-second-page';
+export * from './first-sub-page';
+export * from './second-sub-page';

@@ -28,7 +28,8 @@
   "letsDoShopping": "Let's do your shopping together!",
   "invalidEmail": "Invalid email",
   "successfullyRegistered": "Successfully registered",
-  "successSendEmail": "We have sent a confirmation to the given e-mail. Click on the link in the email within one hour to complete your registration",
+  "successSendRegistrationEmail": "We have sent a confirmation to the given e-mail. Click on the link in the email within one hour to complete your registration",
+  "successSendForgotEmail": "We have sent a confirmation to the given e-mail. Click on the link in the email within one hour to complete your change password request",
   "passwordsDoNotMatch": "Passwords do not match",
   "error": "Error",
   "userAlreadyExists": "The e-mail address is already taken",
@@ -38,5 +39,11 @@
   "invalidKey": "The given link has expired",
   "invalidLengthOfPassword": "Invalid length of password",
   "serverError": "Internal server error",
+  "resetYourPassword": "Reset your password",
+  "userNotExists": "The user does not exists",
+  "newPassword": "New password",
+  "passwordChangedSuccessfully": "Password changed successfully",
+  "rememberMe": "Remember me",
+  "forgotPasswordQuestion": "Forgot password?",
   "eof": "eof"
 }
