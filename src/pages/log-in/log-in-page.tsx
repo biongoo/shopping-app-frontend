@@ -35,11 +35,6 @@ export const LogInPage = () => {
     onError: generateOnError({ setError }),
   });
 
-  const onSubmit = (data: LoginInputs) => {
-    console.log(data);
-    mutation.mutate(data);
-  };
-
   return (
     <Stack
       width={1}
@@ -48,7 +43,7 @@ export const LogInPage = () => {
       component="form"
       noValidate
       autoComplete="off"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit((x) => mutation.mutate(x))}
     >
       <Box>
         <Typography variant="h5">

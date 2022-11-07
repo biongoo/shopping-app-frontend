@@ -1,2 +1,3 @@
 export * from './alert';
-export * from './authLayout';
+export * from './app-layout';
+export * from './auth-layout';

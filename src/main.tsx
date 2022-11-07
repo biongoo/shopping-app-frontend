@@ -19,7 +19,7 @@ ReactDOM.createRoot(document.querySelector('#root') as HTMLElement).render(
   <React.StrictMode>
     <Theme>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router(queryClient)} />
+        <RouterProvider router={router} />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </Theme>
