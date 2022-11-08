@@ -1,38 +1,40 @@
-import { Box, Stack } from '@mui/material';
-import { Outlet } from 'react-router-dom';
-import { Languages } from '../languages';
-import { Theme } from '../theme';
+import { Paper } from '@mui/material';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import { Drawer } from './components';
+
+const drawerWidth = 220;
 
 export const AppLayout = () => (
-  <Box
-    sx={{
-      display: 'flex',
-      height: '100vh',
-      padding: '1rem',
-      gap: '1rem',
-    }}
-  >
-    <Box sx={{ display: 'flex', flexGrow: 1, flexDirection: 'column' }}>
-      <Stack
-        direction="row"
-        justifyContent="flex-end"
-        spacing={0.5}
-        height="5vh"
-      >
-        <Theme />
-        <Languages />
-      </Stack>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: 1,
-        }}
-      >
-        <Outlet />
-      </Box>
-      <Box height="5vh" />
+  <Box sx={{ display: 'flex' }}>
+    <Drawer drawerWidth={drawerWidth} />
+    <Box
+      component="main"
+      sx={{
+        flexGrow: 1,
+        p: { xs: 1, sm: 2, md: 3 },
+        width: { sm: `calc(100% - ${drawerWidth}px)` },
+      }}
+    >
+      <Toolbar />
+      <Paper sx={{ p: 2 }}>
+        <Typography paragraph>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
+          dolor purus non enim praesent elementum facilisis leo vel. Risus at
+          ultrices mi tempus imperdiet. Semper risus in hendrerit gravida rutrum
+          quisque non tellus. Convallis convallis tellus id interdum velit
+          laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed
+          adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies
+          integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate
+          eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo
+          quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat
+          vivamus at augue. At augue eget arcu dictum varius duis at consectetur
+          lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien
+          faucibus et molestie ac.
+        </Typography>
+      </Paper>
     </Box>
   </Box>
 );

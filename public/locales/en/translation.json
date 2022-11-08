@@ -46,5 +46,8 @@
   "rememberMe": "Remember me",
   "forgotPasswordQuestion": "Forgot password?",
   "invalidEmailOrPassword": "Invalid email or password",
+  "openMenu": "Open menu",
+  "home": "Home",
+  "shops": "Shops",
   "eof": "eof"
 }

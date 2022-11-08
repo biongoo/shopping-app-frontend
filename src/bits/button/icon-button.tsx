@@ -4,9 +4,9 @@ import { MouseEventHandler, PropsWithChildren } from 'react';
 type Props = PropsWithChildren & {
   title: string;
   open: boolean;
-  edge?: false | 'end' | 'start';
   scale?: number;
   color?: string;
+  edge?: false | 'end' | 'start';
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 

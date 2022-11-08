@@ -1,8 +1,6 @@
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import InputAdornment from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
-import { SxProps } from '@mui/system';
+import { InputAdornment, SxProps, TextField } from '@mui/material';
 import { useState } from 'react';
 import {
   Control,
