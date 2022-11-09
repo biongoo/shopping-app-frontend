@@ -13,6 +13,14 @@ type AuthResDto = {
 export const logIn = (body: AuthReqDto) =>
   connectApi<AuthReqDto, AuthResDto>({
     endpoint: 'auth/log-in',
+    tokenType: false,
     method: 'POST',
     body,
+  });
+
+export const logOut = () =>
+  connectApi({
+    endpoint: 'auth/log-out',
+    tokenType: 'refresh',
+    method: 'POST',
   });

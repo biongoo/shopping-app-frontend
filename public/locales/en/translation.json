@@ -49,5 +49,10 @@
   "openMenu": "Open menu",
   "home": "Home",
   "shops": "Shops",
+  "successfullyLoggedIn": "Successfully logged in",
+  "account": "Account",
+  "settings": "Settings",
+  "logout": "Logout",
+  "signedOutSuccessfully": "Signed out successfully",
   "eof": "eof"
 }

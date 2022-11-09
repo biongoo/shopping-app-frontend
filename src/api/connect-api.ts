@@ -1,7 +1,9 @@
 import { ApiData, ApiError } from '~/models';
+import { useAuthStore } from '~/stores';
 
 type ConnectApiProps<Req> = Omit<RequestInit, 'url' | 'body'> & {
   endpoint: string;
+  tokenType?: 'access' | 'refresh' | false;
   body?: Req;
 };
 
@@ -15,7 +17,13 @@ export const connectApi = async <Req, Res = never>(
         method: props.method ?? 'GET',
         headers: {
           'Content-Type': 'application/json',
-          /* Authorization: `Bearer ${store.getState().auth.accessToken}`, */
+          ...(props.tokenType != false && {
+            Authorization: `Bearer ${
+              props.tokenType === 'refresh'
+                ? useAuthStore.getState().refreshToken
+                : useAuthStore.getState().accessToken
+            }`,
+          }),
           ...props.headers,
         },
         body: props.body ? JSON.stringify(props.body) : undefined,
@@ -37,7 +45,7 @@ export const connectApi = async <Req, Res = never>(
       }
     }
 
-    return new ApiData(status, message, data as Res);
+    return new ApiData(status, data as Res, message);
   } catch (error) {
     throw error instanceof ApiError ? error : new ApiError('unknownApiError');
   }

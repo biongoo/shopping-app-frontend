@@ -3,7 +3,7 @@ import { ComponentProps } from 'react';
 
 type Props = Pick<
   ComponentProps<typeof LoadingButton>,
-  'onClick' | 'variant' | 'color' | 'type' | 'loading'
+  'onClick' | 'variant' | 'color' | 'type' | 'loading' | 'fullWidth'
 > & {
   text: string;
 };
@@ -16,6 +16,7 @@ export const Button = (props: Props) => {
       color={props.color ?? 'primary'}
       onMouseDown={props.onClick}
       loading={props.loading}
+      fullWidth={props.fullWidth}
     >
       {props.text}
     </LoadingButton>

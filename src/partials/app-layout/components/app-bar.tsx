@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { IconButton } from '~/bits';
 import { Languages } from '../../languages';
 import { Theme } from '../../theme';
+import { Avatar } from './avatar';
 
 type Props = {
   isOpen: boolean;
@@ -52,10 +53,12 @@ export const AppBar = (props: Props) => {
           direction="row"
           spacing={0.5}
           justifyContent="flex-end"
+          alignItems="center"
           sx={{ flexGrow: 1 }}
         >
           <Theme />
           <Languages />
+          <Avatar />
         </Stack>
       </Toolbar>
     </AppBarMui>

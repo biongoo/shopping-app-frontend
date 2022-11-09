@@ -49,5 +49,10 @@
   "openMenu": "Otwórz menu",
   "home": "Strona główna",
   "shops": "Sklepy",
+  "successfullyLoggedIn": "Pomyślnie zalogowany",
+  "account": "Konto",
+  "settings": "Ustawienia",
+  "logout": "Wyloguj",
+  "signedOutSuccessfully": "Wylogowano pomyślnie",
   "eof": "eof"
 }

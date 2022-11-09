@@ -23,6 +23,7 @@ export const LogInPage = () => {
   const mutation = useMutation({
     mutationFn: logIn,
     onSuccess: generateOnSuccess({
+      message: 'successfullyLoggedIn',
       reset,
       fn: (res, req) => {
         logInStore(
@@ -89,7 +90,12 @@ export const LogInPage = () => {
           <Typography variant="body1">{t('forgotPasswordQuestion')}</Typography>
         </Link>
       </Stack>
-      <Button text={t('logIn')} variant="contained" type="submit" />
+      <Button
+        text={t('logIn')}
+        variant="contained"
+        type="submit"
+        loading={mutation.isLoading}
+      />
       <Divider>
         <Typography variant="body2">{t('or').toLocaleUpperCase()}</Typography>
       </Divider>

@@ -18,6 +18,7 @@ type ThirdStepDto = {
 export const createRegistrationUser = (body: FirstStepDto) =>
   connectApi({
     endpoint: 'auth/sign-up/first-step',
+    tokenType: false,
     method: 'POST',
     body,
   });
@@ -25,6 +26,7 @@ export const createRegistrationUser = (body: FirstStepDto) =>
 export const verifyRegistrationKey = (body: SecondStepDto) =>
   connectApi({
     endpoint: 'auth/sign-up/second-step',
+    tokenType: false,
     method: 'POST',
     body,
   });
@@ -32,6 +34,7 @@ export const verifyRegistrationKey = (body: SecondStepDto) =>
 export const createUser = (body: ThirdStepDto) =>
   connectApi({
     endpoint: 'auth/sign-up/third-step',
+    tokenType: false,
     method: 'POST',
     body,
   });
@@ -39,6 +42,7 @@ export const createUser = (body: ThirdStepDto) =>
 export const createForgotUser = (body: FirstStepDto) =>
   connectApi({
     endpoint: 'auth/forgot/first-step',
+    tokenType: false,
     method: 'POST',
     body,
   });
@@ -46,6 +50,7 @@ export const createForgotUser = (body: FirstStepDto) =>
 export const verifyForgotKey = (body: SecondStepDto) =>
   connectApi({
     endpoint: 'auth/forgot/second-step',
+    tokenType: false,
     method: 'POST',
     body,
   });
@@ -53,6 +58,7 @@ export const verifyForgotKey = (body: SecondStepDto) =>
 export const updateUser = (body: ThirdStepDto) =>
   connectApi({
     endpoint: 'auth/forgot/third-step',
+    tokenType: false,
     method: 'POST',
     body,
   });

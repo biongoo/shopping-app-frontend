@@ -8,6 +8,7 @@ type Auth = {
     accessToken: string,
     refreshToken: string
   ) => void;
+  logOut: () => void;
 };
 
 const getStorage = <T>(key: string) => {
@@ -23,6 +24,11 @@ const setStorage = <T>(type: 'local' | 'session', key: string, value: T) => {
   }
 };
 
+const removeFromStorages = (key: string) => {
+  localStorage.removeItem(key);
+  sessionStorage.removeItem(key);
+};
+
 export const useAuthStore = create<Auth>()((set) => ({
   accessToken: getStorage('accessToken'),
 
@@ -33,10 +39,16 @@ export const useAuthStore = create<Auth>()((set) => ({
     accessToken: string,
     refreshToken: string
   ) => {
-    set(() => {
-      setStorage(type, 'accessToken', accessToken);
-      setStorage(type, 'refreshToken', refreshToken);
-      return { accessToken, refreshToken };
-    });
+    setStorage(type, 'accessToken', accessToken);
+    setStorage(type, 'refreshToken', refreshToken);
+
+    set(() => ({ accessToken, refreshToken }));
+  },
+
+  logOut: () => {
+    removeFromStorages('accessToken');
+    removeFromStorages('refreshToken');
+
+    set(() => ({ accessToken: undefined, refreshToken: undefined }));
   },
 }));
