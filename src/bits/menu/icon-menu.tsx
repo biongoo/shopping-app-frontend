@@ -1,10 +1,10 @@
 import { Menu } from '@mui/material';
-import { ComponentProps, ReactNode, useState } from 'react';
+import { ComponentProps, ReactElement, useState } from 'react';
 import { IconButton } from '../button/icon-button';
 
 type Props = {
   iconProps: Omit<ComponentProps<typeof IconButton>, 'open'>;
-  children: ReactNode;
+  content: (props: { onClose: () => void }) => ReactElement | null;
 };
 
 export const IconMenu = (props: Props) => {
@@ -26,7 +26,6 @@ export const IconMenu = (props: Props) => {
         open={isOpen}
         anchorEl={anchorEl}
         onClose={handleClose}
-        onClick={handleClose}
         PaperProps={{
           elevation: 0,
           sx: {
@@ -50,7 +49,7 @@ export const IconMenu = (props: Props) => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        {props.children}
+        <props.content onClose={handleClose} />
       </Menu>
     </>
   );

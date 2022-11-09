@@ -13,8 +13,7 @@ export const Languages = () => {
         children: <LanguageIcon src={actualLanguage?.icon ?? langs[0].icon} />,
         title: t('language'),
       }}
-    >
-      <LanguageOptions />
-    </IconMenu>
+      content={LanguageOptions}
+    />
   );
 };

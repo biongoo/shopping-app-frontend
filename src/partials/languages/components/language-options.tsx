@@ -3,13 +3,20 @@ import { useTranslation } from 'react-i18next';
 import { langs } from '~/i18n';
 import { LanguageIcon } from './language-icon';
 
-export const LanguageOptions = () => {
+type Props = {
+  onClose: () => void;
+};
+
+export const LanguageOptions = (props: Props) => {
   const { i18n } = useTranslation();
 
   const content = langs.map((lang) => (
     <MenuItem
       key={lang.value}
-      onClick={() => i18n.changeLanguage(lang.value)}
+      onClick={() => {
+        props.onClose();
+        setTimeout(() => i18n.changeLanguage(lang.value), 100);
+      }}
       selected={i18n.resolvedLanguage === lang.value}
       sx={{
         paddingY: 1,
