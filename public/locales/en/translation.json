@@ -54,5 +54,6 @@
   "settings": "Settings",
   "logout": "Logout",
   "signedOutSuccessfully": "Signed out successfully",
+  "invalidCredentials": "Invalid credentials",
   "eof": "eof"
 }

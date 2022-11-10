@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate, useLocation } from 'react-router-dom';
-import { ErrorPage, LogInPage, SignUpPage } from './pages';
+import { ErrorPage, LogInPage, SignUpPage, ShopPage, HomePage } from './pages';
 import { ForgotPage } from './pages/sign-up/forgot-page';
 import { AppLayout, AuthLayout } from './partials';
 import { useAuthStore } from './stores';
@@ -10,16 +10,16 @@ type AuthProviderProps = {
 };
 
 const AuthProvider = (props: AuthProviderProps) => {
-  const accessToken = useAuthStore((store) => store.accessToken);
   const location = useLocation();
+  const refreshToken = useAuthStore((store) => store.refreshToken);
 
   if (props.shouldBeLoggedIn) {
-    if (!accessToken) {
+    if (!refreshToken) {
       return <Navigate to="/" state={{ from: location }} replace />;
     }
   } else {
-    if (accessToken) {
-      return <Navigate to="/app" state={{ from: location }} replace />;
+    if (refreshToken) {
+      return <Navigate to="/app/home" state={{ from: location }} replace />;
     }
   }
 
@@ -76,6 +76,20 @@ export const router = createBrowserRouter([
       </AuthProvider>
     ),
     errorElement: <ErrorPage />,
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/app/home" />,
+      },
+      {
+        path: 'home',
+        element: <HomePage />,
+      },
+      {
+        path: 'shop',
+        element: <ShopPage />,
+      },
+    ],
   },
   {
     path: '*',

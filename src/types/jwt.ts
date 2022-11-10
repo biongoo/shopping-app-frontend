@@ -1,4 +1,4 @@
-export type User = {
+export type Jwt = {
   userId: number;
   sessionId: number;
   email: string;

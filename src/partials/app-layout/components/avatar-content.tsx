@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { logOut as logOutApi } from '~/api';
 import { Button } from '~/bits';
 import { useAuthStore } from '~/stores';
-import { User } from '~/types';
+import { Jwt } from '~/types';
 import { generateOnSuccess } from '~/utils';
 
 type Props = {
@@ -29,7 +29,7 @@ export const AvatarContent = (props: Props) => {
     return null;
   }
 
-  const user = jwtDecode<User>(accessToken);
+  const jwt = jwtDecode<Jwt>(accessToken);
 
   const mutation = useMutation({
     mutationFn: logOutApi,
@@ -51,7 +51,7 @@ export const AvatarContent = (props: Props) => {
     <>
       <Box sx={{ my: 1.5, px: 2.5 }}>
         <Typography variant="subtitle1" noWrap>
-          {user.email}
+          {jwt.email}
         </Typography>
       </Box>
       <Divider />

@@ -24,3 +24,11 @@ export const logOut = () =>
     tokenType: 'refresh',
     method: 'POST',
   });
+
+export const refreshTokens = () =>
+  connectApi<never, AuthResDto>({
+    endpoint: 'auth/refresh',
+    tokenType: 'refresh',
+    method: 'POST',
+    omitCheckTokens: true,
+  });

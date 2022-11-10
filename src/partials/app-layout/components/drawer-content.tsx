@@ -17,12 +17,12 @@ const pages = [
   {
     key: 'home',
     icon: HomeIcon,
-    path: '/app',
+    path: '/app/home',
   },
   {
     key: 'shops',
     icon: StoreIcon,
-    path: '/app/shops',
+    path: '/app/shop',
   },
 ] as const;
 

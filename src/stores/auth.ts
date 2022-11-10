@@ -9,6 +9,7 @@ type Auth = {
     refreshToken: string
   ) => void;
   logOut: () => void;
+  refreshTokens: (accessToken: string, refreshToken: string) => void;
 };
 
 const getStorage = <T>(key: string) => {
@@ -50,5 +51,14 @@ export const useAuthStore = create<Auth>()((set) => ({
     removeFromStorages('refreshToken');
 
     set(() => ({ accessToken: undefined, refreshToken: undefined }));
+  },
+
+  refreshTokens: (accessToken: string, refreshToken: string) => {
+    const type = localStorage.getItem('accessToken') ? 'local' : 'session';
+
+    setStorage(type, 'accessToken', accessToken);
+    setStorage(type, 'refreshToken', refreshToken);
+
+    set(() => ({ accessToken, refreshToken }));
   },
 }));

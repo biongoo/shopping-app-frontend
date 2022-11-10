@@ -1,4 +1,5 @@
-import { Box, Paper, Toolbar } from '@mui/material';
+import { Box, Toolbar } from '@mui/material';
+import { Outlet } from 'react-router-dom';
 import { Drawer } from './components';
 
 const drawerWidth = 220;
@@ -15,7 +16,7 @@ export const AppLayout = () => (
       }}
     >
       <Toolbar />
-      <Paper sx={{ p: 2 }}>j</Paper>
+      <Outlet />
     </Box>
   </Box>
 );
