@@ -46,9 +46,9 @@ export const AvatarContent = (props: Props) => {
   };
 
   return (
-    <>
+    <Box minWidth={200}>
       <Box sx={{ my: 1.5, px: 2.5 }}>
-        <Typography variant="subtitle1" noWrap>
+        <Typography variant="subtitle1" noWrap textAlign="center">
           {jwt.email}
         </Typography>
       </Box>
@@ -70,6 +70,6 @@ export const AvatarContent = (props: Props) => {
           loading={mutation.isLoading}
         />
       </Box>
-    </>
+    </Box>
   );
 };

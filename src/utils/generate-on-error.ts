@@ -12,7 +12,9 @@ export const generateOnError = <T extends FieldValues>(props?: Props<T>) => {
     props?.fn?.(apiError);
 
     if (apiError.inputErrors.length > 0 && props?.setError) {
-      for (const error of apiError.inputErrors) {
+      const reversedErrors = apiError.inputErrors.reverse();
+
+      for (const error of reversedErrors) {
         if (error.inputName) {
           props.setError(error.inputName as FieldPath<T>, {
             message: error.key,

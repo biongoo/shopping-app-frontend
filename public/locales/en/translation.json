@@ -37,7 +37,7 @@
   "emailJustSent": "Wait a minute to try resending the email",
   "emailNotSent": "There was a problem sending your e-mail. Wait for a while and try again",
   "invalidKey": "The given link has expired",
-  "invalidLengthOfPassword": "Invalid length of password",
+  "invalidLength": "Invalid length of the field",
   "serverError": "Internal server error",
   "resetYourPassword": "Reset your password",
   "userNotExists": "The user does not exists",
@@ -57,5 +57,9 @@
   "invalidCredentials": "Invalid credentials",
   "addShop": "Add shop",
   "save": "Save",
+  "name": "Name",
+  "successfullyAdded": "Successfully added",
+  "invalidNumber": "The value should be a number",
+  "invalidString": "The value should be a text",
   "eof": "eof"
 }

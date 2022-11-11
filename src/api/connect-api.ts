@@ -11,7 +11,7 @@ type ConnectApiProps<Req> = Omit<RequestInit, 'url' | 'body'> & {
   body?: Req;
 };
 
-export const connectApi = async <Req, Res = never>(
+export const connectApi = async <Res = unknown, Req = unknown>(
   props: ConnectApiProps<Req>
 ) => {
   try {

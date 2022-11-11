@@ -6,16 +6,16 @@ import {
   DialogTitle,
   Stack,
 } from '@mui/material';
-import { PropsWithChildren, ReactNode } from 'react';
+import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
-import { IconButton } from '../button';
+import { Button, IconButton } from '../button';
 
 type Props = PropsWithChildren & {
   isOpen: boolean;
   titleKey: string;
-  actions: ReactNode;
-  onClose: () => void;
+  isLoading: boolean;
   reset: () => void;
+  onClose: () => void;
   handleSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
 };
 
@@ -33,11 +33,12 @@ export const FormModal = (props: Props) => {
   return (
     <Dialog
       open={props.isOpen}
-      onClose={props.onClose}
+      onClose={handleClose}
       PaperProps={{
         sx: {
           width: '100%',
           m: { xs: 2, sm: 4 },
+          backgroundImage: 'none',
         },
       }}
     >
@@ -61,7 +62,14 @@ export const FormModal = (props: Props) => {
           </IconButton>
         </Stack>
         <DialogContent dividers={true}>{props.children}</DialogContent>
-        <DialogActions sx={{ pr: 2 }}>{props.actions}</DialogActions>
+        <DialogActions sx={{ pr: 2 }}>
+          <Button
+            type="submit"
+            textKey="save"
+            color="success"
+            loading={props.isLoading}
+          />
+        </DialogActions>
       </form>
     </Dialog>
   );

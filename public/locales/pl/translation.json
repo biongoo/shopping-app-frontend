@@ -37,7 +37,7 @@
   "emailJustSent": "Poczekaj minutę, aby spróbować ponownie wysłać wiadomość",
   "emailNotSent": "Nastąpił problem z wysyłaniem wiadomości e mail. Poczekaj chwilę i spróbuj ponownie",
   "invalidKey": "Podany link wygasł",
-  "invalidLengthOfPassword": "Nieprawidłowa długość hasła",
+  "invalidLength": "Nieprawidłowa długość pola",
   "serverError": "Wewętrzny błąd serwera",
   "resetYourPassword": "Zresetuj swoje hasło",
   "userNotExists": "Użytkownik nie istnieje",
@@ -57,5 +57,9 @@
   "invalidCredentials": "Nieprawidłowe dane uwierzytelniające",
   "addShop": "Dodaj sklep",
   "save": "Zapisz",
+  "name": "Nazwa",
+  "successfullyAdded": "Pomyślnie dodano",
+  "invalidNumber": "Wartość powinna być liczbą",
+  "invalidString": "Wartość powinna być tekstem",
   "eof": "eof"
 }

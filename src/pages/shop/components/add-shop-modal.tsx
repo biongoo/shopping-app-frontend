@@ -1,17 +1,34 @@
 import AddIcon from '@mui/icons-material/Add';
+import { Stack } from '@mui/material';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { Button, FormModal, IconButton } from '~/bits';
+import { addShop } from '~/api';
+import { FormModal, IconButton, Input } from '~/bits';
+import { generateOnError, generateOnSuccess } from '~/utils';
 
 type AddShopInputs = {
   name: string;
 };
 
 export const AddShopModal = () => {
-  const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const { control, handleSubmit, reset, setError } = useForm<AddShopInputs>();
+
+  const mutation = useMutation({
+    mutationFn: addShop,
+    onSuccess: generateOnSuccess({
+      alertTime: 5,
+      message: 'successfullyAdded',
+      reset,
+      fn: () => {
+        queryClient.invalidateQueries({ queryKey: ['shops'] });
+        setIsOpenAddModal(false);
+      },
+    }),
+    onError: generateOnError({ setError }),
+  });
 
   return (
     <>
@@ -25,14 +42,19 @@ export const AddShopModal = () => {
       <FormModal
         titleKey="addShop"
         isOpen={isOpenAddModal}
-        actions={<Button textKey="add" />}
+        isLoading={mutation.isLoading}
         reset={reset}
-        handleSubmit={handleSubmit(() => {
-          /* */
-        })}
         onClose={() => setIsOpenAddModal(false)}
+        handleSubmit={handleSubmit((data) => mutation.mutate(data))}
       >
-        xd
+        <Stack>
+          <Input
+            name="name"
+            labelKey="name"
+            control={control}
+            defaultValue=""
+          />
+        </Stack>
       </FormModal>
     </>
   );

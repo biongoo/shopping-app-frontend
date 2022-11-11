@@ -47,7 +47,7 @@ export const ShopPage = () => {
       </Stack>
       <Paper>
         <TableContainer>
-          <Table sx={{ minWidth: 750 }}>
+          <Table>
             {/* <EnhancedTableHead
               numSelected={selected.length}
               order={order}

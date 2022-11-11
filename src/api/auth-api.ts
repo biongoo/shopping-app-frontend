@@ -11,7 +11,7 @@ type AuthResDto = {
 };
 
 export const logIn = (body: AuthReqDto) =>
-  connectApi<AuthReqDto, AuthResDto>({
+  connectApi<AuthResDto, AuthReqDto>({
     endpoint: 'auth/log-in',
     tokenType: false,
     method: 'POST',
@@ -26,7 +26,7 @@ export const logOut = () =>
   });
 
 export const refreshTokens = () =>
-  connectApi<never, AuthResDto>({
+  connectApi<AuthResDto>({
     endpoint: 'auth/refresh',
     tokenType: 'refresh',
     method: 'POST',

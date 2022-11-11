@@ -7,7 +7,7 @@ import './i18n';
 import { router } from './router';
 import { Theme } from './theme';
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 10,

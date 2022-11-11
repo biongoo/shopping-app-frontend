@@ -1,4 +1,5 @@
 import create from 'zustand';
+import { queryClient } from '~/main';
 
 type Auth = {
   accessToken?: string;
@@ -47,10 +48,11 @@ export const useAuthStore = create<Auth>()((set) => ({
   },
 
   logOut: () => {
+    set(() => ({ accessToken: undefined, refreshToken: undefined }));
+
     removeFromStorages('accessToken');
     removeFromStorages('refreshToken');
-
-    set(() => ({ accessToken: undefined, refreshToken: undefined }));
+    queryClient.removeQueries();
   },
 
   refreshTokens: (accessToken: string, refreshToken: string) => {
