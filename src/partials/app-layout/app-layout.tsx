@@ -2,7 +2,7 @@ import { Box, Toolbar } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import { Drawer } from './components';
 
-const drawerWidth = 220;
+const drawerWidth = 230;
 
 export const AppLayout = () => (
   <Box sx={{ display: 'flex' }}>
@@ -11,12 +11,19 @@ export const AppLayout = () => (
       component="main"
       sx={{
         flexGrow: 1,
-        p: { xs: 1, sm: 2, md: 3 },
         width: { sm: `calc(100% - ${drawerWidth}px)` },
       }}
     >
       <Toolbar />
-      <Outlet />
+      <Box
+        sx={{
+          p: { xs: 2, md: 3 },
+          maxWidth: 900,
+          margin: 'auto',
+        }}
+      >
+        <Outlet />
+      </Box>
     </Box>
   </Box>
 );

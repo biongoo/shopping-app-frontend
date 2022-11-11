@@ -1,6 +1,7 @@
+import { Shop } from '~/types';
 import { connectApi } from './connect-api';
 
 export const getShops = () =>
-  connectApi({
+  connectApi<never, Shop[]>({
     endpoint: 'shop',
   });

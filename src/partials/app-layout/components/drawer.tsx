@@ -50,7 +50,7 @@ export const Drawer = ({ drawerWidth }: Props) => {
           boxSizing: 'border-box',
           width: drawerWidth,
           backgroundColor: (theme) =>
-            emphasize(theme.palette.background.default, 0.02),
+            emphasize(theme.palette.background.default, 0.01),
         },
       }}
       open

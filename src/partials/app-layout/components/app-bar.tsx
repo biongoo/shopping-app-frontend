@@ -44,7 +44,7 @@ export const AppBar = (props: Props) => {
         ml: { sm: `${props.drawerWidth}px` },
         backgroundImage: 'none',
         backgroundColor: (theme) =>
-          emphasize(alpha(theme.palette.background.default, 0.9), 0.02),
+          emphasize(alpha(theme.palette.background.default, 0.9), 0.01),
       }}
     >
       <Toolbar>
