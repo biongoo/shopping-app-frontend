@@ -1,20 +1,35 @@
+import CloseIcon from '@mui/icons-material/Close';
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Stack,
 } from '@mui/material';
+import { PropsWithChildren, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { IconButton } from '../button';
 
-type Props = {
-  title: 'string';
+type Props = PropsWithChildren & {
   isOpen: boolean;
+  titleKey: string;
+  actions: ReactNode;
   onClose: () => void;
+  reset: () => void;
+  handleSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
 };
 
 export const FormModal = (props: Props) => {
   const { t } = useTranslation();
+
+  const handleClose = () => {
+    props.onClose();
+
+    setTimeout(() => {
+      props.reset();
+    }, 100);
+  };
+
   return (
     <Dialog
       open={props.isOpen}
@@ -26,12 +41,28 @@ export const FormModal = (props: Props) => {
         },
       }}
     >
-      <DialogTitle>{t(props.title)}</DialogTitle>
-      <DialogContent dividers={true}>test</DialogContent>
-      <DialogActions>
-        <Button onClick={props.onClose}>Cancel</Button>
-        <Button onClick={props.onClose}>Subscribe</Button>
-      </DialogActions>
+      <form noValidate autoComplete="off" onSubmit={props.handleSubmit}>
+        <Stack
+          component={DialogTitle}
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          pr={1}
+          py={1}
+        >
+          {t(props.titleKey)}
+          <IconButton
+            open={false}
+            color="inherit"
+            titleKey="close"
+            onClick={handleClose}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Stack>
+        <DialogContent dividers={true}>{props.children}</DialogContent>
+        <DialogActions sx={{ pr: 2 }}>{props.actions}</DialogActions>
+      </form>
     </Dialog>
   );
 };

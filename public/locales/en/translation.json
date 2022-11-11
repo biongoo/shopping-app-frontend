@@ -15,7 +15,7 @@
   "hidePassword": "Hide Password",
   "showPassword": "Show Password",
   "logIn": "Log In",
-  "or": "Or",
+  "orUpperCase": "OR",
   "continue": "Continue",
   "signUp": "Sign Up",
   "getStartedAbsolutelyFree": "Get started absolutely free",
@@ -56,5 +56,6 @@
   "signedOutSuccessfully": "Signed out successfully",
   "invalidCredentials": "Invalid credentials",
   "addShop": "Add shop",
+  "save": "Save",
   "eof": "eof"
 }

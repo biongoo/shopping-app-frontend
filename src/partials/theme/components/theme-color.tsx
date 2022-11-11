@@ -1,4 +1,4 @@
-import { Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import {
   amber,
   blue,
@@ -16,7 +16,7 @@ import {
   red,
   teal,
 } from '@mui/material/colors';
-import { useTranslation } from 'react-i18next';
+import { TranslatedText } from '~/bits';
 import { useUiStore } from '~/stores';
 import { ThemeColorRow } from './theme-color-row';
 
@@ -39,7 +39,6 @@ const colors = [
 ];
 
 export const ThemeColor = () => {
-  const { t } = useTranslation();
   const [paletteColor, setColor] = useUiStore((store) => [
     store.color,
     store.setColor,
@@ -62,7 +61,7 @@ export const ThemeColor = () => {
 
   return (
     <Stack spacing={1}>
-      <Typography>{t('color')}</Typography>
+      <TranslatedText textKey="color" />
       {rows}
     </Stack>
   );

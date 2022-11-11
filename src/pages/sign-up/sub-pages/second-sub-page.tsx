@@ -1,10 +1,9 @@
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import { Box, CircularProgress, Stack, Typography } from '@mui/material';
+import { Box, CircularProgress, Stack } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import Lottie from 'lottie-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import {
   createUser,
@@ -13,7 +12,7 @@ import {
   verifyRegistrationKey,
 } from '~/api';
 import confetti from '~/assets/lotties/confetti.json';
-import { Button, IconButton, Input } from '~/bits';
+import { Button, IconButton, Input, TranslatedText } from '~/bits';
 import { generateOnError, generateOnSuccess } from '~/utils';
 import { Stepper } from '../components/stepper';
 
@@ -32,7 +31,6 @@ type SecondStepInputs = {
 };
 
 const SecondStep = ({ type, onNext }: SecondStepProps) => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const { email, key } = useParams();
   const { control, handleSubmit, setError } = useForm<SecondStepInputs>();
@@ -97,29 +95,27 @@ const SecondStep = ({ type, onNext }: SecondStepProps) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Box>
-          <Typography variant="h5">{t('justOneMoreStep')}</Typography>
-          <Typography variant="subtitle2" color="text.secondary">
-            {t('enterYourDetails')}
-          </Typography>
+          <TranslatedText variant="h5" textKey="justOneMoreStep" />
+          <TranslatedText
+            variant="subtitle2"
+            color="text.secondary"
+            textKey="enterYourDetails"
+          />
         </Box>
-        <IconButton
-          open={true}
-          title={t('goBack')}
-          onClick={() => navigate('/')}
-        >
+        <IconButton open={true} titleKey="goBack" onClick={() => navigate('/')}>
           <ArrowBackIosNewIcon />
         </IconButton>
       </Stack>
       <Input
         name="email"
-        label={t('email')}
+        labelKey="email"
         control={control}
         defaultValue={email ?? ''}
         disabled={true}
       />
       <Input
         name="password"
-        label={t(passwordInput)}
+        labelKey={passwordInput}
         control={control}
         defaultValue=""
         type="password"
@@ -127,16 +123,16 @@ const SecondStep = ({ type, onNext }: SecondStepProps) => {
       />
       <Input
         name="confirmPassword"
-        label={t('confirmPassword')}
+        labelKey="confirmPassword"
         control={control}
         defaultValue=""
         type="password"
         rules={{ minLength: 8 }}
       />
       <Button
-        text={t('continue')}
-        variant="contained"
         type="submit"
+        textKey="continue"
+        variant="contained"
         loading={mutation.isLoading}
       />
       <Stepper activeStep={2} />
@@ -145,7 +141,6 @@ const SecondStep = ({ type, onNext }: SecondStepProps) => {
 };
 
 const ThirdStep = ({ type }: Props) => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const passwordInput =
@@ -156,13 +151,15 @@ const ThirdStep = ({ type }: Props) => {
   return (
     <Stack width={1} spacing={2.5} maxWidth={500} position="relative">
       <Box>
-        <Typography variant="h5">{t(passwordInput)}</Typography>
-        <Typography variant="subtitle2" color="text.secondary">
-          {t('letsDoShopping')}
-        </Typography>
+        <TranslatedText variant="h5" textKey={passwordInput} />
+        <TranslatedText
+          variant="subtitle2"
+          color="text.secondary"
+          textKey="letsDoShopping"
+        />
       </Box>
       <Button
-        text={t('logIn')}
+        textKey="logIn"
         variant="contained"
         onClick={() => navigate('/')}
       />

@@ -15,7 +15,7 @@
   "hidePassword": "Ukryj hasło",
   "showPassword": "Pokaż hasło",
   "logIn": "Zaloguj",
-  "or": "Lub",
+  "orUpperCase": "LUB",
   "continue": "Kontynuuj",
   "signUp": "Załóż konto",
   "getStartedAbsolutelyFree": "Zacznij całkowicie za darmo",
@@ -56,5 +56,6 @@
   "signedOutSuccessfully": "Wylogowano pomyślnie",
   "invalidCredentials": "Nieprawidłowe dane uwierzytelniające",
   "addShop": "Dodaj sklep",
+  "save": "Zapisz",
   "eof": "eof"
 }

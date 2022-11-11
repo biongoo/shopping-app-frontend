@@ -34,10 +34,10 @@ export const Alert = () => {
         severity={alert.variant}
         action={
           <IconButton
-            title={t('close')}
             open={false}
             scale={0.7}
             color="inherit"
+            titleKey="close"
             onClick={hideAlert}
           >
             <CloseIcon fontSize="inherit" />

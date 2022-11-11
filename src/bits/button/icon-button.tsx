@@ -1,9 +1,10 @@
 import { Box, IconButton as IconButtonMui, Tooltip } from '@mui/material';
 import { MouseEventHandler, PropsWithChildren } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type Props = PropsWithChildren & {
-  title: string;
   open: boolean;
+  titleKey: string;
   scale?: number;
   color?: string;
   edge?: false | 'end' | 'start';
@@ -11,10 +12,12 @@ type Props = PropsWithChildren & {
 };
 
 export const IconButton = (props: Props) => {
+  const { t } = useTranslation();
+
   const size = props.scale ? props.scale * 44 : 44;
 
   return (
-    <Tooltip title={props.title} arrow>
+    <Tooltip title={t(props.titleKey)} arrow>
       <IconButtonMui
         onClick={props.onClick}
         edge={props.edge}

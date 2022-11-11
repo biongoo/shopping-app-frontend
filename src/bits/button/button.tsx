@@ -1,14 +1,17 @@
 import LoadingButton from '@mui/lab/LoadingButton';
 import { ComponentProps } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type Props = Pick<
   ComponentProps<typeof LoadingButton>,
   'onClick' | 'variant' | 'color' | 'type' | 'loading' | 'fullWidth'
 > & {
-  text: string;
+  textKey: string;
 };
 
 export const Button = (props: Props) => {
+  const { t } = useTranslation();
+
   return (
     <LoadingButton
       type={props.type}
@@ -18,7 +21,7 @@ export const Button = (props: Props) => {
       loading={props.loading}
       fullWidth={props.fullWidth}
     >
-      {props.text}
+      {t(props.textKey)}
     </LoadingButton>
   );
 };

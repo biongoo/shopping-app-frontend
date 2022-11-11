@@ -4,14 +4,14 @@ import { langs } from '~/i18n';
 import { LanguageIcon, LanguageOptions } from './components';
 
 export const Languages = () => {
-  const { i18n, t } = useTranslation();
+  const { i18n } = useTranslation();
   const actualLanguage = langs.find((x) => x.value === i18n.resolvedLanguage);
 
   return (
     <IconMenu
       iconProps={{
+        titleKey: 'language',
         children: <LanguageIcon src={actualLanguage?.icon ?? langs[0].icon} />,
-        title: t('language'),
       }}
       content={LanguageOptions}
     />

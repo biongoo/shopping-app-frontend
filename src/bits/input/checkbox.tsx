@@ -8,10 +8,11 @@ import {
   PathValue,
   UseControllerProps,
 } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 type CheckboxProps<T extends FieldValues> = {
   name: string;
-  label: string;
+  labelKey: string;
   control: Control<T>;
   defaultValue: PathValue<T, Path<T>>;
   sx?: SxProps;
@@ -21,7 +22,9 @@ type CheckboxProps<T extends FieldValues> = {
 type Props<T extends FieldValues> = UseControllerProps<T> & CheckboxProps<T>;
 
 export const Checkbox = <T extends FieldValues>(props: Props<T>) => {
-  const { name, label, control, defaultValue, sx, disabled } = props;
+  const { t } = useTranslation();
+
+  const { name, labelKey, control, defaultValue, sx, disabled } = props;
 
   return (
     <Controller
@@ -30,7 +33,7 @@ export const Checkbox = <T extends FieldValues>(props: Props<T>) => {
       defaultValue={defaultValue}
       render={({ field }) => (
         <FormControlLabel
-          label={label}
+          label={t(labelKey)}
           control={
             <CheckboxMui
               {...field}

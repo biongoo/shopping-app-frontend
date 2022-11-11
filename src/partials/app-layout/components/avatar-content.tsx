@@ -8,9 +8,8 @@ import {
 } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import jwtDecode from 'jwt-decode';
-import { useTranslation } from 'react-i18next';
 import { logOut as logOutApi } from '~/api';
-import { Button } from '~/bits';
+import { Button, TranslatedText } from '~/bits';
 import { useAuthStore } from '~/stores';
 import { Jwt } from '~/types';
 import { generateOnSuccess } from '~/utils';
@@ -20,7 +19,6 @@ type Props = {
 };
 
 export const AvatarContent = (props: Props) => {
-  const { t } = useTranslation();
   const logOut = useAuthStore((store) => store.logOut);
   const accessToken = useAuthStore((store) => store.accessToken);
 
@@ -60,14 +58,14 @@ export const AvatarContent = (props: Props) => {
           <ListItemIcon>
             <SettingsIcon sx={{ color: 'icon.primary' }} />
           </ListItemIcon>
-          <Typography ml={1}>{t('settings')}</Typography>
+          <TranslatedText ml={1} textKey="settings" />
         </MenuItem>
       </Box>
       <Divider />
       <Box sx={{ p: 2 }}>
         <Button
           fullWidth
-          text={t('logout')}
+          textKey="logout"
           onClick={handleLogout}
           loading={mutation.isLoading}
         />

@@ -8,7 +8,6 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useTranslation } from 'react-i18next';
 import { IconButton } from '~/bits';
 import { Languages } from '../../languages';
 import { Theme } from '../../theme';
@@ -22,14 +21,13 @@ type Props = {
 
 export const AppBar = (props: Props) => {
   const theme = useTheme();
-  const { t } = useTranslation();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   const menuButton = isSm && (
     <IconButton
       edge="start"
       open={props.isOpen}
-      title={t('openMenu')}
+      titleKey="openMenu"
       onClick={props.handleDrawerToggle}
     >
       <MenuIcon />

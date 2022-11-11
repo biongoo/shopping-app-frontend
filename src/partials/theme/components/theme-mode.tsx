@@ -1,11 +1,10 @@
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
-import { Button, darken, lighten, Stack, Typography } from '@mui/material';
-import { useTranslation } from 'react-i18next';
+import { Button, darken, lighten, Stack } from '@mui/material';
+import { TranslatedText } from '~/bits';
 import { useUiStore } from '~/stores';
 
 export const ThemeMode = () => {
-  const { t } = useTranslation();
   const [mode, setMode] = useUiStore((store) => [store.mode, store.setMode]);
 
   const lightColor =
@@ -16,7 +15,7 @@ export const ThemeMode = () => {
 
   return (
     <Stack spacing={1}>
-      <Typography>{t('mode')}</Typography>
+      <TranslatedText textKey="mode" />
       <Stack direction="row" justifyContent="space-between">
         <Button
           onClick={() => setMode('light')}

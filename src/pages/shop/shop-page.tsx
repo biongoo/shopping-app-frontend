@@ -9,19 +9,15 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  Typography,
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
 import { getShops } from '~/api';
-import { Breadcrumbs } from '~/bits';
+import { Breadcrumbs, TranslatedText } from '~/bits';
 import { AddShopModal } from './components';
 
 const breadcrumbs = [{ key: 'home' }, { key: 'shops' }];
 
 export const ShopPage = () => {
-  const { t } = useTranslation();
-
   const { data: res, isInitialLoading } = useQuery({
     queryKey: ['shops'],
     queryFn: getShops,
@@ -44,9 +40,7 @@ export const ShopPage = () => {
         mb={4}
       >
         <Box>
-          <Typography variant="h5" gutterBottom>
-            {t('shops')}
-          </Typography>
+          <TranslatedText variant="h5" gutterBottom textKey="shops" />
           <Breadcrumbs elements={breadcrumbs} />
         </Box>
         <AddShopModal />

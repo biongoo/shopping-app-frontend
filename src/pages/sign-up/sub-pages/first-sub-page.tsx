@@ -1,11 +1,10 @@
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { createForgotUser, createRegistrationUser } from '~/api';
-import { Button, IconButton, Input } from '~/bits';
+import { Button, IconButton, Input, TranslatedText } from '~/bits';
 import { generateOnError, generateOnSuccess } from '~/utils';
 import { Stepper } from '../components/stepper';
 
@@ -18,7 +17,6 @@ type FirstSubInputs = {
 };
 
 export const FirstSubPage = ({ type }: Props) => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const { control, handleSubmit, setError, reset } = useForm<FirstSubInputs>();
 
@@ -46,22 +44,20 @@ export const FirstSubPage = ({ type }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Box>
-          <Typography variant="h5">{t(title)}</Typography>
-          <Typography variant="subtitle2" color="text.secondary">
-            {t('enterYourDetails')}
-          </Typography>
+          <TranslatedText variant="h5" textKey={title} />
+          <TranslatedText
+            variant="subtitle2"
+            color="text.secondary"
+            textKey={'enterYourDetails'}
+          />
         </Box>
-        <IconButton
-          open={true}
-          title={t('goBack')}
-          onClick={() => navigate('/')}
-        >
+        <IconButton open={true} titleKey="goBack" onClick={() => navigate('/')}>
           <ArrowBackIosNewIcon />
         </IconButton>
       </Stack>
       <Input
         name="email"
-        label={t('email')}
+        labelKey="email"
         control={control}
         defaultValue=""
         patternErrorMessage="invalidEmail"
@@ -72,9 +68,9 @@ export const FirstSubPage = ({ type }: Props) => {
         }}
       />
       <Button
-        text={t('continue')}
-        variant="contained"
         type="submit"
+        textKey="continue"
+        variant="contained"
         loading={mutation.isLoading}
       />
       <Stepper activeStep={1} />

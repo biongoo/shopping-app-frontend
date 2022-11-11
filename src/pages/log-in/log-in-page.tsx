@@ -1,10 +1,9 @@
-import { Box, Divider, Link, Stack, Typography } from '@mui/material';
+import { Box, Divider, Link, Stack } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import { Link as LinkRR, useNavigate } from 'react-router-dom';
 import { logIn } from '~/api';
-import { Button, Checkbox, Input } from '~/bits';
+import { Button, Checkbox, Input, TranslatedText } from '~/bits';
 import { useAuthStore } from '~/stores';
 import { generateOnError, generateOnSuccess } from '~/utils';
 
@@ -15,7 +14,6 @@ type LoginInputs = {
 };
 
 export const LogInPage = () => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const logInStore = useAuthStore((state) => state.logIn);
   const { control, handleSubmit, reset, setError } = useForm<LoginInputs>();
@@ -47,16 +45,20 @@ export const LogInPage = () => {
       onSubmit={handleSubmit((x) => mutation.mutate(x))}
     >
       <Box>
-        <Typography variant="h5">
-          {t('signInTo', { appName: import.meta.env.VITE_APP_TITLE })}
-        </Typography>
-        <Typography variant="subtitle2" color="text.secondary">
-          {t('enterYourDetails')}
-        </Typography>
+        <TranslatedText
+          variant="h5"
+          textKey="signInTo"
+          options={{ appName: import.meta.env.VITE_APP_TITLE }}
+        />
+        <TranslatedText
+          variant="subtitle2"
+          color="text.secondary"
+          textKey="enterYourDetails"
+        />
       </Box>
       <Input
         name="email"
-        label={t('email')}
+        labelKey="email"
         control={control}
         defaultValue=""
         patternErrorMessage="invalidEmail"
@@ -68,7 +70,7 @@ export const LogInPage = () => {
       />
       <Input
         name="password"
-        label={t('password')}
+        labelKey="password"
         control={control}
         defaultValue=""
         type="password"
@@ -82,25 +84,25 @@ export const LogInPage = () => {
       >
         <Checkbox
           name="rememberMe"
-          label={t('rememberMe')}
+          labelKey="rememberMe"
           control={control}
           defaultValue={true}
         />
         <Link component={LinkRR} to="/forgot" color="inherit">
-          <Typography variant="body1">{t('forgotPasswordQuestion')}</Typography>
+          <TranslatedText variant="body1" textKey="forgotPasswordQuestion" />
         </Link>
       </Stack>
       <Button
-        text={t('logIn')}
-        variant="contained"
         type="submit"
+        textKey="logIn"
+        variant="contained"
         loading={mutation.isLoading}
       />
       <Divider>
-        <Typography variant="body2">{t('or').toLocaleUpperCase()}</Typography>
+        <TranslatedText variant="body2" textKey="orUpperCase" />
       </Divider>
       <Button
-        text={t('signUp')}
+        textKey="signUp"
         variant="contained"
         onClick={() => navigate('sign-up')}
       />

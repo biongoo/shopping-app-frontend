@@ -16,7 +16,7 @@ import { IconButton } from '../button';
 
 type InputProps<T extends FieldValues> = {
   name: string;
-  label: string;
+  labelKey: string;
   control: Control<T>;
   defaultValue: PathValue<T, Path<T>>;
   sx?: SxProps;
@@ -31,8 +31,8 @@ type Props<T extends FieldValues> = UseControllerProps<T> & InputProps<T>;
 export const Input = <T extends FieldValues>(props: Props<T>) => {
   const {
     name,
-    label,
     control,
+    labelKey,
     defaultValue,
     sx,
     type,
@@ -85,7 +85,7 @@ export const Input = <T extends FieldValues>(props: Props<T>) => {
           {...field}
           sx={sx}
           id={name}
-          label={label}
+          label={t(labelKey)}
           disabled={disabled}
           type={isPassword && !isVisible ? 'password' : undefined}
           error={Boolean(error)}
@@ -99,7 +99,7 @@ export const Input = <T extends FieldValues>(props: Props<T>) => {
                     scale={0.85}
                     open={false}
                     onClick={() => setIsVisible((x) => !x)}
-                    title={isVisible ? t('hidePassword') : t('showPassword')}
+                    titleKey={isVisible ? 'hidePassword' : 'showPassword'}
                   >
                     {isVisible ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
