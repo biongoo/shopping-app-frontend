@@ -4,6 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import './i18n';
+import './main.css';
 import { router } from './router';
 import { Theme } from './theme';
 
