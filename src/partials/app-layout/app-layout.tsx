@@ -1,29 +1,32 @@
-import { Box, Toolbar } from '@mui/material';
+import { Box, Stack, Toolbar } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import { Drawer } from './components';
 
 const drawerWidth = 230;
 
 export const AppLayout = () => (
-  <Box sx={{ display: 'flex' }}>
+  <Stack direction="row">
     <Drawer drawerWidth={drawerWidth} />
-    <Box
+    <Stack
       component="main"
+      alignItems="center"
       sx={{
-        flexGrow: 1,
+        height: '100vh',
+        minWidth: '270px',
         width: { xs: '100%', sm: `calc(100% - ${drawerWidth}px)` },
       }}
     >
       <Toolbar />
       <Box
         sx={{
-          p: { xs: 2, md: 3 },
+          overflow: 'auto',
+          width: '100%',
           maxWidth: 900,
-          margin: 'auto',
+          p: { xs: 2, md: 3 },
         }}
       >
         <Outlet />
       </Box>
-    </Box>
-  </Box>
+    </Stack>
+  </Stack>
 );

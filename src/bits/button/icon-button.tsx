@@ -7,6 +7,7 @@ type Props = PropsWithChildren & {
   titleKey: string;
   scale?: number;
   color?: string;
+  disabled?: boolean;
   edge?: false | 'end' | 'start';
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
@@ -19,8 +20,9 @@ export const IconButton = (props: Props) => {
   return (
     <Tooltip title={t(props.titleKey)} arrow>
       <IconButtonMui
-        onClick={props.onClick}
         edge={props.edge}
+        onClick={props.onClick}
+        disabled={props.disabled}
         sx={{
           padding: 0,
           width: size,

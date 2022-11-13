@@ -46,7 +46,7 @@ const getDesignTokens = (mode: PaletteMode, color: Color): ThemeOptions => ({
             primary: '#edf0f2',
           },
           icon: {
-            primary: '#6d7b87',
+            primary: '#8b959e',
           },
           background: {
             default: '#161c24',

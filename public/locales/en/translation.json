@@ -61,5 +61,10 @@
   "successfullyAdded": "Successfully added",
   "invalidNumber": "The value should be a number",
   "invalidString": "The value should be a text",
+  "existingName": "An item with the given name already exists",
+  "reorder": "Reorder",
+  "search": "Search",
+  "notExistingReorderItem": "The order was not saved due to data mismatch",
+  "successfullyReordered": "Successfully reordered",
   "eof": "eof"
 }

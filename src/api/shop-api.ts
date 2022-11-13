@@ -14,6 +14,13 @@ type DeleteShopDto = {
   shopId: number;
 };
 
+type PostShopsOrderDto = {
+  shops: Array<{
+    id: number;
+    orderNumber: number;
+  }>;
+};
+
 export const getShops = () =>
   connectApi<Shop[]>({
     endpoint: 'shop',
@@ -37,5 +44,12 @@ export const deleteShop = (body: DeleteShopDto) =>
   connectApi({
     endpoint: 'shop',
     method: 'DELETE',
+    body,
+  });
+
+export const reorderShops = (body: PostShopsOrderDto) =>
+  connectApi({
+    endpoint: 'shop/reorder',
+    method: 'POST',
     body,
   });

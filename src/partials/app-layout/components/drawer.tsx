@@ -2,7 +2,6 @@ import {
   Box,
   Drawer as DrawerMui,
   emphasize,
-  SwipeableDrawer,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
@@ -24,11 +23,10 @@ export const Drawer = ({ drawerWidth }: Props) => {
   };
 
   const drawer = isSm ? (
-    <SwipeableDrawer
+    <DrawerMui
       variant="temporary"
       open={mobileOpen}
       onClose={handleDrawerToggle}
-      onOpen={handleDrawerToggle}
       ModalProps={{
         keepMounted: true,
       }}
@@ -40,8 +38,8 @@ export const Drawer = ({ drawerWidth }: Props) => {
         },
       }}
     >
-      <DrawerContent />
-    </SwipeableDrawer>
+      <DrawerContent onClick={handleDrawerToggle} />
+    </DrawerMui>
   ) : (
     <DrawerMui
       variant="permanent"

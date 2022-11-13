@@ -13,6 +13,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 
+type Props = {
+  onClick?: () => void;
+};
+
 const pages = [
   {
     key: 'home',
@@ -26,7 +30,7 @@ const pages = [
   },
 ] as const;
 
-export const DrawerContent = () => {
+export const DrawerContent = (props: Props) => {
   const { t } = useTranslation();
 
   const listContent = pages.map((page) => (
@@ -34,6 +38,7 @@ export const DrawerContent = () => {
       key={page.key}
       disablePadding
       component={NavLink}
+      onClick={props.onClick}
       to={page.path}
       sx={{
         color: 'text.primary',

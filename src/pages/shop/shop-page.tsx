@@ -1,27 +1,38 @@
-import {
-  Box,
-  CircularProgress,
-  emphasize,
-  Paper,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import { getShops } from '~/api';
+import { arrayMove } from '@dnd-kit/sortable';
+import { Box, CircularProgress, Stack } from '@mui/material';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { getShops, reorderShops } from '~/api';
 import { Breadcrumbs, TranslatedText } from '~/bits';
+import { Table } from '~/bits/table';
+import { Shop } from '~/types';
+import { generateOnError, generateOnSuccess } from '~/utils';
 import { AddShopModal } from './components';
 
+type Id = string | number;
+
 const breadcrumbs = [{ key: 'home' }, { key: 'shops' }];
+const headers = [
+  { labelKey: 'orderNumber', isOrdering: true },
+  { labelKey: 'name', isOrdering: true },
+];
 
 export const ShopPage = () => {
-  const { data: res, isInitialLoading } = useQuery({
+  const [reorderedShops, setReorderedShops] = useState<Shop[] | null>();
+  const isReordering = Boolean(reorderedShops);
+
+  const { data, isInitialLoading, refetch } = useQuery({
     queryKey: ['shops'],
     queryFn: getShops,
+    enabled: !isReordering,
+  });
+
+  const mutation = useMutation({
+    mutationFn: reorderShops,
+    onSuccess: generateOnSuccess({
+      message: 'successfullyReordered',
+    }),
+    onError: generateOnError(),
   });
 
   if (isInitialLoading) {
@@ -32,8 +43,47 @@ export const ShopPage = () => {
     );
   }
 
+  const handleStartReorder = () => {
+    setReorderedShops(data?.data);
+  };
+
+  const handleDrag = (firstId: Id, secondId: Id) => {
+    setReorderedShops((shops) => {
+      if (!shops) {
+        return;
+      }
+
+      const activeIndex = shops.findIndex((x) => x.id === firstId);
+      const overIndex = shops.findIndex((x) => x.id === secondId);
+
+      return arrayMove(shops, activeIndex, overIndex).map((x, i) => ({
+        ...x,
+        orderNumber: i + 1,
+      }));
+    });
+  };
+
+  const handleEndReorder = async () => {
+    if (!reorderedShops || mutation.isLoading) {
+      return;
+    }
+
+    const preparedData = reorderedShops.map((x) => ({
+      id: x.id,
+      orderNumber: x.orderNumber,
+    }));
+
+    const res = await mutation.mutateAsync({ shops: preparedData });
+
+    if (res.status === 'ok') {
+      await refetch();
+    }
+
+    setReorderedShops(null);
+  };
+
   return (
-    <Box>
+    <Stack sx={{ height: '100%' }}>
       <Stack
         direction="row"
         alignItems="center"
@@ -44,38 +94,18 @@ export const ShopPage = () => {
           <TranslatedText variant="h5" gutterBottom textKey="shops" />
           <Breadcrumbs elements={breadcrumbs} />
         </Box>
-        <AddShopModal />
+        <AddShopModal isReordering={isReordering} />
       </Stack>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead
-            sx={{
-              backgroundColor: (theme) =>
-                emphasize(theme.palette.background.paper, 0.1),
-            }}
-          >
-            <TableRow>
-              <TableCell>#</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell align="right">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {res?.data.map((row) => (
-              <TableRow
-                key={row.name}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {row.orderNumber}
-                </TableCell>
-                <TableCell>{row.name}</TableCell>
-                <TableCell align="right">{row.name}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+      <Table
+        id="users"
+        headers={headers}
+        isReordering={isReordering}
+        isFetchingReorder={mutation.isLoading}
+        data={reorderedShops ?? data?.data ?? []}
+        onDrag={handleDrag}
+        onStartReorder={handleStartReorder}
+        onEndReorder={handleEndReorder}
+      />
+    </Stack>
   );
 };

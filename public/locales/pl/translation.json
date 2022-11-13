@@ -61,5 +61,10 @@
   "successfullyAdded": "Pomyślnie dodano",
   "invalidNumber": "Wartość powinna być liczbą",
   "invalidString": "Wartość powinna być tekstem",
+  "existingName": "Element o podanej nazwie już istnieje",
+  "reorder": "Zmień kolejność",
+  "search": "Szukaj",
+  "notExistingReorderItem": "Kolejność nie została zapisana z powodu niezgodności danych",
+  "successfullyReordered": "Pomyślnie zmieniono kolejność",
   "eof": "eof"
 }

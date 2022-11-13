@@ -15,7 +15,13 @@ export class ApiError {
 
   constructor(error?: string, inputErrors?: string[]) {
     if (error) {
-      this.mainError = new Error(error);
+      const src = error.split(':');
+
+      if (src.length === 1) {
+        this.mainError = new Error(error);
+      } else {
+        this.inputErrors.push(new Error(src?.[0], src?.[1]));
+      }
     }
 
     if (inputErrors) {

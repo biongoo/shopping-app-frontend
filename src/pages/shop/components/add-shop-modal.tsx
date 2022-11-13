@@ -7,11 +7,15 @@ import { addShop } from '~/api';
 import { FormModal, IconButton, Input } from '~/bits';
 import { generateOnError, generateOnSuccess } from '~/utils';
 
+type Props = {
+  isReordering: boolean;
+};
+
 type AddShopInputs = {
   name: string;
 };
 
-export const AddShopModal = () => {
+export const AddShopModal = (props: Props) => {
   const queryClient = useQueryClient();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const { control, handleSubmit, reset, setError } = useForm<AddShopInputs>();
@@ -34,6 +38,7 @@ export const AddShopModal = () => {
     <>
       <IconButton
         open={isOpenAddModal}
+        disabled={props.isReordering}
         titleKey="addShop"
         onClick={() => setIsOpenAddModal(true)}
       >
