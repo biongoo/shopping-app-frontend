@@ -17,6 +17,20 @@ const headers = [
   { labelKey: 'name', isOrdering: true },
 ];
 
+const hasOrderChanged = (reorderedShops: Shop[], originalShops?: Shop[]) => {
+  for (const shop of reorderedShops) {
+    const originalOrder = originalShops?.find(
+      (x) => x.id === shop.id
+    )?.orderNumber;
+
+    if (originalOrder != shop.orderNumber) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
 export const ShopPage = () => {
   const [reorderedShops, setReorderedShops] = useState<Shop[] | null>();
   const isReordering = Boolean(reorderedShops);
@@ -65,6 +79,11 @@ export const ShopPage = () => {
 
   const handleEndReorder = async () => {
     if (!reorderedShops || mutation.isLoading) {
+      return;
+    }
+
+    if (!hasOrderChanged(reorderedShops, data?.data)) {
+      setReorderedShops(null);
       return;
     }
 
