@@ -8,6 +8,7 @@ type Props = PropsWithChildren & {
   scale?: number;
   color?: string;
   disabled?: boolean;
+  placement?: 'left' | 'right';
   edge?: false | 'end' | 'start';
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
@@ -18,7 +19,7 @@ export const IconButton = (props: Props) => {
   const size = props.scale ? props.scale * 44 : 44;
 
   return (
-    <Tooltip title={t(props.titleKey)} arrow>
+    <Tooltip title={t(props.titleKey)} arrow placement={props.placement}>
       <IconButtonMui
         edge={props.edge}
         onClick={props.onClick}

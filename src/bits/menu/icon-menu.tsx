@@ -1,5 +1,5 @@
 import { Menu } from '@mui/material';
-import { ComponentProps, ReactElement, useState } from 'react';
+import { ComponentProps, MouseEvent, ReactElement, useState } from 'react';
 import { IconButton } from '../button/icon-button';
 
 type Props = {
@@ -11,7 +11,7 @@ export const IconMenu = (props: Props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isOpen = Boolean(anchorEl);
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 

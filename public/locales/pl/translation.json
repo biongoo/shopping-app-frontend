@@ -66,5 +66,9 @@
   "search": "Szukaj",
   "notExistingReorderItem": "Kolejność nie została zapisana z powodu niezgodności danych",
   "successfullyReordered": "Pomyślnie zmieniono kolejność",
+  "sections": "Działy",
+  "edit": "Edytuj",
+  "options": "Opcje",
+  "delete": "Usuń",
   "eof": "eof"
 }

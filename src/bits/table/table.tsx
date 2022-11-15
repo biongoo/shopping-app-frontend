@@ -8,24 +8,24 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import {
   restrictToFirstScrollableAncestor,
   restrictToVerticalAxis,
   restrictToWindowEdges,
 } from '@dnd-kit/modifiers';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import {
   Paper,
   Table as TableMui,
   TableBody,
   TableContainer,
 } from '@mui/material';
+import { Stack } from '@mui/system';
 import { useState } from 'react';
 import { Header, Row, Toolbar } from './components';
 import { Data, HeadCell, Order } from './table-types';
-import { Stack } from '@mui/system';
 
 type Props = {
   id: string;
@@ -33,6 +33,8 @@ type Props = {
   headers: HeadCell[];
   isReordering: boolean;
   isFetchingReorder: boolean;
+  elementShowingActions?: number;
+  renderActions?: (id: number) => JSX.Element;
   onDrag: (firstId: string | number, secondId: string | number) => void;
   onStartReorder: () => void;
   onEndReorder: () => void;
@@ -69,7 +71,7 @@ export const Table = (props: Props) => {
   const sensors = useSensors(
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 150,
+        delay: 200,
         tolerance: 5,
       },
     }),
@@ -139,6 +141,8 @@ export const Table = (props: Props) => {
       data={data}
       id={props.id}
       isReordering={props.isReordering}
+      isShowingActions={props.elementShowingActions === data.id}
+      renderActions={props.renderActions}
     />
   ));
 
@@ -176,6 +180,7 @@ export const Table = (props: Props) => {
               orderBy={orderBy}
               headers={props.headers}
               isReordering={props.isReordering}
+              areActions={Boolean(props.renderActions)}
               onRequestSort={handleRequestSort}
             />
             <TableBody>

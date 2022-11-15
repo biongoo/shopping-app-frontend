@@ -66,5 +66,9 @@
   "search": "Search",
   "notExistingReorderItem": "The order was not saved due to data mismatch",
   "successfullyReordered": "Successfully reordered",
+  "sections": "Sections",
+  "edit": "Edit",
+  "options": "Options",
+  "delete": "Delete",
   "eof": "eof"
 }

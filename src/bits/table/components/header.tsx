@@ -13,6 +13,7 @@ type Props = {
   order: Order;
   orderBy: string;
   headers: HeadCell[];
+  areActions: boolean;
   isReordering: boolean;
   onRequestSort: (property: keyof Data) => void;
 };
@@ -42,6 +43,7 @@ export const Header = (props: Props) => {
     );
   });
 
+  const actionsCell = props.areActions && <TableCell></TableCell>;
   const reorderCell = props.isReordering && <TableCell></TableCell>;
 
   return (
@@ -54,7 +56,7 @@ export const Header = (props: Props) => {
       <TableRow>
         {reorderCell}
         {cells}
-        <TableCell></TableCell>
+        {actionsCell}
       </TableRow>
     </TableHead>
   );
