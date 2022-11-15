@@ -21,7 +21,7 @@ export const Alert = () => {
     <Snackbar
       open={alert.open}
       autoHideDuration={alert.time}
-      sx={{ maxWidth: { sm: 500, md: 600 } }}
+      sx={{ maxWidth: { sm: 500, md: 600 }, opacity: 0.8 }}
       anchorOrigin={{
         horizontal: 'right',
         vertical: 'bottom',
@@ -29,7 +29,7 @@ export const Alert = () => {
       onClose={hideAlert}
     >
       <AlertMui
-        variant="outlined"
+        variant="filled"
         sx={{ width: '100%' }}
         severity={alert.variant}
         action={
