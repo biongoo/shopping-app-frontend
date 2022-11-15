@@ -62,35 +62,39 @@ export const connectApi = async <Res = unknown, Req = unknown>(
 const checkTokens = async () => {
   const { accessToken, refreshToken } = useAuthStore.getState();
 
-  if (!accessToken || !refreshToken) {
-    return logOutFn();
+  if (!refreshToken || jwtDecode<Jwt>(refreshToken).exp * 1000 <= Date.now()) {
+    logOutFn();
   }
 
-  const refreshExp = jwtDecode<Jwt>(refreshToken).exp;
-  if (refreshExp * 1000 <= Date.now()) {
-    return logOutFn();
-  }
-
-  const accessExp = jwtDecode<Jwt>(accessToken).exp;
-  if ((accessExp - 60) * 1000 <= Date.now() && !(await tryRefreshToken())) {
-    return logOutFn();
+  if (
+    !accessToken ||
+    (jwtDecode<Jwt>(accessToken).exp - 10) * 1000 <= Date.now()
+  ) {
+    await tryRefreshToken();
   }
 };
 
 const tryRefreshToken = async () => {
+  if (useAuthStore.getState().isRefreshing) {
+    throw new ApiError('refreshingNow');
+  }
+
+  useAuthStore.setState({ isRefreshing: true });
+
   try {
     const response = await refreshTokens();
 
-    if (!response) {
-      return false;
+    if (response.status != 'ok' || !useAuthStore.getState().refreshToken) {
+      throw new Error('invalidCredentials');
     }
 
     const { accessToken, refreshToken } = response.data;
-    useAuthStore.getState().refreshTokens(accessToken, refreshToken);
 
-    return true;
+    useAuthStore.getState().refreshTokens(accessToken, refreshToken);
+    useAuthStore.setState({ isRefreshing: false });
   } catch {
-    return false;
+    useAuthStore.setState({ isRefreshing: false });
+    logOutFn();
   }
 };
 

@@ -4,6 +4,7 @@ import { queryClient } from '~/main';
 type Auth = {
   accessToken?: string;
   refreshToken?: string;
+  isRefreshing: boolean;
   logIn: (
     type: 'local' | 'session',
     accessToken: string,
@@ -35,6 +36,8 @@ export const useAuthStore = create<Auth>()((set) => ({
   accessToken: getStorage('accessToken'),
 
   refreshToken: getStorage('refreshToken'),
+
+  isRefreshing: false,
 
   logIn: (
     type: 'local' | 'session',

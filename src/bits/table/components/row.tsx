@@ -57,7 +57,7 @@ export const Row = (props: Props) => {
     );
 
     const actions = props.renderActions && (
-      <TableCell align="right" sx={{ p: 0, pr: 2 }}>
+      <TableCell align="right" sx={{ p: 0, pr: 1 }}>
         {props.renderActions(id)}
       </TableCell>
     );
