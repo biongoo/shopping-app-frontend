@@ -1,1 +1,2 @@
-export * from './add-shop-modal';
+export * from './add-shop';
+export * from './modify-shop';

@@ -70,5 +70,11 @@
   "edit": "Edit",
   "options": "Options",
   "delete": "Delete",
+  "successfullyEdited": "Successfully edited",
+  "successfullyDeleted": "Successfully deleted",
+  "editShop": "Edit shop",
+  "deleteShop": "Delete shop",
+  "areYouSureDelete": "Are you sure you want to delete \"{{item}}\"?",
+  "yes": "Yes",
   "eof": "eof"
 }

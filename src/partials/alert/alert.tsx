@@ -21,7 +21,7 @@ export const Alert = () => {
     <Snackbar
       open={alert.open}
       autoHideDuration={alert.time}
-      sx={{ maxWidth: { sm: 500, md: 600 }, opacity: 0.8 }}
+      sx={{ maxWidth: { sm: 500, md: 600 }, opacity: 0.85 }}
       anchorOrigin={{
         horizontal: 'right',
         vertical: 'bottom',

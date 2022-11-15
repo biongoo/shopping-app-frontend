@@ -15,7 +15,7 @@ type AddShopInputs = {
   name: string;
 };
 
-export const AddShopModal = (props: Props) => {
+export const AddShop = (props: Props) => {
   const queryClient = useQueryClient();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const { control, handleSubmit, reset, setError } = useForm<AddShopInputs>();

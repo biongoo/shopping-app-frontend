@@ -70,5 +70,11 @@
   "edit": "Edytuj",
   "options": "Opcje",
   "delete": "Usuń",
+  "successfullyEdited": "Pomyślnie edytowano",
+  "successfullyDeleted": "Pomyślnie usunięto",
+  "editShop": "Edytuj sklep",
+  "deleteShop": "Usuń sklep",
+  "areYouSureDelete": "Czy na pewno chcesz usunąć \"{{item}}\"?",
+  "yes": "Tak",
   "eof": "eof"
 }

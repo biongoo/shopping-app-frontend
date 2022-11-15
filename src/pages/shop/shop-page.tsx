@@ -1,31 +1,19 @@
-import { arrayMove } from '@dnd-kit/sortable';
-import AddBusinessIcon from '@mui/icons-material/AddBusiness';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import {
-  Box,
-  CircularProgress,
-  ListItemIcon,
-  MenuItem,
-  Popover,
-  Stack,
-} from '@mui/material';
+import { Box, CircularProgress, Stack } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { getShops, reorderShops } from '~/api';
 import { Breadcrumbs, IconButton, Table, TranslatedText } from '~/bits';
 import { Shop } from '~/types';
-import { generateOnError, generateOnSuccess } from '~/utils';
-import { AddShopModal } from './components';
+import {
+  changeOrder,
+  generateOnError,
+  generateOnSuccess,
+  hasOrderChanged,
+} from '~/utils';
+import { AddShop, ModifyData, ModifyShop } from './components';
 
 type Id = string | number;
-
-type DetailsPopover = {
-  id: number;
-  element: HTMLElement;
-} | null;
 
 const breadcrumbs = [{ key: 'home' }, { key: 'shops' }];
 const headers = [
@@ -33,24 +21,9 @@ const headers = [
   { labelKey: 'name', isOrdering: true },
 ];
 
-const hasOrderChanged = (reorderedShops: Shop[], originalShops?: Shop[]) => {
-  for (const shop of reorderedShops) {
-    const originalOrder = originalShops?.find(
-      (x) => x.id === shop.id
-    )?.orderNumber;
-
-    if (originalOrder != shop.orderNumber) {
-      return true;
-    }
-  }
-
-  return false;
-};
-
 export const ShopPage = () => {
-  const navigate = useNavigate();
+  const [modifyData, setModifyData] = useState<ModifyData>(null);
   const [reorderedShops, setReorderedShops] = useState<Shop[] | null>();
-  const [detailsPopover, setDetailsPopover] = useState<DetailsPopover>(null);
 
   const isReordering = Boolean(reorderedShops);
 
@@ -59,6 +32,8 @@ export const ShopPage = () => {
     queryFn: getShops,
     enabled: !isReordering,
   });
+
+  const shops = data?.data;
 
   const mutation = useMutation({
     mutationFn: reorderShops,
@@ -77,23 +52,11 @@ export const ShopPage = () => {
   }
 
   const handleStartReorder = () => {
-    setReorderedShops(data?.data);
+    setReorderedShops(shops);
   };
 
   const handleDrag = (firstId: Id, secondId: Id) => {
-    setReorderedShops((shops) => {
-      if (!shops) {
-        return;
-      }
-
-      const activeIndex = shops.findIndex((x) => x.id === firstId);
-      const overIndex = shops.findIndex((x) => x.id === secondId);
-
-      return arrayMove(shops, activeIndex, overIndex).map((x, i) => ({
-        ...x,
-        orderNumber: i + 1,
-      }));
-    });
+    setReorderedShops(changeOrder(firstId, secondId));
   };
 
   const handleEndReorder = async () => {
@@ -101,7 +64,7 @@ export const ShopPage = () => {
       return;
     }
 
-    if (!hasOrderChanged(reorderedShops, data?.data)) {
+    if (!hasOrderChanged(reorderedShops, shops)) {
       setReorderedShops(null);
       return;
     }
@@ -121,16 +84,16 @@ export const ShopPage = () => {
   };
 
   const handleOpenMenu = (currentTarget: HTMLElement, id: number) => {
-    setDetailsPopover({ element: currentTarget, id });
+    setModifyData({ element: currentTarget, id });
   };
 
   const handleCloseMenu = () => {
-    setDetailsPopover(null);
+    setModifyData(null);
   };
 
   const actions = (id: number) => (
     <IconButton
-      open={Boolean(detailsPopover)}
+      open={modifyData?.id === id}
       titleKey="options"
       scale={0.9}
       placement="left"
@@ -154,65 +117,26 @@ export const ShopPage = () => {
             <TranslatedText variant="h5" gutterBottom textKey="shops" />
             <Breadcrumbs elements={breadcrumbs} />
           </Box>
-          <AddShopModal isReordering={isReordering} />
+          <AddShop isReordering={isReordering} />
         </Stack>
         <Table
           id="users"
           headers={headers}
           isReordering={isReordering}
           isFetchingReorder={mutation.isLoading}
-          data={reorderedShops ?? data?.data ?? []}
-          elementShowingActions={detailsPopover?.id}
+          data={reorderedShops ?? shops ?? []}
+          elementShowingActions={modifyData?.id}
           renderActions={actions}
           onDrag={handleDrag}
           onStartReorder={handleStartReorder}
           onEndReorder={handleEndReorder}
         />
       </Stack>
-      <Popover
-        open={Boolean(detailsPopover)}
-        anchorEl={detailsPopover?.element}
+      <ModifyShop
+        data={modifyData}
+        shops={shops ?? []}
         onClose={handleCloseMenu}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        PaperProps={{
-          sx: {
-            p: 1,
-            '& .MuiMenuItem-root': {
-              px: 1,
-              typography: 'body2',
-              borderRadius: 0.75,
-            },
-          },
-        }}
-      >
-        <MenuItem onClick={() => navigate(`/app/shop/${detailsPopover?.id}`)}>
-          <ListItemIcon>
-            <AddBusinessIcon />
-          </ListItemIcon>
-          <TranslatedText ml={1} textKey="sections" />
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            /* */
-          }}
-        >
-          <ListItemIcon>
-            <EditIcon />
-          </ListItemIcon>
-          <TranslatedText ml={1} textKey="edit" />
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            /* */
-          }}
-        >
-          <ListItemIcon>
-            <DeleteIcon />
-          </ListItemIcon>
-          <TranslatedText ml={1} textKey="delete" />
-        </MenuItem>
-      </Popover>
+      />
     </>
   );
 };
