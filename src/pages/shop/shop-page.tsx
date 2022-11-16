@@ -117,7 +117,7 @@ export const ShopPage = () => {
             <TranslatedText variant="h5" gutterBottom textKey="shops" />
             <Breadcrumbs elements={breadcrumbs} />
           </Box>
-          <AddShop isReordering={isReordering} />
+          <AddShop isReordering={isReordering} shops={shops ?? []} />
         </Stack>
         <Table
           id="users"

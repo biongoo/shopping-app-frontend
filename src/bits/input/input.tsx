@@ -22,6 +22,7 @@ type InputProps<T extends FieldValues> = {
   sx?: SxProps;
   type?: 'password';
   disabled?: boolean;
+  fullWidth?: boolean;
   onlyNumbers?: boolean;
   patternErrorMessage?: string;
 };
@@ -38,6 +39,7 @@ export const Input = <T extends FieldValues>(props: Props<T>) => {
     type,
     rules,
     disabled,
+    fullWidth,
     onlyNumbers,
     patternErrorMessage,
   } = props;
@@ -87,6 +89,7 @@ export const Input = <T extends FieldValues>(props: Props<T>) => {
           id={name}
           label={t(labelKey)}
           disabled={disabled}
+          fullWidth={fullWidth}
           type={isPassword && !isVisible ? 'password' : undefined}
           error={Boolean(error)}
           helperText={error && getErrorText(error)}

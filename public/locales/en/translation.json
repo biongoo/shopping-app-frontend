@@ -76,5 +76,10 @@
   "deleteShop": "Delete shop",
   "areYouSureDelete": "Are you sure you want to delete \"{{item}}\"?",
   "yes": "Yes",
+  "atTheTop": "At the top",
+  "atTheEnd": "At the end",
+  "afterItem": "After item",
+  "position": "Position",
+  "shop": "Shop",
   "eof": "eof"
 }
