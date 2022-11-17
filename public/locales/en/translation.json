@@ -77,7 +77,7 @@
   "areYouSureDelete": "Are you sure you want to delete \"{{item}}\"?",
   "yes": "Yes",
   "atTheTop": "At the top",
-  "atTheEnd": "At the end",
+  "atTheBottom": "At the bottom",
   "afterItem": "After item",
   "position": "Position",
   "shop": "Shop",

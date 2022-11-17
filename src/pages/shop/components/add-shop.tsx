@@ -8,8 +8,8 @@ import {
   FormModal,
   IconButton,
   Input,
-  Select,
   ToggleButtonGroup,
+  Autocomplete,
 } from '~/bits';
 import { OrderType } from '~/enums';
 import { Shop } from '~/types';
@@ -23,7 +23,11 @@ type Props = {
 type AddShopInputs = {
   name: string;
   orderType: OrderType;
-  afterShopId: number;
+  afterShop: {
+    value: number;
+    label: string;
+    shouldBeTranslated: boolean;
+  };
 };
 
 export const AddShop = (props: Props) => {
@@ -48,24 +52,17 @@ export const AddShop = (props: Props) => {
 
   const orderType = watch('orderType');
 
-  const xd = [
-    ...props.shops,
-    ...props.shops,
-    ...props.shops,
-    ...props.shops,
-    ...props.shops,
-    ...props.shops,
-    ...props.shops,
-  ];
-
   const additionalInput =
     orderType === OrderType.afterItem ? (
-      <Select
-        name="afterShopId"
-        labelKey="shop"
+      <Autocomplete
+        name="afterShop"
         control={control}
-        defaultValue=""
-        options={xd.map((x) => ({ value: x.id, itemName: x.name }))}
+        titleKey="shop"
+        options={props.shops.map((x) => ({
+          value: x.id,
+          label: x.name,
+          shouldBeTranslated: false,
+        }))}
       />
     ) : null;
 
@@ -93,16 +90,16 @@ export const AddShop = (props: Props) => {
             labelKey="name"
             control={control}
             defaultValue=""
-            fullWidth
           />
           <ToggleButtonGroup
+            fullWidth
             name="orderType"
             titleKey="position"
             control={control}
-            defaultValue={OrderType.atTheEnd}
+            defaultValue={OrderType.atTheBottom}
             options={[
               OrderType.atTheTop,
-              OrderType.atTheEnd,
+              OrderType.atTheBottom,
               OrderType.afterItem,
             ]}
           />
