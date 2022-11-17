@@ -22,6 +22,7 @@
     "unicorn/no-null": "off",
     "unicorn/no-keyword-prefix": "off",
     "react/react-in-jsx-scope": "off",
+    "unicorn/no-useless-undefined": "off",
     "prettier/prettier": [
       "error",
       {

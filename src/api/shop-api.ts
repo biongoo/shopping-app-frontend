@@ -1,8 +1,11 @@
+import { OrderType } from '~/enums';
 import { Shop } from '~/types';
 import { connectApi } from './connect-api';
 
 type PostShopDto = {
   name: string;
+  orderType: OrderType;
+  orderAfterId?: number;
 };
 
 type PatchShopDto = {

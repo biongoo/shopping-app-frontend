@@ -61,6 +61,7 @@
   "successfullyAdded": "Pomyślnie dodano",
   "invalidNumber": "Wartość powinna być liczbą",
   "invalidString": "Wartość powinna być tekstem",
+  "invalidValue": "Wartość jest nieprawidłowa",
   "existingName": "Element o podanej nazwie już istnieje",
   "reorder": "Zmień kolejność",
   "search": "Szukaj",

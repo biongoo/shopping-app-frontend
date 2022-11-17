@@ -61,6 +61,7 @@
   "successfullyAdded": "Successfully added",
   "invalidNumber": "The value should be a number",
   "invalidString": "The value should be a text",
+  "invalidValue": "The value is invalid",
   "existingName": "An item with the given name already exists",
   "reorder": "Reorder",
   "search": "Search",

@@ -21,30 +21,38 @@ import {
   Control,
   Controller,
   FieldValues,
+  Path,
+  PathValue,
   UseControllerProps,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-type Option<K> = {
-  value: K;
+type PropOption<T extends FieldValues> = {
+  value: PathValue<T, Path<T>>;
   label: string;
   shouldBeTranslated: boolean;
 };
 
-type RenderOptions<K> = {
+type Option<T extends FieldValues> = {
+  value: PathValue<T, Path<T>>;
+  label: string;
+};
+
+type RenderOptions<T extends FieldValues> = {
   props: React.HTMLAttributes<HTMLLIElement>;
-  option: Option<K>;
+  option: Option<T>;
 }[];
 
-type AutocompleteProps<K, T extends FieldValues> = {
+type AutocompleteProps<T extends FieldValues> = {
   name: string;
   titleKey: string;
   control: Control<T>;
-  options: Array<Option<K>>;
+  options: Array<PropOption<T>>;
+  required?: boolean;
 };
 
-type Props<K, T extends FieldValues> = UseControllerProps<T> &
-  AutocompleteProps<K, T>;
+type Props<T extends FieldValues> = UseControllerProps<T> &
+  AutocompleteProps<T>;
 
 const LISTBOX_PADDING = 8;
 
@@ -57,9 +65,9 @@ const OuterElementType = forwardRef<HTMLDivElement>(function OuterElementType(
   return <div ref={ref} {...props} {...outerProps} />;
 });
 
-const Row = <K,>(props: ListChildComponentProps<RenderOptions<K>>) => {
-  const { t } = useTranslation();
-
+const Row = <T extends FieldValues>(
+  props: ListChildComponentProps<RenderOptions<T>>
+) => {
   const { data, index, style } = props;
   const dataSet = data[index];
 
@@ -68,18 +76,14 @@ const Row = <K,>(props: ListChildComponentProps<RenderOptions<K>>) => {
     top: (style.top as number) + LISTBOX_PADDING,
   };
 
-  const label = dataSet.option.shouldBeTranslated
-    ? t(dataSet.option.label)
-    : dataSet.option.label;
-
   return (
     <Typography component="li" {...dataSet.props} noWrap style={inlineStyle}>
-      {label}
+      {dataSet.option.label}
     </Typography>
   );
 };
 
-const ListboxComponent = <K,>(
+const ListboxComponent = <T extends FieldValues>(
   props: HTMLAttributes<HTMLElement>,
   ref: Ref<HTMLDivElement>
 ) => {
@@ -87,7 +91,7 @@ const ListboxComponent = <K,>(
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up('sm'));
 
-  const itemData = children as RenderOptions<K>;
+  const itemData = children as RenderOptions<T>;
   const itemSize = smUp ? 36 : 48;
   const itemCount = itemData.length;
   const height = itemCount > 8 ? 8 * itemSize : itemCount * itemSize;
@@ -105,7 +109,7 @@ const ListboxComponent = <K,>(
           outerElementType={OuterElementType}
           height={height + 2 * LISTBOX_PADDING}
         >
-          {Row}
+          {(e) => Row(e)}
         </FixedSizeList>
       </OuterElementContext.Provider>
     </div>
@@ -126,17 +130,25 @@ const StyledPopper = styled(Popper)({
   },
 });
 
-export const Autocomplete = <K, T extends FieldValues>(props: Props<K, T>) => {
+export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
   const { t } = useTranslation();
 
-  const { name, titleKey, options, control, defaultValue } = props;
+  const { name, titleKey, options, control, defaultValue, required } = props;
+
+  const translatedOptions = options.map((x) => ({
+    value: x.value,
+    label: x.shouldBeTranslated ? t(x.label) : x.label,
+  }));
 
   return (
     <Controller
       name={name}
       control={control}
       defaultValue={defaultValue}
-      render={({ field }) => (
+      rules={{
+        required,
+      }}
+      render={({ field, fieldState: { error } }) => (
         <AutocompleteMui
           {...field}
           id={name}
@@ -145,30 +157,35 @@ export const Autocomplete = <K, T extends FieldValues>(props: Props<K, T>) => {
           disableListWrap
           PopperComponent={StyledPopper}
           ListboxComponent={FRefListboxComponent}
-          options={options}
+          options={translatedOptions}
+          value={field.value || null}
           renderInput={(params) => (
-            <TextField {...params} label={t(titleKey)} />
+            <TextField
+              {...params}
+              error={Boolean(error)}
+              helperText={error && t('requiredField')}
+              label={t(titleKey)}
+            />
           )}
+          isOptionEqualToValue={(option, value) => option.value === value}
           renderOption={(props, option) =>
             ({ props, option } as unknown as React.ReactNode)
           }
           getOptionLabel={(option) => {
-            let output = '';
+            const value = option as PathValue<T, Path<T>>;
+            const item = translatedOptions.find((x) => x.value === value);
 
-            if (typeof option === 'string') {
-              output = option;
-            } else {
-              output = option.shouldBeTranslated
-                ? t(option.label)
-                : option.label;
-            }
-
-            return output;
+            return item?.label ?? '';
           }}
-          isOptionEqualToValue={(option, value) => option.value === value.value}
-          value={field.value || null}
+          filterOptions={(filterOptions, state) =>
+            filterOptions.filter((x) =>
+              x.label
+                .toLocaleLowerCase()
+                .includes(state.inputValue.toLocaleLowerCase())
+            )
+          }
           onChange={(_e, newValue) => {
-            field.onChange(newValue);
+            field.onChange(newValue?.value);
           }}
         />
       )}

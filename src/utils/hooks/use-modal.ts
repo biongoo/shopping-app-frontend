@@ -1,19 +1,53 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Modal<T> = {
+  isInit: boolean;
   isOpen: boolean;
+  isRender: boolean;
   data?: T;
 };
 
-export const useModal = <T>() => {
-  const [state, setState] = useState<Modal<T>>({ isOpen: false });
+export const useModal = <T = never>() => {
+  const [state, setState] = useState<Modal<T>>({
+    isInit: true,
+    isOpen: false,
+    isRender: false,
+  });
 
-  const setOpen = (data: T) => {
-    setState({ isOpen: true, data });
+  useEffect(() => {
+    let timeout: number;
+
+    if (state.isOpen === false && !state.isInit) {
+      timeout = setTimeout(
+        () =>
+          setState({
+            isInit: true,
+            isOpen: false,
+            isRender: false,
+          }),
+        300
+      );
+    }
+
+    return () => clearTimeout(timeout);
+  }, [state.isOpen]);
+
+  const setOpen = (data?: T) => {
+    setState({
+      isInit: false,
+      isOpen: true,
+      isRender: true,
+      data,
+    });
   };
 
   const setClose = () => {
-    setState((x) => ({ isOpen: false, data: x.data }));
+    setState((x) => ({
+      isInit: false,
+      isOpen: false,
+      isRender: true,
+      data: x.data,
+    }));
   };
 
   return [state, setOpen, setClose] as const;
