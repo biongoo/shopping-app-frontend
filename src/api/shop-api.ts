@@ -9,8 +9,10 @@ type PostShopDto = {
 };
 
 type PatchShopDto = {
-  shopId: number;
   name: string;
+  orderType: OrderType;
+  orderAfterId?: number;
+  shopId: number;
 };
 
 type DeleteShopDto = {

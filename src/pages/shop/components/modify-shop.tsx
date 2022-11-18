@@ -4,6 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { ListItemIcon, MenuItem, Popover } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { TranslatedText } from '~/bits';
+import { OrderType } from '~/enums';
 import { Shop } from '~/types';
 import { useModal } from '~/utils';
 import { DeleteShopModal } from './delete-shop-modal';
@@ -12,11 +13,13 @@ import { EditShopModal } from './edit-shop-modal';
 export type ModifyData = {
   id: number;
   element: HTMLElement;
-} | null;
+};
 
 type Props = {
   shops: Shop[];
+  isOpen: boolean;
   data: ModifyData;
+  onHide: () => void;
   onClose: () => void;
 };
 
@@ -25,31 +28,71 @@ export const ModifyShop = (props: Props) => {
   const [editModal, setOpenEdit, setCloseEdit] = useModal<Shop>();
   const [deleteModal, setOpenDelete, setCloseDelete] = useModal<Shop>();
 
-  const shop = props.shops.find((x) => x.id === props.data?.id);
+  const shop = props.shops.find((x) => x.id === props.data.id);
+
+  if (!shop) {
+    return null;
+  }
 
   const handleOpenEdit = () => {
-    if (!shop) {
-      return;
+    props.onHide();
+
+    let orderType: OrderType | undefined;
+    let orderAfterId: number | undefined;
+
+    if (shop.orderNumber === 1) {
+      orderType = OrderType.atTheTop;
+    } else if (shop.orderNumber === props.shops.length) {
+      orderType = OrderType.atTheBottom;
+    } else {
+      orderType = OrderType.afterItem;
+      orderAfterId = props.shops.find(
+        (x) => x.orderNumber === shop.orderNumber - 1
+      )?.id;
     }
 
+    setOpenEdit({ ...shop, orderType, orderAfterId });
+  };
+
+  const handleCloseEdit = () => {
+    setCloseEdit();
     props.onClose();
-    setOpenEdit(shop);
   };
 
   const handleOpenDelete = () => {
-    if (!shop) {
-      return;
-    }
-
-    props.onClose();
+    props.onHide();
     setOpenDelete(shop);
   };
+
+  const handleCloseDelete = () => {
+    setCloseDelete();
+    props.onClose();
+  };
+
+  const editContent =
+    editModal.isRender && editModal.data ? (
+      <EditShopModal
+        shops={props.shops}
+        shop={editModal.data}
+        isOpen={editModal.isOpen}
+        onClose={handleCloseEdit}
+      />
+    ) : null;
+
+  const deleteContent =
+    deleteModal.isRender && deleteModal.data ? (
+      <DeleteShopModal
+        shop={deleteModal.data}
+        isOpen={deleteModal.isOpen}
+        onClose={handleCloseDelete}
+      />
+    ) : null;
 
   return (
     <>
       <Popover
-        open={Boolean(props.data)}
-        anchorEl={props.data?.element}
+        open={props.isOpen}
+        anchorEl={props.data.element}
         onClose={props.onClose}
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -64,7 +107,7 @@ export const ModifyShop = (props: Props) => {
           },
         }}
       >
-        <MenuItem onClick={() => navigate(`/app/shop/${props.data?.id}`)}>
+        <MenuItem onClick={() => navigate(`/app/shop/${props.data.id}`)}>
           <ListItemIcon>
             <AddBusinessIcon />
           </ListItemIcon>
@@ -83,16 +126,8 @@ export const ModifyShop = (props: Props) => {
           <TranslatedText ml={1} textKey="delete" />
         </MenuItem>
       </Popover>
-      <EditShopModal
-        shop={editModal.data}
-        isOpen={editModal.isOpen}
-        onClose={setCloseEdit}
-      />
-      <DeleteShopModal
-        shop={deleteModal.data}
-        isOpen={deleteModal.isOpen}
-        onClose={setCloseDelete}
-      />
+      {editContent}
+      {deleteContent}
     </>
   );
 };

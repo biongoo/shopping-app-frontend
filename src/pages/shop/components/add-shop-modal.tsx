@@ -22,41 +22,37 @@ type AddShopInputs = {
 
 export const AddShopModal = (props: Props) => {
   const { shops, isOpen, onClose } = props;
-
   const queryClient = useQueryClient();
+  const mutation = useMutation(addShop);
   const { control, handleSubmit, reset, setError, setValue, watch } =
     useForm<AddShopInputs>();
-
-  const mutation = useMutation({
-    mutationFn: addShop,
-    onSuccess: generateOnSuccess({
-      alertTime: 5,
-      message: 'successfullyAdded',
-      reset,
-      fn: () => {
-        queryClient.invalidateQueries({ queryKey: ['shops'] });
-        onClose();
-      },
-    }),
-    onError: generateOnError({ setError }),
-  });
-
-  const onSubmit = (data: AddShopInputs) => {
-    mutation.mutate(data);
-  };
-
   const orderType = watch('orderType');
 
   useEffect(() => {
     setValue('orderAfterId', undefined);
   }, [orderType]);
 
+  const onSubmit = (data: AddShopInputs) => {
+    mutation.mutate(data, {
+      onSuccess: generateOnSuccess({
+        alertTime: 5,
+        message: 'successfullyAdded',
+        reset,
+        fn: () => {
+          queryClient.invalidateQueries({ queryKey: ['shops'] });
+          onClose();
+        },
+      }),
+      onError: generateOnError({ setError }),
+    });
+  };
+
   const additionalInput =
     orderType === OrderType.afterItem ? (
       <Autocomplete
-        name="orderAfterId"
-        control={control}
         titleKey="shop"
+        control={control}
+        name="orderAfterId"
         required={orderType === OrderType.afterItem}
         options={shops.map((x) => ({
           value: x.id,

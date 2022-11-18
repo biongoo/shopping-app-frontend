@@ -4,37 +4,31 @@ import { AlertModal, TranslatedText } from '~/bits';
 import { Shop } from '~/types';
 import { generateOnError, generateOnSuccess } from '~/utils';
 
-type EditShopModalProps = {
-  shop?: Shop;
+type DeleteShopModalProps = {
+  shop: Shop;
   isOpen: boolean;
   onClose: () => void;
 };
 
-export const DeleteShopModal = (props: EditShopModalProps) => {
+export const DeleteShopModal = (props: DeleteShopModalProps) => {
   const { shop, isOpen, onClose } = props;
-
   const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: deleteShop,
-    onSuccess: generateOnSuccess({
-      alertTime: 5,
-      message: 'successfullyDeleted',
-      fn: () => {
-        queryClient.invalidateQueries({ queryKey: ['shops'] });
-        onClose();
-      },
-    }),
-    onError: generateOnError(),
-  });
+  const mutation = useMutation(deleteShop);
 
   const handleSubmit = () => {
-    if (!shop?.id) {
-      onClose();
-      return;
-    }
+    const data = { shopId: shop.id };
 
-    mutation.mutate({ shopId: shop.id });
+    mutation.mutate(data, {
+      onSuccess: generateOnSuccess({
+        alertTime: 5,
+        message: 'successfullyDeleted',
+        fn: () => {
+          queryClient.invalidateQueries({ queryKey: ['shops'] });
+          onClose();
+        },
+      }),
+      onError: generateOnError(),
+    });
   };
 
   return (

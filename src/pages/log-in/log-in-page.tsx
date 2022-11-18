@@ -15,24 +15,31 @@ type LoginInputs = {
 
 export const LogInPage = () => {
   const navigate = useNavigate();
+  const mutation = useMutation(logIn);
   const logInStore = useAuthStore((state) => state.logIn);
   const { control, handleSubmit, reset, setError } = useForm<LoginInputs>();
 
-  const mutation = useMutation({
-    mutationFn: logIn,
-    onSuccess: generateOnSuccess({
-      message: 'successfullyLoggedIn',
-      reset,
-      fn: (res, req) => {
-        logInStore(
-          req.rememberMe ? 'local' : 'session',
-          res.data.accessToken,
-          res.data.refreshToken
-        );
-      },
-    }),
-    onError: generateOnError({ setError }),
-  });
+  const onSubmit = (data: LoginInputs) => {
+    const preparedData = {
+      email: data.email,
+      password: data.password,
+    };
+
+    mutation.mutate(preparedData, {
+      onSuccess: generateOnSuccess({
+        message: 'successfullyLoggedIn',
+        reset,
+        fn: (res) => {
+          logInStore(
+            data.rememberMe ? 'local' : 'session',
+            res.data.accessToken,
+            res.data.refreshToken
+          );
+        },
+      }),
+      onError: generateOnError({ setError }),
+    });
+  };
 
   return (
     <Stack
@@ -42,7 +49,7 @@ export const LogInPage = () => {
       component="form"
       noValidate
       autoComplete="off"
-      onSubmit={handleSubmit((x) => mutation.mutate(x))}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <Box>
         <TranslatedText

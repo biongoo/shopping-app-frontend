@@ -19,15 +19,16 @@ type FirstSubInputs = {
 export const FirstSubPage = ({ type }: Props) => {
   const navigate = useNavigate();
   const { control, handleSubmit, setError, reset } = useForm<FirstSubInputs>();
+  const mutation = useMutation(
+    type === 'signUp' ? createRegistrationUser : createForgotUser
+  );
 
-  const mutationFn =
-    type === 'signUp' ? createRegistrationUser : createForgotUser;
-
-  const mutation = useMutation({
-    mutationFn,
-    onSuccess: generateOnSuccess({ reset }),
-    onError: generateOnError({ setError }),
-  });
+  const onSubmit = (data: FirstSubInputs) => {
+    mutation.mutate(data, {
+      onSuccess: generateOnSuccess({ reset }),
+      onError: generateOnError({ setError }),
+    });
+  };
 
   const title =
     type === 'signUp' ? 'getStartedAbsolutelyFree' : 'resetYourPassword';
@@ -40,7 +41,7 @@ export const FirstSubPage = ({ type }: Props) => {
       component="form"
       noValidate
       autoComplete="off"
-      onSubmit={handleSubmit((x) => mutation.mutate(x))}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Box>

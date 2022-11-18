@@ -2,17 +2,21 @@ import { FieldValues, UseFormReset } from 'react-hook-form';
 import { ApiData } from '~/models';
 import { useUiStore } from '~/stores';
 
-type Props<Res, Inputs extends FieldValues> = {
+type Props<Res, Req, Inputs extends FieldValues> = {
   message?: string;
   alertTime?: number;
-  fn?: (data: ApiData<Res>, variables: Inputs) => void;
+  fn?: (data: Res, variables: Req) => void;
   reset?: UseFormReset<Inputs>;
 };
 
-export const generateOnSuccess = <Res, T extends FieldValues>(
-  props?: Props<Res, T>
+export const generateOnSuccess = <Res, Req, T extends FieldValues>(
+  props?: Props<Res, Req, T>
 ) => {
-  return (data: ApiData<Res>, variables: T) => {
+  return (data: Res, variables: Req) => {
+    if (!(data instanceof ApiData)) {
+      return;
+    }
+
     props?.fn?.(data, variables);
 
     if (data.message || props?.message) {

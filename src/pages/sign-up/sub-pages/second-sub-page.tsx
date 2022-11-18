@@ -44,10 +44,7 @@ const SecondStep = ({ type, onNext }: SecondStepProps) => {
       ? () => verifyRegistrationKey({ email, key })
       : () => verifyForgotKey({ email, key });
 
-  const mutationFn = type === 'signUp' ? createUser : updateUser;
-
   const url = type === 'signUp' ? '/sign-up' : '/forgot';
-
   const { isInitialLoading } = useQuery({
     retry: 0,
     queryKey: [type, email, key],
@@ -55,18 +52,12 @@ const SecondStep = ({ type, onNext }: SecondStepProps) => {
     onError: generateOnError({ fn: () => navigate(url) }),
   });
 
-  const mutation = useMutation({
-    mutationFn,
-    onSuccess: generateOnSuccess({ fn: () => onNext() }),
-    onError: generateOnError({
-      setError,
-      fn: (apiError) => {
-        if (apiError?.mainError?.key === 'invalidKey') {
-          navigate(url);
-        }
-      },
-    }),
-  });
+  const mutationFn = type === 'signUp' ? createUser : updateUser;
+  const mutation = useMutation(mutationFn);
+
+  if (isInitialLoading) {
+    return <CircularProgress />;
+  }
 
   const onSubmit = (data: SecondStepInputs) => {
     if (data.password !== data.confirmPassword) {
@@ -74,12 +65,20 @@ const SecondStep = ({ type, onNext }: SecondStepProps) => {
       return;
     }
 
-    mutation.mutate({ email, key, password: data.password });
-  };
+    const preparedData = { email, key, password: data.password };
 
-  if (isInitialLoading) {
-    return <CircularProgress />;
-  }
+    mutation.mutate(preparedData, {
+      onSuccess: generateOnSuccess({ fn: () => onNext() }),
+      onError: generateOnError({
+        setError,
+        fn: (apiError) => {
+          if (apiError?.mainError?.key === 'invalidKey') {
+            navigate(url);
+          }
+        },
+      }),
+    });
+  };
 
   const passwordInput = type === 'signUp' ? 'password' : 'newPassword';
 

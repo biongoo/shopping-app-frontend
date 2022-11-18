@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 type Modal<T> = {
+  isHide: boolean;
   isInit: boolean;
   isOpen: boolean;
   isRender: boolean;
@@ -10,6 +11,7 @@ type Modal<T> = {
 export const useModal = <T = never>() => {
   const [state, setState] = useState<Modal<T>>({
     isInit: true,
+    isHide: false,
     isOpen: false,
     isRender: false,
   });
@@ -17,11 +19,12 @@ export const useModal = <T = never>() => {
   useEffect(() => {
     let timeout: number;
 
-    if (state.isOpen === false && !state.isInit) {
+    if (!state.isOpen && !state.isInit && !state.isHide) {
       timeout = setTimeout(
         () =>
           setState({
             isInit: true,
+            isHide: false,
             isOpen: false,
             isRender: false,
           }),
@@ -30,19 +33,21 @@ export const useModal = <T = never>() => {
     }
 
     return () => clearTimeout(timeout);
-  }, [state.isOpen]);
+  }, [state.isOpen, state.isHide]);
 
   const setOpen = (data?: T) => {
-    setState({
-      isInit: false,
+    setState((x) => ({
       isOpen: true,
+      isInit: false,
+      isHide: false,
       isRender: true,
-      data,
-    });
+      data: data ?? x.data,
+    }));
   };
 
   const setClose = () => {
     setState((x) => ({
+      isHide: false,
       isInit: false,
       isOpen: false,
       isRender: true,
@@ -50,5 +55,15 @@ export const useModal = <T = never>() => {
     }));
   };
 
-  return [state, setOpen, setClose] as const;
+  const setHide = () => {
+    setState((x) => ({
+      isHide: true,
+      isInit: false,
+      isOpen: false,
+      isRender: true,
+      data: x.data,
+    }));
+  };
+
+  return [state, setOpen, setClose, setHide] as const;
 };

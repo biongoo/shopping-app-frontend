@@ -2,29 +2,35 @@ import { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
 import { ApiError } from '~/models';
 import { useUiStore } from '~/stores';
 
-type Props<T extends FieldValues> = {
-  fn?: (apiError?: ApiError) => void;
+type Props<Req, T extends FieldValues> = {
+  fn?: (error: ApiError, variables?: Req) => void;
   setError?: UseFormSetError<T>;
 };
 
-export const generateOnError = <T extends FieldValues>(props?: Props<T>) => {
-  return (apiError: ApiError) => {
-    props?.fn?.(apiError);
+export const generateOnError = <Req, T extends FieldValues>(
+  props?: Props<Req, T>
+) => {
+  return (error: unknown, variables?: Req) => {
+    if (!(error instanceof ApiError)) {
+      return;
+    }
 
-    if (apiError.inputErrors.length > 0 && props?.setError) {
-      const reversedErrors = apiError.inputErrors.reverse();
+    props?.fn?.(error, variables);
 
-      for (const error of reversedErrors) {
-        if (error.inputName) {
-          props.setError(error.inputName as FieldPath<T>, {
-            message: error.key,
+    if (error.inputErrors.length > 0 && props?.setError) {
+      const reversedErrors = error.inputErrors.reverse();
+
+      for (const singleError of reversedErrors) {
+        if (singleError.inputName) {
+          props.setError(singleError.inputName as FieldPath<T>, {
+            message: singleError.key,
           });
         }
       }
     }
 
-    if (apiError.inputErrors.length > 0 && !props?.setError) {
-      const firstError = apiError.inputErrors.find(() => true);
+    if (error.inputErrors.length > 0 && !props?.setError) {
+      const firstError = error.inputErrors.find(() => true);
 
       if (firstError) {
         useUiStore.getState().showAlert({
@@ -36,12 +42,12 @@ export const generateOnError = <T extends FieldValues>(props?: Props<T>) => {
       }
     }
 
-    if (apiError.inputErrors.length === 0 && apiError.mainError) {
+    if (error.inputErrors.length === 0 && error.mainError) {
       useUiStore.getState().showAlert({
         time: 30,
         variant: 'error',
         titleKey: 'error',
-        bodyKey: apiError.mainError.key,
+        bodyKey: error.mainError.key,
       });
     }
   };

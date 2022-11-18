@@ -10,6 +10,7 @@ import {
   generateOnError,
   generateOnSuccess,
   hasOrderChanged,
+  useModal,
 } from '~/utils';
 import { AddShop, ModifyData, ModifyShop } from './components';
 
@@ -22,24 +23,16 @@ const headers = [
 ];
 
 export const ShopPage = () => {
-  const [modifyData, setModifyData] = useState<ModifyData>(null);
-  const [reorderedShops, setReorderedShops] = useState<Shop[] | null>();
-
+  const mutation = useMutation(reorderShops);
+  const [reorderedShops, setReorderedShops] = useState<Shop[]>();
   const isReordering = Boolean(reorderedShops);
+  const [options, setOpenOptions, setCloseOptions, setHideOptions] =
+    useModal<ModifyData>();
 
   const { data, isInitialLoading, refetch } = useQuery({
     queryKey: ['shops'],
     queryFn: getShops,
     enabled: !isReordering,
-  });
-
-  const shops = data?.data;
-
-  const mutation = useMutation({
-    mutationFn: reorderShops,
-    onSuccess: generateOnSuccess({
-      message: 'successfullyReordered',
-    }),
     onError: generateOnError(),
   });
 
@@ -50,6 +43,8 @@ export const ShopPage = () => {
       </Box>
     );
   }
+
+  const shops = data?.data;
 
   const handleStartReorder = () => {
     setReorderedShops(shops);
@@ -65,44 +60,54 @@ export const ShopPage = () => {
     }
 
     if (!hasOrderChanged(reorderedShops, shops)) {
-      setReorderedShops(null);
+      setReorderedShops(undefined);
       return;
     }
 
-    const preparedData = reorderedShops.map((x) => ({
-      id: x.id,
-      orderNumber: x.orderNumber,
-    }));
+    const data = {
+      shops: reorderedShops.map((x) => ({
+        id: x.id,
+        orderNumber: x.orderNumber,
+      })),
+    };
 
-    const res = await mutation.mutateAsync({ shops: preparedData });
+    const res = await mutation.mutateAsync(data, {
+      onSuccess: generateOnSuccess({
+        message: 'successfullyReordered',
+      }),
+      onError: generateOnError(),
+    });
 
     if (res.status === 'ok') {
       await refetch();
     }
 
-    setReorderedShops(null);
-  };
-
-  const handleOpenMenu = (currentTarget: HTMLElement, id: number) => {
-    setModifyData({ element: currentTarget, id });
-  };
-
-  const handleCloseMenu = () => {
-    setModifyData(null);
+    setReorderedShops(undefined);
   };
 
   const actions = (id: number) => (
     <IconButton
-      open={modifyData?.id === id}
-      titleKey="options"
       scale={0.9}
       placement="left"
+      titleKey="options"
       disabled={isReordering}
-      onClick={(e) => handleOpenMenu(e.currentTarget, id)}
+      open={options.data?.id === id}
+      onClick={(e) => setOpenOptions({ element: e.currentTarget, id })}
     >
       <MoreVertIcon />
     </IconButton>
   );
+
+  const optionsContent =
+    options.isRender && options.data ? (
+      <ModifyShop
+        data={options.data}
+        shops={shops ?? []}
+        isOpen={options.isOpen}
+        onHide={setHideOptions}
+        onClose={setCloseOptions}
+      />
+    ) : null;
 
   return (
     <>
@@ -123,20 +128,16 @@ export const ShopPage = () => {
           id="users"
           headers={headers}
           isReordering={isReordering}
-          isFetchingReorder={mutation.isLoading}
           data={reorderedShops ?? shops ?? []}
-          elementShowingActions={modifyData?.id}
-          renderActions={actions}
+          isFetchingReorder={mutation.isLoading}
+          elementShowingActions={options.data?.id}
           onDrag={handleDrag}
+          renderActions={actions}
           onStartReorder={handleStartReorder}
           onEndReorder={handleEndReorder}
         />
       </Stack>
-      <ModifyShop
-        data={modifyData}
-        shops={shops ?? []}
-        onClose={handleCloseMenu}
-      />
+      {optionsContent}
     </>
   );
 };

@@ -19,6 +19,7 @@ type Props = {
 };
 
 export const AvatarContent = (props: Props) => {
+  const mutation = useMutation(logOutApi);
   const logOut = useAuthStore((store) => store.logOut);
   const accessToken = useAuthStore((store) => store.accessToken);
 
@@ -29,20 +30,17 @@ export const AvatarContent = (props: Props) => {
 
   const jwt = jwtDecode<Jwt>(accessToken);
 
-  const mutation = useMutation({
-    mutationFn: logOutApi,
-    onSuccess: generateOnSuccess({
-      message: 'signedOutSuccessfully',
-      fn: logOut,
-    }),
-    onError: generateOnSuccess({
-      message: 'signedOutSuccessfully',
-      fn: logOut,
-    }),
-  });
-
   const handleLogout = () => {
-    mutation.mutate({});
+    mutation.mutate(undefined, {
+      onSuccess: generateOnSuccess({
+        message: 'signedOutSuccessfully',
+        fn: logOut,
+      }),
+      onError: generateOnSuccess({
+        message: 'signedOutSuccessfully',
+        fn: logOut,
+      }),
+    });
   };
 
   return (
