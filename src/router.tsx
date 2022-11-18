@@ -1,5 +1,12 @@
 import { createBrowserRouter, Navigate, useLocation } from 'react-router-dom';
-import { ErrorPage, LogInPage, SignUpPage, ShopPage, HomePage } from './pages';
+import {
+  ErrorPage,
+  HomePage,
+  LogInPage,
+  ShopPage,
+  ShopSectionPage,
+  SignUpPage,
+} from './pages';
 import { ForgotPage } from './pages/sign-up/forgot-page';
 import { AppLayout, AuthLayout } from './partials';
 import { useAuthStore } from './stores';
@@ -87,7 +94,16 @@ export const router = createBrowserRouter([
       },
       {
         path: 'shop',
-        element: <ShopPage />,
+        children: [
+          {
+            index: true,
+            element: <ShopPage />,
+          },
+          {
+            path: ':shopId/',
+            element: <ShopSectionPage />,
+          },
+        ],
       },
     ],
   },

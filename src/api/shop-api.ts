@@ -1,4 +1,5 @@
 import { OrderType } from '~/enums';
+import { ApiData } from '~/models';
 import { Shop } from '~/types';
 import { connectApi } from './connect-api';
 
@@ -26,33 +27,33 @@ type PostShopsOrderDto = {
   }>;
 };
 
-export const getShops = () =>
-  connectApi<Shop[]>({
+export const getShops = (): Promise<ApiData<Shop[]>> =>
+  connectApi({
     endpoint: 'shop',
   });
 
-export const addShop = (body: PostShopDto) =>
-  connectApi<Shop>({
+export const addShop = (body: PostShopDto): Promise<ApiData<Shop>> =>
+  connectApi({
     endpoint: 'shop',
     method: 'POST',
     body,
   });
 
-export const editShop = (body: PatchShopDto) =>
-  connectApi<Shop, PatchShopDto>({
+export const editShop = (body: PatchShopDto): Promise<ApiData<Shop>> =>
+  connectApi({
     endpoint: 'shop',
     method: 'PATCH',
     body,
   });
 
-export const deleteShop = (body: DeleteShopDto) =>
+export const deleteShop = (body: DeleteShopDto): Promise<ApiData> =>
   connectApi({
     endpoint: 'shop',
     method: 'DELETE',
     body,
   });
 
-export const reorderShops = (body: PostShopsOrderDto) =>
+export const reorderShops = (body: PostShopsOrderDto): Promise<ApiData> =>
   connectApi({
     endpoint: 'shop/reorder',
     method: 'POST',

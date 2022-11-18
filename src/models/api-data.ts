@@ -1,4 +1,4 @@
-export class ApiData<Res> {
+export class ApiData<Res = unknown> {
   constructor(
     public readonly status: string,
     public readonly data: Res,

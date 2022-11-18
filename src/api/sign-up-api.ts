@@ -1,3 +1,4 @@
+import { ApiData } from '~/models';
 import { connectApi } from './connect-api';
 
 type FirstStepDto = {
@@ -15,7 +16,7 @@ type ThirdStepDto = {
   key: string;
 };
 
-export const createRegistrationUser = (body: FirstStepDto) =>
+export const createRegistrationUser = (body: FirstStepDto): Promise<ApiData> =>
   connectApi({
     endpoint: 'auth/sign-up/first-step',
     tokenType: false,
@@ -23,7 +24,7 @@ export const createRegistrationUser = (body: FirstStepDto) =>
     body,
   });
 
-export const verifyRegistrationKey = (body: SecondStepDto) =>
+export const verifyRegistrationKey = (body: SecondStepDto): Promise<ApiData> =>
   connectApi({
     endpoint: 'auth/sign-up/second-step',
     tokenType: false,
@@ -31,7 +32,7 @@ export const verifyRegistrationKey = (body: SecondStepDto) =>
     body,
   });
 
-export const createUser = (body: ThirdStepDto) =>
+export const createUser = (body: ThirdStepDto): Promise<ApiData> =>
   connectApi({
     endpoint: 'auth/sign-up/third-step',
     tokenType: false,
@@ -39,7 +40,7 @@ export const createUser = (body: ThirdStepDto) =>
     body,
   });
 
-export const createForgotUser = (body: FirstStepDto) =>
+export const createForgotUser = (body: FirstStepDto): Promise<ApiData> =>
   connectApi({
     endpoint: 'auth/forgot/first-step',
     tokenType: false,
@@ -47,7 +48,7 @@ export const createForgotUser = (body: FirstStepDto) =>
     body,
   });
 
-export const verifyForgotKey = (body: SecondStepDto) =>
+export const verifyForgotKey = (body: SecondStepDto): Promise<ApiData> =>
   connectApi({
     endpoint: 'auth/forgot/second-step',
     tokenType: false,
@@ -55,7 +56,7 @@ export const verifyForgotKey = (body: SecondStepDto) =>
     body,
   });
 
-export const updateUser = (body: ThirdStepDto) =>
+export const updateUser = (body: ThirdStepDto): Promise<ApiData> =>
   connectApi({
     endpoint: 'auth/forgot/third-step',
     tokenType: false,

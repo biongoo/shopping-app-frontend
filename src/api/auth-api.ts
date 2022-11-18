@@ -1,3 +1,4 @@
+import { ApiData } from '~/models';
 import { connectApi } from './connect-api';
 
 type AuthReqDto = {
@@ -10,23 +11,23 @@ type AuthResDto = {
   refreshToken: string;
 };
 
-export const logIn = (body: AuthReqDto) =>
-  connectApi<AuthResDto, AuthReqDto>({
+export const logIn = (body: AuthReqDto): Promise<ApiData<AuthResDto>> =>
+  connectApi({
     endpoint: 'auth/log-in',
     tokenType: false,
     method: 'POST',
     body,
   });
 
-export const logOut = () =>
+export const logOut = (): Promise<ApiData> =>
   connectApi({
     endpoint: 'auth/log-out',
     tokenType: 'refresh',
     method: 'POST',
   });
 
-export const refreshTokens = () =>
-  connectApi<AuthResDto>({
+export const refreshTokens = (): Promise<ApiData<AuthResDto>> =>
+  connectApi({
     endpoint: 'auth/refresh',
     tokenType: 'refresh',
     method: 'POST',
