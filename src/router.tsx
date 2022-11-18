@@ -4,7 +4,7 @@ import {
   HomePage,
   LogInPage,
   ShopPage,
-  ShopSectionPage,
+  SectionPage,
   SignUpPage,
 } from './pages';
 import { ForgotPage } from './pages/sign-up/forgot-page';
@@ -101,7 +101,7 @@ export const router = createBrowserRouter([
           },
           {
             path: ':shopId/',
-            element: <ShopSectionPage />,
+            element: <SectionPage />,
           },
         ],
       },

@@ -14,7 +14,7 @@ type Props = {
 };
 
 export const Row = (props: Props) => {
-  const { id, name, orderNumber, ...otherColumns } = props.data;
+  const { id, name, orderNumber } = props.data;
 
   const {
     attributes,
@@ -36,12 +36,6 @@ export const Row = (props: Props) => {
 
   const memorizedRowContent = useMemo(() => {
     const cells: JSX.Element[] = [];
-
-    for (const property in otherColumns) {
-      cells.push(
-        <TableCell component="div">{otherColumns[property]}</TableCell>
-      );
-    }
 
     const reorderCell = props.isReordering && (
       <TableCell
@@ -84,7 +78,6 @@ export const Row = (props: Props) => {
       ref={setNodeRef}
       selected={isDragging}
       sx={{
-        '&:last-child td, &:last-child th': { border: 0 },
         touchAction: props.isReordering ? 'manipulation' : 'auto',
         transform: CSS.Transform.toString(transform),
         transition,

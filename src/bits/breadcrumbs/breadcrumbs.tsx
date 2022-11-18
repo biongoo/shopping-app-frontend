@@ -6,6 +6,7 @@ type Props = {
   elements: Array<{
     key: string;
     href?: string;
+    ignoreTranslation?: boolean;
   }>;
 };
 
@@ -14,8 +15,12 @@ export const Breadcrumbs = ({ elements }: Props) => {
 
   const content = elements.map((x, i) =>
     i === elements.length - 1 ? (
-      <Typography key={x.key} color="text.primary">
-        {t(x.key)}
+      <Typography
+        key={x.key}
+        color="text.primary"
+        sx={{ overflowWrap: 'anywhere' }}
+      >
+        {x.ignoreTranslation === true ? x.key : t(x.key)}
       </Typography>
     ) : (
       <Link
@@ -24,8 +29,9 @@ export const Breadcrumbs = ({ elements }: Props) => {
         underline="hover"
         color="inherit"
         to={`/app/${x.href ?? 'home'}`}
+        style={{ overflowWrap: 'anywhere' }}
       >
-        {t(x.key)}
+        {x.ignoreTranslation === true ? x.key : t(x.key)}
       </Link>
     )
   );

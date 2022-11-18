@@ -1,21 +1,23 @@
 import AddIcon from '@mui/icons-material/Add';
 import { IconButton } from '~/bits';
-import { AddShopModal } from '~/partials';
-import { Shop } from '~/types';
+import { AddSectionModal } from '~/partials';
+import { Section } from '~/types';
 import { useModal } from '~/utils';
 
 type Props = {
-  shops: Shop[];
+  shopId: number;
   isReordering: boolean;
+  sections: Section[];
 };
 
-export const AddShop = (props: Props) => {
+export const AddSection = (props: Props) => {
   const [modal, setOpen, setClose] = useModal();
 
   const content = modal.isRender ? (
-    <AddShopModal
-      shops={props.shops}
+    <AddSectionModal
       isOpen={modal.isOpen}
+      shopId={props.shopId}
+      sections={props.sections}
       onClose={setClose}
     />
   ) : null;
@@ -25,7 +27,7 @@ export const AddShop = (props: Props) => {
       <IconButton
         open={modal.isOpen}
         disabled={props.isReordering}
-        titleKey="addShop"
+        titleKey="addSection"
         onClick={() => setOpen()}
       >
         <AddIcon />

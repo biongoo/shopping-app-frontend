@@ -82,5 +82,18 @@
   "afterItem": "After item",
   "position": "Position",
   "shop": "Shop",
+  "section": "Section",
+  "addSection": "Add section",
+  "editSection": "Edit section",
+  "deleteSection": "Delete section",
+  "addYourShops": "Add your shops!",
+  "addYourSections": "Add your sections!",
+  "notFound": "Not found",
+  "notResultFound": "Not result found for \"{{item}}\".",
+  "tryCheckTypos": "Try checking for typos or using complete words.",
+  "clear": "Clear",
+  "noOptions": "No options",
+  "open": "Open",
+  "items": "Items",
   "eof": "eof"
 }

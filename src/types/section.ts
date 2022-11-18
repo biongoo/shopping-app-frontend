@@ -1,6 +1,6 @@
 import { OrderType } from '~/enums';
 
-export type ShopSection = {
+export type Section = {
   id: number;
   name: string;
   shopId: number;

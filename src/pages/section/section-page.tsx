@@ -2,9 +2,10 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Box, CircularProgress, Stack } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { getShops, reorderShops } from '~/api';
+import { Navigate, useParams } from 'react-router-dom';
+import { getSectionsWithShop, reorderSections } from '~/api';
 import { Breadcrumbs, IconButton, Table, TranslatedText } from '~/bits';
-import { Shop } from '~/types';
+import { Section } from '~/types';
 import {
   changeOrder,
   generateOnError,
@@ -12,31 +13,37 @@ import {
   hasOrderChanged,
   useModal,
 } from '~/utils';
-import { AddShop, ModifyData, ModifyShop } from './components';
+import { AddSection, ModifyData, ModifySection } from './components';
 
 type Id = string | number;
 
-const breadcrumbs = [{ key: 'home' }, { key: 'shops' }];
 const headers = [
   { labelKey: 'orderNumber', isOrdering: true },
   { labelKey: 'name', isOrdering: true },
 ];
 
-export const ShopPage = () => {
-  const mutation = useMutation(reorderShops);
-  const [reorderedShops, setReorderedShops] = useState<Shop[]>();
-  const isReordering = Boolean(reorderedShops);
+export const SectionPage = () => {
+  const { shopId } = useParams();
+  const mutation = useMutation(reorderSections);
+  const [reorderedSections, setReorderedSections] = useState<Section[]>();
+  const isReordering = Boolean(reorderedSections);
   const [options, setOpenOptions, setCloseOptions, setHideOptions] =
     useModal<ModifyData>();
 
+  if (!shopId || Number.isNaN(shopId)) {
+    return <Navigate to="/" />;
+  }
+
+  const shopIdAsNumber = +shopId;
+
   const { data, isInitialLoading, refetch } = useQuery({
-    queryKey: ['shops'],
-    queryFn: getShops,
+    queryKey: ['shop', shopIdAsNumber, { withShop: true }],
+    queryFn: () => getSectionsWithShop({ shopId: shopIdAsNumber }),
     enabled: !isReordering,
     onError: generateOnError(),
   });
 
-  if (isInitialLoading) {
+  if (isInitialLoading || !data) {
     return (
       <Box textAlign="center">
         <CircularProgress />
@@ -44,45 +51,51 @@ export const ShopPage = () => {
     );
   }
 
-  const shops = data?.data;
+  const res = data.data;
+  const breadcrumbs = [
+    { key: 'home' },
+    { key: 'shops', href: 'shop' },
+    { key: res.shop.name, ignoreTranslation: true },
+  ];
 
   const handleStartReorder = () => {
-    setReorderedShops(shops);
+    setReorderedSections(res.sections);
   };
 
   const handleDrag = (firstId: Id, secondId: Id) => {
-    setReorderedShops(changeOrder(firstId, secondId));
+    setReorderedSections(changeOrder(firstId, secondId));
   };
 
   const handleEndReorder = async () => {
-    if (!reorderedShops || mutation.isLoading) {
+    if (!reorderedSections || mutation.isLoading) {
       return;
     }
 
-    if (!hasOrderChanged(reorderedShops, shops)) {
-      setReorderedShops(undefined);
+    if (!hasOrderChanged(reorderedSections, res.sections)) {
+      setReorderedSections(undefined);
       return;
     }
 
     const data = {
-      shops: reorderedShops.map((x) => ({
+      shopId: shopIdAsNumber,
+      sections: reorderedSections.map((x) => ({
         id: x.id,
         orderNumber: x.orderNumber,
       })),
     };
 
-    const res = await mutation.mutateAsync(data, {
+    const mutateRes = await mutation.mutateAsync(data, {
       onSuccess: generateOnSuccess({
         message: 'successfullyReordered',
       }),
       onError: generateOnError(),
     });
 
-    if (res.status === 'ok') {
+    if (mutateRes.status === 'ok') {
       await refetch();
     }
 
-    setReorderedShops(undefined);
+    setReorderedSections(undefined);
   };
 
   const actions = (id: number) => (
@@ -92,7 +105,13 @@ export const ShopPage = () => {
       titleKey="options"
       disabled={isReordering}
       open={options.data?.id === id}
-      onClick={(e) => setOpenOptions({ element: e.currentTarget, id })}
+      onClick={(e) =>
+        setOpenOptions({
+          id,
+          shopId: shopIdAsNumber,
+          element: e.currentTarget,
+        })
+      }
     >
       <MoreVertIcon />
     </IconButton>
@@ -100,10 +119,10 @@ export const ShopPage = () => {
 
   const optionsContent =
     options.isRender && options.data ? (
-      <ModifyShop
+      <ModifySection
         data={options.data}
-        shops={shops ?? []}
         isOpen={options.isOpen}
+        sections={res.sections}
         onHide={setHideOptions}
         onClose={setCloseOptions}
       />
@@ -119,20 +138,24 @@ export const ShopPage = () => {
           mb={4}
         >
           <Box>
-            <TranslatedText variant="h5" gutterBottom textKey="shops" />
+            <TranslatedText variant="h5" gutterBottom textKey="sections" />
             <Breadcrumbs elements={breadcrumbs} />
           </Box>
-          <AddShop isReordering={isReordering} shops={shops ?? []} />
+          <AddSection
+            shopId={shopIdAsNumber}
+            isReordering={isReordering}
+            sections={res.sections}
+          />
         </Stack>
         <Table
           id="users"
           columns={3}
           headers={headers}
-          emptyKey="addYourShops"
+          emptyKey="addYourSections"
           isReordering={isReordering}
-          data={reorderedShops ?? shops ?? []}
           isFetchingReorder={mutation.isLoading}
           elementShowingActions={options.data?.id}
+          data={reorderedSections ?? res.sections}
           onDrag={handleDrag}
           renderActions={actions}
           onStartReorder={handleStartReorder}

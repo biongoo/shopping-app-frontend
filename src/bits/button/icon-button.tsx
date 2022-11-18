@@ -18,25 +18,31 @@ export const IconButton = (props: Props) => {
 
   const size = props.scale ? props.scale * 44 : 44;
 
-  return (
-    <Tooltip title={t(props.titleKey)} arrow placement={props.placement}>
-      <IconButtonMui
-        edge={props.edge}
-        onClick={props.onClick}
-        disabled={props.disabled}
-        sx={{
-          padding: 0,
-          width: size,
-          height: size,
-        }}
+  const button = (
+    <IconButtonMui
+      edge={props.edge}
+      onClick={props.onClick}
+      disabled={props.disabled}
+      sx={{
+        padding: 0,
+        width: size,
+        height: size,
+      }}
+    >
+      <Box
+        color={props.color ?? (props.open ? 'primary.main' : 'icon.primary')}
+        sx={{ display: 'flex' }}
       >
-        <Box
-          color={props.color ?? (props.open ? 'primary.main' : 'icon.primary')}
-          sx={{ display: 'flex' }}
-        >
-          {props.children}
-        </Box>
-      </IconButtonMui>
+        {props.children}
+      </Box>
+    </IconButtonMui>
+  );
+
+  return props.disabled ? (
+    button
+  ) : (
+    <Tooltip title={t(props.titleKey)} arrow placement={props.placement}>
+      {button}
     </Tooltip>
   );
 };

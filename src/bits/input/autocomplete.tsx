@@ -155,10 +155,14 @@ export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
           blurOnSelect
           autoHighlight
           disableListWrap
-          PopperComponent={StyledPopper}
-          ListboxComponent={FRefListboxComponent}
-          options={translatedOptions}
           value={field.value || null}
+          options={translatedOptions}
+          PopperComponent={StyledPopper}
+          openText={t('open') ?? 'Open'}
+          closeText={t('close') ?? 'Close'}
+          clearText={t('clear') ?? 'Clear'}
+          ListboxComponent={FRefListboxComponent}
+          noOptionsText={t('noOptions') ?? 'No options'}
           renderInput={(params) => (
             <TextField
               {...params}

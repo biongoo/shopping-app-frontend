@@ -1,3 +1,3 @@
 export * from './jwt';
+export * from './section';
 export * from './shop';
-export * from './shop-section';

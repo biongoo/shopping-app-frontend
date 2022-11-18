@@ -19,17 +19,22 @@ import {
 import {
   Paper,
   Table as TableMui,
+  TableRow,
   TableBody,
+  TableCell,
   TableContainer,
 } from '@mui/material';
 import { Stack } from '@mui/system';
 import { useState } from 'react';
+import { TranslatedText } from '../text';
 import { Header, Row, Toolbar } from './components';
 import { Data, HeadCell, Order } from './table-types';
 
 type Props = {
   id: string;
   data: Data[];
+  columns: number;
+  emptyKey: string;
   headers: HeadCell[];
   isReordering: boolean;
   isFetchingReorder: boolean;
@@ -146,6 +151,34 @@ export const Table = (props: Props) => {
     />
   ));
 
+  const emptyRow =
+    preparedData.length === 0 ? (
+      <TableRow>
+        <TableCell
+          colSpan={props.isReordering ? props.columns + 1 : props.columns}
+          align="center"
+        >
+          {search === '' ? (
+            <TranslatedText variant="h6" textKey={props.emptyKey} />
+          ) : (
+            <>
+              <TranslatedText
+                mb={1}
+                variant="h6"
+                textKey="notFound"
+                sx={{ fontWeight: 'bold' }}
+              />
+              <TranslatedText
+                textKey="notResultFound"
+                options={{ item: search }}
+              />
+              <TranslatedText textKey="tryCheckTypos" />
+            </>
+          )}
+        </TableCell>
+      </TableRow>
+    ) : null;
+
   return (
     <Stack component={Paper} sx={{ minHeight: 0 }}>
       <Toolbar
@@ -183,13 +216,16 @@ export const Table = (props: Props) => {
               areActions={Boolean(props.renderActions)}
               onRequestSort={handleRequestSort}
             />
-            <TableBody>
+            <TableBody
+              sx={{ '& :last-child td, & :last-child th': { border: 0 } }}
+            >
               <SortableContext
                 items={props.data}
                 strategy={verticalListSortingStrategy}
                 disabled={!props.isReordering}
               >
                 {rows}
+                {emptyRow}
               </SortableContext>
             </TableBody>
           </TableMui>

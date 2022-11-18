@@ -26,6 +26,7 @@ export const AddShopModal = (props: Props) => {
   const mutation = useMutation(addShop);
   const { control, handleSubmit, reset, setError, setValue, watch } =
     useForm<AddShopInputs>();
+
   const orderType = watch('orderType');
 
   useEffect(() => {
@@ -68,7 +69,7 @@ export const AddShopModal = (props: Props) => {
       isOpen={isOpen}
       isLoading={mutation.isLoading}
       reset={reset}
-      onClose={() => onClose()}
+      onClose={onClose}
       handleSubmit={handleSubmit(onSubmit)}
     >
       <Stack spacing={2} direction="column">

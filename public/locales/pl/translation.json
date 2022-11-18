@@ -82,5 +82,18 @@
   "afterItem": "Po pozycji",
   "position": "Pozycja",
   "shop": "Sklep",
+  "section": "Dział",
+  "addSection": "Dodaj dział",
+  "editSection": "Edytuj dział",
+  "deleteSection": "Usuń dział",
+  "addYourShops": "Dodaj swoje sklepy!",
+  "addYourSections": "Dodaj swoje działy!",
+  "notFound": "Nie znaleziono",
+  "notResultFound": "Nie znaleziono wyników dla \"{{item}}\"",
+  "tryCheckTypos": "Spróbuj sprawdzić literówki lub użyj całych słów",
+  "clear": "Wyczyść",
+  "noOptions": "Brak opcji",
+  "open": "Otwórz",
+  "items": "Przedmioty",
   "eof": "eof"
 }

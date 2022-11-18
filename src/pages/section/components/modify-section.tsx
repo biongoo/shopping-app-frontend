@@ -1,36 +1,37 @@
-import DashboardIcon from '@mui/icons-material/Dashboard';
+import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { ListItemIcon, MenuItem, Popover } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { TranslatedText } from '~/bits';
 import { OrderType } from '~/enums';
-import { Shop } from '~/types';
+import { Section } from '~/types';
 import { useModal } from '~/utils';
-import { DeleteShopModal } from './delete-shop-modal';
-import { EditShopModal } from './edit-shop-modal';
+import { DeleteSectionModal } from './delete-section-modal';
+import { EditSectionModal } from './edit-section-modal';
 
 export type ModifyData = {
   id: number;
+  shopId: number;
   element: HTMLElement;
 };
 
 type Props = {
-  shops: Shop[];
   isOpen: boolean;
   data: ModifyData;
+  sections: Section[];
   onHide: () => void;
   onClose: () => void;
 };
 
-export const ModifyShop = (props: Props) => {
+export const ModifySection = (props: Props) => {
   const navigate = useNavigate();
-  const [editModal, setOpenEdit, setCloseEdit] = useModal<Shop>();
-  const [deleteModal, setOpenDelete, setCloseDelete] = useModal<Shop>();
+  const [editModal, setOpenEdit, setCloseEdit] = useModal<Section>();
+  const [deleteModal, setOpenDelete, setCloseDelete] = useModal<Section>();
 
-  const shop = props.shops.find((x) => x.id === props.data.id);
+  const section = props.sections.find((x) => x.id === props.data.id);
 
-  if (!shop) {
+  if (!section) {
     return null;
   }
 
@@ -40,18 +41,18 @@ export const ModifyShop = (props: Props) => {
     let orderType: OrderType | undefined;
     let orderAfterId: number | undefined;
 
-    if (shop.orderNumber === 1) {
+    if (section.orderNumber === 1) {
       orderType = OrderType.atTheTop;
-    } else if (shop.orderNumber === props.shops.length) {
+    } else if (section.orderNumber === props.sections.length) {
       orderType = OrderType.atTheBottom;
     } else {
       orderType = OrderType.afterItem;
-      orderAfterId = props.shops.find(
-        (x) => x.orderNumber === shop.orderNumber - 1
+      orderAfterId = props.sections.find(
+        (x) => x.orderNumber === section.orderNumber - 1
       )?.id;
     }
 
-    setOpenEdit({ ...shop, orderType, orderAfterId });
+    setOpenEdit({ ...section, orderType, orderAfterId });
   };
 
   const handleCloseEdit = () => {
@@ -61,7 +62,7 @@ export const ModifyShop = (props: Props) => {
 
   const handleOpenDelete = () => {
     props.onHide();
-    setOpenDelete(shop);
+    setOpenDelete(section);
   };
 
   const handleCloseDelete = () => {
@@ -71,9 +72,9 @@ export const ModifyShop = (props: Props) => {
 
   const editContent =
     editModal.isRender && editModal.data ? (
-      <EditShopModal
-        shops={props.shops}
-        shop={editModal.data}
+      <EditSectionModal
+        section={editModal.data}
+        sections={props.sections}
         isOpen={editModal.isOpen}
         onClose={handleCloseEdit}
       />
@@ -81,8 +82,8 @@ export const ModifyShop = (props: Props) => {
 
   const deleteContent =
     deleteModal.isRender && deleteModal.data ? (
-      <DeleteShopModal
-        shop={deleteModal.data}
+      <DeleteSectionModal
+        section={deleteModal.data}
         isOpen={deleteModal.isOpen}
         onClose={handleCloseDelete}
       />
@@ -107,11 +108,15 @@ export const ModifyShop = (props: Props) => {
           },
         }}
       >
-        <MenuItem onClick={() => navigate(`/app/shop/${props.data.id}`)}>
+        <MenuItem
+          onClick={() =>
+            navigate(`/app/shop/${props.data.shopId}/${props.data.id}`)
+          }
+        >
           <ListItemIcon>
-            <DashboardIcon />
+            <AddBusinessIcon />
           </ListItemIcon>
-          <TranslatedText ml={1} textKey="sections" />
+          <TranslatedText ml={1} textKey="items" />
         </MenuItem>
         <MenuItem onClick={handleOpenEdit}>
           <ListItemIcon>
