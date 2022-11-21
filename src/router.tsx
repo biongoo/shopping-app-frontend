@@ -1,13 +1,13 @@
 import { createBrowserRouter, Navigate, useLocation } from 'react-router-dom';
 import {
   ErrorPage,
+  ForgotPage,
   HomePage,
   LogInPage,
-  ShopPage,
   SectionPage,
+  ShopPage,
   SignUpPage,
 } from './pages';
-import { ForgotPage } from './pages/sign-up/forgot-page';
 import { AppLayout, AuthLayout } from './partials';
 import { useAuthStore } from './stores';
 
