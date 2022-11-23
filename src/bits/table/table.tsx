@@ -18,32 +18,33 @@ import {
 } from '@dnd-kit/sortable';
 import {
   Paper,
+  Stack,
   Table as TableMui,
-  TableRow,
   TableBody,
   TableCell,
   TableContainer,
+  TableRow,
 } from '@mui/material';
-import { Stack } from '@mui/system';
 import { useState } from 'react';
 import { TranslatedText } from '../text';
 import { Header, Row, Toolbar } from './components';
-import { Data, HeadCell, Order } from './table-types';
+import { Column, Data, Order } from './table-types';
 
-type Props = {
-  id: string;
-  data: Data[];
-  columns: number;
+type Props<T> = {
+  data: Data<T>[];
+  name: string;
   emptyKey: string;
-  headers: HeadCell[];
-  isReordering: boolean;
-  isFetchingReorder: boolean;
-  elementShowingActions?: number;
-  renderActions?: (id: number) => JSX.Element;
-  onDrag: (firstId: string | number, secondId: string | number) => void;
-  onStartReorder: () => void;
-  onEndReorder: () => void;
+  columns: Array<Column<Data<T>>>;
+  isReordering?: boolean;
+  isShowingActions?: boolean;
+  isFetchingReorder?: boolean;
+  defaultOrderBy?: keyof Data<T>;
+  onEndReorder?: () => void;
+  onStartReorder?: () => void;
+  onDrag?: (firstId: string | number, secondId: string | number) => void;
 };
+
+const createColumns = <T,>(creator: () => Array<Column<T>>) => creator();
 
 const descendingComparator = <T,>(a: T, b: T, orderBy: keyof T) => {
   if (b[orderBy] < a[orderBy]) {
@@ -55,7 +56,7 @@ const descendingComparator = <T,>(a: T, b: T, orderBy: keyof T) => {
   return 0;
 };
 
-const getComparator = <Key extends keyof Data>(
+const getComparator = <Key extends string | number>(
   order: Order,
   orderBy: Key
 ): ((
@@ -67,11 +68,27 @@ const getComparator = <Key extends keyof Data>(
     : (a, b) => -descendingComparator(a, b, orderBy);
 };
 
-export const Table = (props: Props) => {
+const TableComponent = <T,>(props: Props<T>) => {
+  const {
+    data,
+    name,
+    columns,
+    emptyKey,
+    isReordering,
+    defaultOrderBy,
+    isShowingActions,
+    isFetchingReorder,
+    onDrag,
+    onEndReorder,
+    onStartReorder,
+  } = props;
+
   const [search, setSearch] = useState('');
   const [order, setOrder] = useState<Order>('asc');
   const [isDragging, setIsDragging] = useState(false);
-  const [orderBy, setOrderBy] = useState<keyof Data>('orderNumber');
+  const [orderBy, setOrderBy] = useState<Omit<keyof Data<T>, 'actions'>>(
+    defaultOrderBy ?? 'id'
+  );
 
   const sensors = useSensors(
     useSensor(TouchSensor, {
@@ -88,41 +105,37 @@ export const Table = (props: Props) => {
     })
   );
 
-  const handleRequestSort = (property: keyof Data) => {
-    if (props.isReordering) {
+  const handleSort = (property: Omit<keyof Data<T>, 'actions'>) => {
+    if (isReordering) {
       return;
     }
 
     const isAsc = orderBy === property && order === 'asc';
 
-    setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    setOrder(isAsc ? 'desc' : 'asc');
   };
 
-  const handleRequestSearch = (value: string) => {
-    if (props.isReordering) {
-      return;
-    }
-
+  const handleSearch = (value: string) => {
     setSearch(value);
   };
 
-  const handleRequestReorder = () => {
-    if (props.isReordering === false) {
+  const handleReorder = () => {
+    if (isReordering === false) {
       setSearch('');
       setOrder('asc');
-      setOrderBy('orderNumber');
-      props.onStartReorder();
+      setOrderBy(defaultOrderBy ?? 'id');
+      onStartReorder?.();
     } else {
-      props.onEndReorder();
+      onEndReorder?.();
     }
   };
 
-  const handleRequestDragStart = () => {
+  const handleDragStart = () => {
     setIsDragging(true);
   };
 
-  const handleRequestDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     setIsDragging(false);
 
     const { active, over } = event;
@@ -131,35 +144,56 @@ export const Table = (props: Props) => {
       return;
     }
 
-    props.onDrag(active.id, over.id);
+    onDrag?.(active.id, over.id);
   };
 
   const searchLowerCase = search.toLowerCase();
 
-  const preparedData = props.data
-    .filter((x) => x.name.toLowerCase().includes(searchLowerCase))
-    .sort(getComparator(order, orderBy));
+  const filteredData = data.filter((x) =>
+    x.name.toLowerCase().includes(searchLowerCase)
+  );
 
-  const rows = preparedData.map((data) => (
-    <Row
-      key={`row-${props.id}-${data.id}`}
-      data={data}
-      id={props.id}
-      isReordering={props.isReordering}
-      isShowingActions={props.elementShowingActions === data.id}
-      renderActions={props.renderActions}
-    />
-  ));
+  const sortedData = orderBy
+    ? columns.find((x) => x.dataKey === orderBy)?.isOrdering
+      ? filteredData.sort(
+          getComparator(order, orderBy as unknown as string | number)
+        )
+      : filteredData
+    : filteredData;
+
+  const rows =
+    sortedData.length > 0
+      ? sortedData.map((x, i) => (
+          <Row<T>
+            key={`row-${name}-${i}-${x.id}`}
+            data={x}
+            name={name}
+            columns={columns}
+            isReordering={isReordering === true}
+            isShowingActions={isShowingActions === true}
+          />
+        ))
+      : null;
+
+  const tableBodyContent =
+    isReordering !== undefined ? (
+      <SortableContext
+        items={data}
+        strategy={verticalListSortingStrategy}
+        disabled={!isReordering}
+      >
+        {rows}
+      </SortableContext>
+    ) : (
+      rows
+    );
 
   const emptyRow =
-    preparedData.length === 0 ? (
+    sortedData.length === 0 ? (
       <TableRow>
-        <TableCell
-          colSpan={props.isReordering ? props.columns + 1 : props.columns}
-          align="center"
-        >
+        <TableCell align="center" colSpan={columns.length}>
           {search === '' ? (
-            <TranslatedText variant="h6" textKey={props.emptyKey} />
+            <TranslatedText variant="h6" textKey={emptyKey} />
           ) : (
             <>
               <TranslatedText
@@ -179,58 +213,66 @@ export const Table = (props: Props) => {
       </TableRow>
     ) : null;
 
+  const table = (
+    <TableMui>
+      <Header<T>
+        name={name}
+        order={order}
+        orderBy={orderBy}
+        columns={columns}
+        isReordering={isReordering}
+        onSort={handleSort}
+      />
+      <TableBody sx={{ '& > tr:last-child > td': { border: 0 } }}>
+        {tableBodyContent}
+        {emptyRow}
+      </TableBody>
+    </TableMui>
+  );
+
+  const tableContent =
+    isReordering !== undefined ? (
+      <DndContext
+        sensors={sensors}
+        onDragEnd={handleDragEnd}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragCancel={handleDragEnd}
+        modifiers={[
+          restrictToVerticalAxis,
+          restrictToWindowEdges,
+          restrictToFirstScrollableAncestor,
+        ]}
+      >
+        {table}
+      </DndContext>
+    ) : (
+      table
+    );
+
   return (
-    <Stack component={Paper} sx={{ minHeight: 0 }}>
+    <Stack component={Paper} sx={{ display: 'flex', overflow: 'auto' }}>
       <Toolbar
         search={search}
-        isReordering={props.isReordering}
-        onRequestSearch={handleRequestSearch}
-        onRequestReorder={handleRequestReorder}
-        isFetchingReorder={props.isFetchingReorder}
+        isReordering={isReordering}
+        isFetchingReorder={isFetchingReorder}
+        onSearch={handleSearch}
+        onReorder={handleReorder}
       />
       <TableContainer
         sx={{
-          overflow: 'auto',
-          touchAction: isDragging ? 'none' : 'auto',
+          touchAction: isDragging !== undefined ? 'none' : 'auto',
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        <DndContext
-          sensors={sensors}
-          onDragEnd={handleRequestDragEnd}
-          collisionDetection={closestCenter}
-          onDragStart={handleRequestDragStart}
-          onDragCancel={() => setIsDragging(false)}
-          modifiers={[
-            restrictToVerticalAxis,
-            restrictToWindowEdges,
-            restrictToFirstScrollableAncestor,
-          ]}
-        >
-          <TableMui>
-            <Header
-              id={props.id}
-              order={order}
-              orderBy={orderBy}
-              headers={props.headers}
-              isReordering={props.isReordering}
-              areActions={Boolean(props.renderActions)}
-              onRequestSort={handleRequestSort}
-            />
-            <TableBody
-              sx={{ '& :last-child td, & :last-child th': { border: 0 } }}
-            >
-              <SortableContext
-                items={props.data}
-                strategy={verticalListSortingStrategy}
-                disabled={!props.isReordering}
-              >
-                {rows}
-                {emptyRow}
-              </SortableContext>
-            </TableBody>
-          </TableMui>
-        </DndContext>
+        {tableContent}
       </TableContainer>
     </Stack>
   );
 };
+
+export const Table = Object.assign(TableComponent, {
+  createColumns,
+});

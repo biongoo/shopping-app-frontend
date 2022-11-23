@@ -1,0 +1,113 @@
+import { ProductType, Unit } from '~/enums';
+import { Product } from '~/types';
+
+export const mockProducts: Product[] = [
+  {
+    id: 1,
+    name: 'Pomidor',
+    type: ProductType.global,
+    units: [Unit.grams, Unit.pieces],
+  },
+  {
+    id: 2,
+    name: 'Masło',
+    type: ProductType.global,
+    units: [Unit.pieces, Unit.grams],
+  },
+  { id: 3, name: 'Chleb', type: ProductType.global, units: [Unit.pieces] },
+  {
+    id: 4,
+    name: 'Parówki',
+    type: ProductType.local,
+    sectionId: 1,
+    units: [Unit.packs],
+  },
+  {
+    id: 5,
+    name: 'Woda',
+    type: ProductType.local,
+    sectionId: 1,
+    units: [Unit.milliliters, Unit.pieces, Unit.pieces],
+  },
+  {
+    id: 6,
+    name: 'Pomidor',
+    type: ProductType.global,
+    units: [Unit.grams, Unit.pieces],
+  },
+  {
+    id: 7,
+    name: 'Masło',
+    type: ProductType.global,
+    units: [Unit.pieces, Unit.grams],
+  },
+  { id: 8, name: 'Chleb', type: ProductType.global, units: [Unit.pieces] },
+  {
+    id: 9,
+    name: 'Parówki',
+    type: ProductType.local,
+    sectionId: 1,
+    units: [Unit.packs],
+  },
+  {
+    id: 10,
+    name: 'Woda',
+    type: ProductType.local,
+    sectionId: 1,
+    units: [Unit.milliliters, Unit.pieces, Unit.pieces],
+  },
+  {
+    id: 11,
+    name: 'Pomidor',
+    type: ProductType.global,
+    units: [Unit.grams, Unit.pieces],
+  },
+  {
+    id: 12,
+    name: 'Masło',
+    type: ProductType.global,
+    units: [Unit.pieces, Unit.grams],
+  },
+  { id: 13, name: 'Chleb', type: ProductType.global, units: [Unit.pieces] },
+  {
+    id: 14,
+    name: 'Parówki',
+    type: ProductType.local,
+    sectionId: 1,
+    units: [Unit.packs],
+  },
+  {
+    id: 15,
+    name: 'Woda',
+    type: ProductType.local,
+    sectionId: 1,
+    units: [Unit.milliliters, Unit.pieces, Unit.pieces],
+  },
+  {
+    id: 16,
+    name: 'Pomidor',
+    type: ProductType.global,
+    units: [Unit.grams, Unit.pieces],
+  },
+  {
+    id: 17,
+    name: 'Masło',
+    type: ProductType.global,
+    units: [Unit.pieces, Unit.grams],
+  },
+  { id: 18, name: 'Chleb', type: ProductType.global, units: [Unit.pieces] },
+  {
+    id: 19,
+    name: 'Parówki',
+    type: ProductType.local,
+    sectionId: 1,
+    units: [Unit.packs],
+  },
+  {
+    id: 20,
+    name: 'Woda',
+    type: ProductType.local,
+    sectionId: 1,
+    units: [Unit.milliliters, Unit.pieces, Unit.pieces],
+  },
+];

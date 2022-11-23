@@ -1,12 +1,16 @@
-export type Data = Record<string, string | number> & {
+export type Order = 'asc' | 'desc';
+
+export type Data<T> = T & {
   id: number;
   name: string;
-  orderNumber: number;
 };
 
-export type HeadCell = {
-  labelKey: keyof Data;
+export type Column<T> = {
+  labelKey: string;
   isOrdering: boolean;
+  dataKey: keyof Data<T> | 'actions';
+  py?: number;
+  width?: number;
+  align?: 'right' | 'left';
+  render: (item: Data<T>, index: number, isReordering: boolean) => JSX.Element;
 };
-
-export type Order = 'asc' | 'desc';

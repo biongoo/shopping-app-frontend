@@ -1,3 +1,4 @@
+import CategoryIcon from '@mui/icons-material/Category';
 import HomeIcon from '@mui/icons-material/Home';
 import StoreIcon from '@mui/icons-material/Store';
 import {
@@ -27,6 +28,11 @@ const pages = [
     key: 'shops',
     icon: StoreIcon,
     path: '/app/shop',
+  },
+  {
+    key: 'products',
+    icon: CategoryIcon,
+    path: '/app/product',
   },
 ] as const;
 

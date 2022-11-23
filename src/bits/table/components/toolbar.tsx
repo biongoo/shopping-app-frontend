@@ -12,22 +12,37 @@ import CheckIcon from '@mui/icons-material/Check';
 
 type Props = {
   search: string;
-  isReordering: boolean;
-  isFetchingReorder: boolean;
-  onRequestReorder: () => void;
-  onRequestSearch: (value: string) => void;
+  isReordering?: boolean;
+  isFetchingReorder?: boolean;
+  onReorder: () => void;
+  onSearch: (value: string) => void;
+};
+
+const getReorderIcon = (isReordering: boolean, isFetchingReorder?: boolean) => {
+  let reorderIcon = <ReorderIcon />;
+
+  if (isFetchingReorder) {
+    reorderIcon = <CircularProgress sx={{ p: 1 }} />;
+  } else if (isReordering === true) {
+    reorderIcon = <CheckIcon />;
+  }
+
+  return reorderIcon;
 };
 
 export const Toolbar = (props: Props) => {
   const { t } = useTranslation();
 
-  let icon = <ReorderIcon />;
-
-  if (props.isFetchingReorder) {
-    icon = <CircularProgress sx={{ p: 1 }} />;
-  } else if (props.isReordering) {
-    icon = <CheckIcon />;
-  }
+  const reorderButton =
+    props.isReordering !== undefined ? (
+      <IconButton
+        open={props.isReordering}
+        titleKey={props.isReordering ? 'save' : 'reorder'}
+        onClick={props.onReorder}
+      >
+        {getReorderIcon(props.isReordering, props.isFetchingReorder)}
+      </IconButton>
+    ) : null;
 
   return (
     <Stack
@@ -40,9 +55,9 @@ export const Toolbar = (props: Props) => {
     >
       <TextField
         value={props.search}
-        placeholder={t('search')}
+        placeholder={t('search') ?? ''}
         disabled={props.isReordering}
-        onChange={(e) => props.onRequestSearch(e.target.value)}
+        onChange={(e) => props.onSearch(e.target.value)}
         sx={(theme) => ({
           '& .MuiInputBase-root': {
             width: { xs: 120, sm: 180, md: 240 },
@@ -62,13 +77,7 @@ export const Toolbar = (props: Props) => {
           ),
         }}
       />
-      <IconButton
-        open={props.isReordering}
-        titleKey={props.isReordering ? 'save' : 'reorder'}
-        onClick={props.onRequestReorder}
-      >
-        {icon}
-      </IconButton>
+      {reorderButton}
     </Stack>
   );
 };

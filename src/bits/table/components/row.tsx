@@ -3,18 +3,18 @@ import { CSS } from '@dnd-kit/utilities';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import { TableCell, TableRow } from '@mui/material';
 import { useMemo } from 'react';
-import { Data } from '../table-types';
+import { Column, Data } from '../table-types';
 
-type Props = {
-  id: string;
-  data: Data;
+type Props<T> = {
+  name: string;
+  data: Data<T>;
   isReordering: boolean;
   isShowingActions: boolean;
-  renderActions?: (id: number) => JSX.Element;
+  columns: Array<Column<Data<T>>>;
 };
 
-export const Row = (props: Props) => {
-  const { id, name, orderNumber } = props.data;
+export const Row = <T,>(props: Props<T>) => {
+  const { data, name, isShowingActions, isReordering, columns } = props;
 
   const {
     attributes,
@@ -24,64 +24,54 @@ export const Row = (props: Props) => {
     transition,
     isDragging,
     isSorting,
-  } = useSortable({ id });
+  } = useSortable({ id: data.id });
 
   let pointer = 'auto';
 
   if (isSorting) {
     pointer = 'grabbing';
-  } else if (props.isReordering) {
+  } else if (isReordering) {
     pointer = 'grab';
   }
 
   const memorizedRowContent = useMemo(() => {
-    const cells: JSX.Element[] = [];
-
-    const reorderCell = props.isReordering && (
+    const cells = columns.map((x, i) => (
       <TableCell
+        key={`cell-${name}-${data.id}-${i}-${x.labelKey}`}
         sx={{
-          p: 0,
-          pl: 2,
-          pt: 0.5,
-          width: 0,
+          pl: !isReordering && i === 0 ? { xs: 2, sm: 4 } : 2,
+          pr: i === columns.length - 1 ? { xs: 1, sm: 2 } : 0,
+          py: x.py,
+          textAlign: x.align ?? 'left',
         }}
       >
-        <DragHandleIcon />
+        {x.render(data, i, isReordering)}
       </TableCell>
-    );
+    ));
 
-    const actions = props.renderActions && (
-      <TableCell align="right" sx={{ p: 0, pr: 1 }}>
-        {props.renderActions(id)}
+    const reorderCell = isReordering && (
+      <TableCell sx={{ py: 1 }}>
+        <DragHandleIcon sx={{ display: 'block' }} />
       </TableCell>
     );
 
     return (
       <>
         {reorderCell}
-        <TableCell
-          scope="row"
-          component="th"
-          sx={{ pl: props.isReordering ? 2 : 4, width: 0 }}
-        >
-          {orderNumber}
-        </TableCell>
-        <TableCell>{name}</TableCell>
         {cells}
-        {actions}
       </>
     );
-  }, [props.isReordering, props.data, props.isShowingActions]);
+  }, [isReordering, isShowingActions, data]);
 
   return (
     <TableRow
       ref={setNodeRef}
       selected={isDragging}
-      sx={{
-        touchAction: props.isReordering ? 'manipulation' : 'auto',
-        transform: CSS.Transform.toString(transform),
+      style={{
         transition,
         cursor: pointer,
+        transform: CSS.Transform.toString(transform),
+        touchAction: isReordering ? 'manipulation' : 'auto',
       }}
       {...attributes}
       {...listeners}

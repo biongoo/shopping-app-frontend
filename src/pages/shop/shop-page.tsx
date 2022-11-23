@@ -17,10 +17,51 @@ import { AddShop, ModifyData, ModifyShop } from './components';
 type Id = string | number;
 
 const breadcrumbs = [{ key: 'home' }, { key: 'shops' }];
-const headers = [
-  { labelKey: 'orderNumber', isOrdering: true },
-  { labelKey: 'name', isOrdering: true },
-];
+
+const getColumns = (
+  setOpenOptions: (data?: ModifyData | undefined) => void,
+  optionsId?: number
+) =>
+  Table.createColumns<Shop>(() => [
+    {
+      dataKey: 'orderNumber',
+      labelKey: '#',
+      isOrdering: true,
+      width: 0,
+      render: (x) => <>{x.orderNumber}</>,
+    },
+    {
+      dataKey: 'name',
+      labelKey: 'name',
+      isOrdering: true,
+      width: 100,
+      render: (x) => <>{x.name}</>,
+    },
+    {
+      dataKey: 'actions',
+      labelKey: 'none',
+      isOrdering: false,
+      width: 0,
+      py: 0,
+      render: (x, _i, isReordering) => (
+        <IconButton
+          scale={0.9}
+          placement="left"
+          titleKey="options"
+          disabled={isReordering}
+          open={optionsId === x.id}
+          onClick={(e) =>
+            setOpenOptions({
+              id: x.id,
+              element: e.currentTarget,
+            })
+          }
+        >
+          <MoreVertIcon />
+        </IconButton>
+      ),
+    },
+  ]);
 
 export const ShopPage = () => {
   const mutation = useMutation(reorderShops);
@@ -85,19 +126,6 @@ export const ShopPage = () => {
     setReorderedShops(undefined);
   };
 
-  const actions = (id: number) => (
-    <IconButton
-      scale={0.9}
-      placement="left"
-      titleKey="options"
-      disabled={isReordering}
-      open={options.data?.id === id}
-      onClick={(e) => setOpenOptions({ element: e.currentTarget, id })}
-    >
-      <MoreVertIcon />
-    </IconButton>
-  );
-
   const optionsContent =
     options.isRender && options.data ? (
       <ModifyShop
@@ -109,37 +137,36 @@ export const ShopPage = () => {
       />
     ) : null;
 
+  const optionsId = options.isOpen ? options.data?.id : undefined;
+
   return (
-    <>
-      <Stack sx={{ height: '100%' }}>
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          mb={4}
-        >
-          <Box>
-            <TranslatedText variant="h5" gutterBottom textKey="shops" />
-            <Breadcrumbs elements={breadcrumbs} />
-          </Box>
-          <AddShop isReordering={isReordering} shops={shops ?? []} />
-        </Stack>
-        <Table
-          id="users"
-          columns={3}
-          headers={headers}
-          emptyKey="addYourShops"
-          isReordering={isReordering}
-          data={reorderedShops ?? shops ?? []}
-          isFetchingReorder={mutation.isLoading}
-          elementShowingActions={options.data?.id}
-          onDrag={handleDrag}
-          renderActions={actions}
-          onStartReorder={handleStartReorder}
-          onEndReorder={handleEndReorder}
-        />
+    <Stack sx={{ flexGrow: 1, overflow: 'auto' }}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        mb={4}
+      >
+        <Box>
+          <TranslatedText variant="h5" gutterBottom textKey="shops" />
+          <Breadcrumbs elements={breadcrumbs} />
+        </Box>
+        <AddShop isReordering={isReordering} shops={shops ?? []} />
       </Stack>
+      <Table
+        name="shops"
+        emptyKey="addYourShops"
+        isReordering={isReordering}
+        defaultOrderBy="orderNumber"
+        isShowingActions={options.isOpen}
+        data={reorderedShops ?? shops ?? []}
+        isFetchingReorder={mutation.isLoading}
+        columns={getColumns(setOpenOptions, optionsId)}
+        onDrag={handleDrag}
+        onEndReorder={handleEndReorder}
+        onStartReorder={handleStartReorder}
+      />
       {optionsContent}
-    </>
+    </Stack>
   );
 };

@@ -116,7 +116,7 @@ export const ModifySection = (props: Props) => {
           <ListItemIcon>
             <AddBusinessIcon />
           </ListItemIcon>
-          <TranslatedText ml={1} textKey="items" />
+          <TranslatedText ml={1} textKey="products" />
         </MenuItem>
         <MenuItem onClick={handleOpenEdit}>
           <ListItemIcon>

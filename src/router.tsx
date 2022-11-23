@@ -2,9 +2,10 @@ import { createBrowserRouter, Navigate, useLocation } from 'react-router-dom';
 import {
   ErrorPage,
   HomePage,
+  ProductPage,
   LogInPage,
-  ShopPage,
   SectionPage,
+  ShopPage,
   SignUpPage,
 } from './pages';
 import { ForgotPage } from './pages/sign-up/forgot-page';
@@ -104,6 +105,10 @@ export const router = createBrowserRouter([
             element: <SectionPage />,
           },
         ],
+      },
+      {
+        path: 'product',
+        element: <ProductPage />,
       },
     ],
   },

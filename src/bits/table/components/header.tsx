@@ -6,45 +6,49 @@ import {
   TableSortLabel,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { Data, HeadCell, Order } from '../table-types';
+import { Column, Data, Order } from '../table-types';
 
-type Props = {
-  id: string;
+type Props<T> = {
+  name: string;
   order: Order;
-  orderBy: string;
-  headers: HeadCell[];
-  areActions: boolean;
-  isReordering: boolean;
-  onRequestSort: (property: keyof Data) => void;
+  columns: Array<Column<Data<T>>>;
+  orderBy: Omit<keyof Data<T>, 'actions'>;
+  isReordering?: boolean;
+  onSort: (property: Omit<keyof Data<T>, 'actions'>) => void;
 };
 
-export const Header = (props: Props) => {
+export const Header = <T,>(props: Props<T>) => {
+  const { name, order, orderBy, columns, isReordering, onSort } = props;
+
   const { t } = useTranslation();
 
-  const cells = props.headers.map((x, i) => {
-    const translatedLabel = x.labelKey === 'orderNumber' ? '#' : t(x.labelKey);
+  const reorderCell = isReordering ? (
+    <TableCell sx={{ width: 0 }}></TableCell>
+  ) : null;
 
-    return (
-      <TableCell
-        key={`${props.id}-${x.labelKey}`}
-        sx={{
-          pl: i === 0 && !props.isReordering ? 4 : 2,
-        }}
-      >
+  const headers = columns.map((x, i) => (
+    <TableCell
+      key={`${name}-${i}-${x.labelKey}`}
+      sx={{
+        width: `${x.width ?? 0}%`,
+        pl: !isReordering && i === 0 ? { xs: 2, sm: 4 } : 2,
+        textAlign: x.align === 'right' ? 'right' : 'left',
+      }}
+    >
+      {x.isOrdering ? (
         <TableSortLabel
-          disabled={props.isReordering}
-          active={props.orderBy === x.labelKey}
-          direction={props.orderBy === x.labelKey ? props.order : 'asc'}
-          onClick={() => props.onRequestSort(x.labelKey)}
+          disabled={isReordering}
+          active={orderBy === x.dataKey}
+          direction={orderBy === x.labelKey ? order : 'asc'}
+          onClick={() => onSort(x.dataKey)}
         >
-          {translatedLabel}
+          {t(x.labelKey)}
         </TableSortLabel>
-      </TableCell>
-    );
-  });
-
-  const actionsCell = props.areActions && <TableCell></TableCell>;
-  const reorderCell = props.isReordering && <TableCell></TableCell>;
+      ) : (
+        t(x.labelKey)
+      )}
+    </TableCell>
+  ));
 
   return (
     <TableHead
@@ -55,8 +59,7 @@ export const Header = (props: Props) => {
     >
       <TableRow>
         {reorderCell}
-        {cells}
-        {actionsCell}
+        {headers}
       </TableRow>
     </TableHead>
   );

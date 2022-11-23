@@ -7,10 +7,12 @@ const drawerWidth = 230;
 export const AppLayout = () => (
   <Stack direction="row">
     <Drawer drawerWidth={drawerWidth} />
-    <Stack
+    <Box
       component="main"
       alignItems="center"
       sx={{
+        display: 'flex',
+        flexDirection: 'column',
         height: '100vh',
         minWidth: '270px',
         width: { xs: '100%', sm: `calc(100% - ${drawerWidth}px)` },
@@ -19,7 +21,10 @@ export const AppLayout = () => (
       <Toolbar />
       <Box
         sx={{
+          flexGrow: 1,
+          display: 'flex',
           overflow: 'auto',
+          flexDirection: 'column',
           width: '100%',
           maxWidth: 900,
           p: { xs: 2, md: 3 },
@@ -27,6 +32,6 @@ export const AppLayout = () => (
       >
         <Outlet />
       </Box>
-    </Stack>
+    </Box>
   </Stack>
 );

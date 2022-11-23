@@ -88,12 +88,15 @@
   "deleteSection": "Usuń dział",
   "addYourShops": "Dodaj swoje sklepy!",
   "addYourSections": "Dodaj swoje działy!",
+  "addYourProducts": "Dodaj swoje produkty!",
   "notFound": "Nie znaleziono",
   "notResultFound": "Nie znaleziono wyników dla \"{{item}}\"",
   "tryCheckTypos": "Spróbuj sprawdzić literówki lub użyj całych słów",
   "clear": "Wyczyść",
   "noOptions": "Brak opcji",
   "open": "Otwórz",
-  "items": "Przedmioty",
+  "products": "Produkty",
+  "#": "#",
+  "none": "",
   "eof": "eof"
 }

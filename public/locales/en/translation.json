@@ -88,12 +88,15 @@
   "deleteSection": "Delete section",
   "addYourShops": "Add your shops!",
   "addYourSections": "Add your sections!",
+  "addYourProducts": "Add your products!",
   "notFound": "Not found",
   "notResultFound": "Not result found for \"{{item}}\".",
   "tryCheckTypos": "Try checking for typos or using complete words.",
   "clear": "Clear",
   "noOptions": "No options",
   "open": "Open",
-  "items": "Items",
+  "products": "Products",
+  "#": "#",
+  "none": "",
   "eof": "eof"
 }
