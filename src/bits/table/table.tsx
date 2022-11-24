@@ -170,8 +170,6 @@ const TableComponent = <T,>(props: Props<T>) => {
       ? sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
       : sortedData;
 
-  console.log(rowsData);
-
   const rows =
     rowsData.length > 0
       ? rowsData.map((x, i) => (

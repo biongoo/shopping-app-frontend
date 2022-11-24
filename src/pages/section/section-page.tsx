@@ -17,10 +17,51 @@ import { AddSection, ModifyData, ModifySection } from './components';
 
 type Id = string | number;
 
-const headers = [
-  { labelKey: 'orderNumber', isOrdering: true },
-  { labelKey: 'name', isOrdering: true },
-];
+const getColumns = (
+  setOpenOptions: (data?: ModifyData | undefined) => void,
+  optionsId?: number
+) =>
+  Table.createColumns<Section>(() => [
+    {
+      dataKey: 'orderNumber',
+      labelKey: '#',
+      isOrdering: true,
+      width: 0,
+      render: (x) => <>{x.orderNumber}</>,
+    },
+    {
+      dataKey: 'name',
+      labelKey: 'name',
+      isOrdering: true,
+      width: 100,
+      render: (x) => <>{x.name}</>,
+    },
+    {
+      dataKey: 'actions',
+      labelKey: 'none',
+      isOrdering: false,
+      width: 0,
+      py: 0,
+      render: (x, _i, isReordering) => (
+        <IconButton
+          scale={0.9}
+          placement="left"
+          titleKey="options"
+          disabled={isReordering}
+          open={optionsId === x.id}
+          onClick={(e) =>
+            setOpenOptions({
+              id: x.id,
+              shopId: x.shopId,
+              element: e.currentTarget,
+            })
+          }
+        >
+          <MoreVertIcon />
+        </IconButton>
+      ),
+    },
+  ]);
 
 export const SectionPage = () => {
   const { shopId } = useParams();
@@ -98,25 +139,6 @@ export const SectionPage = () => {
     setReorderedSections(undefined);
   };
 
-  const actions = (id: number) => (
-    <IconButton
-      scale={0.9}
-      placement="left"
-      titleKey="options"
-      disabled={isReordering}
-      open={options.data?.id === id}
-      onClick={(e) =>
-        setOpenOptions({
-          id,
-          shopId: shopIdAsNumber,
-          element: e.currentTarget,
-        })
-      }
-    >
-      <MoreVertIcon />
-    </IconButton>
-  );
-
   const optionsContent =
     options.isRender && options.data ? (
       <ModifySection
@@ -127,6 +149,8 @@ export const SectionPage = () => {
         onClose={setCloseOptions}
       />
     ) : null;
+
+  const optionsId = options.isOpen ? options.data?.id : undefined;
 
   return (
     <>
@@ -148,18 +172,17 @@ export const SectionPage = () => {
           />
         </Stack>
         <Table
-          id="users"
-          columns={3}
-          headers={headers}
+          name="sections"
           emptyKey="addYourSections"
           isReordering={isReordering}
+          defaultOrderBy="orderNumber"
+          isShowingActions={options.isOpen}
           isFetchingReorder={mutation.isLoading}
-          elementShowingActions={options.data?.id}
           data={reorderedSections ?? res.sections}
+          columns={getColumns(setOpenOptions, optionsId)}
           onDrag={handleDrag}
-          renderActions={actions}
-          onStartReorder={handleStartReorder}
           onEndReorder={handleEndReorder}
+          onStartReorder={handleStartReorder}
         />
       </Stack>
       {optionsContent}
