@@ -30,7 +30,7 @@ export const Header = <T,>(props: Props<T>) => {
     <TableCell
       key={`${name}-${i}-${x.labelKey}`}
       sx={{
-        width: `${x.width ?? 0}%`,
+        width: `${x.width}%`,
         pl: !isReordering && i === 0 ? { xs: 2, sm: 4 } : 2,
         textAlign: x.align === 'right' ? 'right' : 'left',
       }}

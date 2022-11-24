@@ -6,11 +6,11 @@ export type Data<T> = T & {
 };
 
 export type Column<T> = {
+  width: number;
   labelKey: string;
   isOrdering: boolean;
   dataKey: keyof Data<T> | 'actions';
   py?: number;
-  width?: number;
   align?: 'right' | 'left';
   render: (item: Data<T>, index: number, isReordering: boolean) => JSX.Element;
 };

@@ -4,7 +4,6 @@ import { Product } from '~/types';
 import { mockProducts } from './mock-products';
 
 const breadcrumbs = [{ key: 'home' }, { key: 'products' }];
-const products = mockProducts;
 
 const getColumns = () =>
   Table.createColumns<Product>(() => [
@@ -12,19 +11,21 @@ const getColumns = () =>
       dataKey: 'name',
       labelKey: 'name',
       isOrdering: true,
-      width: 2,
+      width: 20,
       render: (x) => <>{x.name}</>,
     },
     {
       dataKey: 'name',
       labelKey: 'name',
       isOrdering: true,
+      width: 30,
       render: (x) => <>{x.name}</>,
     },
     {
       dataKey: 'name',
       labelKey: 'name',
       isOrdering: true,
+      width: 50,
       render: (x) => <>{x.name}</>,
     },
   ]);
@@ -45,7 +46,7 @@ export const ProductPage = () => {
       </Stack>
       <Table
         name="products"
-        data={products}
+        data={mockProducts}
         columns={getColumns()}
         emptyKey="addYourProducts"
       />

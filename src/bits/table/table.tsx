@@ -27,7 +27,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { TranslatedText } from '../text';
-import { Header, Row, Toolbar } from './components';
+import { Header, Pagination, Row, Toolbar } from './components';
 import { Column, Data, Order } from './table-types';
 
 type Props<T> = {
@@ -83,9 +83,10 @@ const TableComponent = <T,>(props: Props<T>) => {
     onStartReorder,
   } = props;
 
+  const [page, setPage] = useState(0);
   const [search, setSearch] = useState('');
   const [order, setOrder] = useState<Order>('asc');
-  const [isDragging, setIsDragging] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [orderBy, setOrderBy] = useState<Omit<keyof Data<T>, 'actions'>>(
     defaultOrderBy ?? 'id'
   );
@@ -131,13 +132,7 @@ const TableComponent = <T,>(props: Props<T>) => {
     }
   };
 
-  const handleDragStart = () => {
-    setIsDragging(true);
-  };
-
   const handleDragEnd = (event: DragEndEvent) => {
-    setIsDragging(false);
-
     const { active, over } = event;
 
     if (!over || active.id === over.id) {
@@ -145,6 +140,15 @@ const TableComponent = <T,>(props: Props<T>) => {
     }
 
     onDrag?.(active.id, over.id);
+  };
+
+  const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(Number.parseInt(e.target.value, 10));
+    setPage(0);
+  };
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
   };
 
   const searchLowerCase = search.toLowerCase();
@@ -161,9 +165,16 @@ const TableComponent = <T,>(props: Props<T>) => {
       : filteredData
     : filteredData;
 
+  const rowsData =
+    isReordering === undefined
+      ? sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+      : sortedData;
+
+  console.log(rowsData);
+
   const rows =
-    sortedData.length > 0
-      ? sortedData.map((x, i) => (
+    rowsData.length > 0
+      ? rowsData.map((x, i) => (
           <Row<T>
             key={`row-${name}-${i}-${x.id}`}
             data={x}
@@ -189,7 +200,7 @@ const TableComponent = <T,>(props: Props<T>) => {
     );
 
   const emptyRow =
-    sortedData.length === 0 ? (
+    rowsData.length === 0 ? (
       <TableRow>
         <TableCell align="center" colSpan={columns.length}>
           {search === '' ? (
@@ -223,7 +234,13 @@ const TableComponent = <T,>(props: Props<T>) => {
         isReordering={isReordering}
         onSort={handleSort}
       />
-      <TableBody sx={{ '& > tr:last-child > td': { border: 0 } }}>
+      <TableBody
+        sx={{
+          ...(isReordering !== undefined
+            ? { '& > tr:last-child > td': { border: 0 } }
+            : undefined),
+        }}
+      >
         {tableBodyContent}
         {emptyRow}
       </TableBody>
@@ -236,7 +253,6 @@ const TableComponent = <T,>(props: Props<T>) => {
         sensors={sensors}
         onDragEnd={handleDragEnd}
         collisionDetection={closestCenter}
-        onDragStart={handleDragStart}
         onDragCancel={handleDragEnd}
         modifiers={[
           restrictToVerticalAxis,
@@ -250,6 +266,17 @@ const TableComponent = <T,>(props: Props<T>) => {
       table
     );
 
+  const tablePagination =
+    isReordering === undefined ? (
+      <Pagination
+        page={page}
+        count={sortedData.length}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+    ) : null;
+
   return (
     <Stack component={Paper} sx={{ display: 'flex', overflow: 'auto' }}>
       <Toolbar
@@ -261,7 +288,6 @@ const TableComponent = <T,>(props: Props<T>) => {
       />
       <TableContainer
         sx={{
-          touchAction: isDragging !== undefined ? 'none' : 'auto',
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
@@ -269,6 +295,7 @@ const TableComponent = <T,>(props: Props<T>) => {
       >
         {tableContent}
       </TableContainer>
+      {tablePagination}
     </Stack>
   );
 };

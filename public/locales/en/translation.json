@@ -98,5 +98,7 @@
   "products": "Products",
   "#": "#",
   "none": "",
+  "perPage": "Per page:",
+  "ofTable": "of",
   "eof": "eof"
 }
