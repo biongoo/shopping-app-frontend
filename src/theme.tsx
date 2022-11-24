@@ -28,7 +28,7 @@ const getDesignTokens = (mode: PaletteMode, color: Color): ThemeOptions => ({
           },
           background: {
             default: '#f0f6fa',
-            paper: '#f0f6fa',
+            paper: '#edf3f7',
           },
           action: {
             selectedOpacity: 0.25,

@@ -27,7 +27,7 @@ export const AppLayout = () => (
           flexDirection: 'column',
           width: '100%',
           maxWidth: 900,
-          p: { xs: 2, md: 3 },
+          p: { xs: 1.5, md: 3 },
         }}
       >
         <Outlet />

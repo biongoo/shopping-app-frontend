@@ -100,5 +100,8 @@
   "none": "",
   "perPage": "Per page:",
   "ofTable": "of",
+  "type": "Type",
+  "local": "Local",
+  "global": "Global",
   "eof": "eof"
 }

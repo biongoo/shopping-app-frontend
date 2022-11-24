@@ -276,7 +276,11 @@ const TableComponent = <T,>(props: Props<T>) => {
     ) : null;
 
   return (
-    <Stack component={Paper} sx={{ display: 'flex', overflow: 'auto' }}>
+    <Stack
+      elevation={4}
+      component={Paper}
+      sx={{ display: 'flex', overflow: 'auto', m: 1 }}
+    >
       <Toolbar
         search={search}
         isReordering={isReordering}
