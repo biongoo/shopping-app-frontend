@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 type ToggleButtonGroupProps<T extends FieldValues> = {
   name: string;
   titleKey: string;
+  translationKey: string;
   control: Control<T>;
   defaultValue: PathValue<T, Path<T>>;
   options: Array<PathValue<T, Path<T>>>;
@@ -33,13 +34,21 @@ export const ToggleButtonGroup = <T extends FieldValues>(props: Props<T>) => {
   const { t } = useTranslation();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const { name, titleKey, options, control, fullWidth, defaultValue } = props;
+  const {
+    name,
+    titleKey,
+    options,
+    control,
+    fullWidth,
+    defaultValue,
+    translationKey,
+  } = props;
 
   const orientation = isSm ? 'vertical' : 'horizontal';
 
   const content = options.map((x) => (
     <ToggleButton key={`${name}-${x}`} value={x}>
-      {t(x)}
+      {t(`${translationKey}.${x}`)}
     </ToggleButton>
   ));
 
@@ -60,6 +69,7 @@ export const ToggleButtonGroup = <T extends FieldValues>(props: Props<T>) => {
             fullWidth={fullWidth}
             orientation={orientation}
             defaultValue={defaultValue}
+            onChange={(_e, value) => field.onChange(value)}
           >
             {content}
           </ToggleButtonGroupMui>

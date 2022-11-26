@@ -1,13 +1,14 @@
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Box, Stack } from '@mui/material';
+import { Box, CircularProgress, Stack } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
+import { getProducts } from '~/api';
 import { Breadcrumbs, IconButton, Table, TranslatedText } from '~/bits';
 import { ProductType } from '~/enums';
 import { Product } from '~/types';
-import { useModal } from '~/utils';
+import { generateOnError, useModal } from '~/utils';
 import { ModifyData } from './components';
-import { mockProducts } from './mock-products';
 
 const breadcrumbs = [{ key: 'home' }, { key: 'products' }];
 
@@ -21,14 +22,14 @@ const getColumns = (
       dataKey: 'name',
       labelKey: 'name',
       isOrdering: true,
-      width: 100,
+      width: 80,
       render: (x) => <>{x.name}</>,
     },
     {
       dataKey: 'type',
       labelKey: 'type',
       isOrdering: true,
-      width: 0,
+      width: 20,
       render: (x) => (
         <>{t(x.type === ProductType.global ? 'global' : 'local')}</>
       ),
@@ -61,8 +62,24 @@ const getColumns = (
 
 export const ProductPage = () => {
   const { t } = useTranslation();
-  const [options, setOpenOptions, setCloseOptions, setHideOptions] =
+  const [options, setOpenOptions /* setCloseOptions, setHideOptions */] =
     useModal<ModifyData>();
+
+  const { data, isInitialLoading } = useQuery({
+    queryKey: ['products'],
+    queryFn: getProducts,
+    onError: generateOnError(),
+  });
+
+  if (isInitialLoading) {
+    return (
+      <Box textAlign="center">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  const products = data?.data ?? [];
 
   const optionsId = options.isOpen ? options.data?.id : undefined;
 
@@ -81,7 +98,7 @@ export const ProductPage = () => {
       </Stack>
       <Table
         name="products"
-        data={mockProducts}
+        data={products}
         emptyKey="addYourProducts"
         defaultOrderBy="name"
         isShowingActions={options.isOpen}

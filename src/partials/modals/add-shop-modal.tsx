@@ -77,8 +77,9 @@ export const AddShopModal = (props: Props) => {
         <ToggleButtonGroup
           fullWidth
           name="orderType"
-          titleKey="position"
           control={control}
+          titleKey="position"
+          translationKey="orderType"
           defaultValue={OrderType.atTheBottom}
           options={[
             OrderType.atTheTop,

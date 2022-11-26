@@ -3,6 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import { TableCell, TableRow } from '@mui/material';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Column, Data } from '../table-types';
 
 type Props<T> = {
@@ -15,6 +16,8 @@ type Props<T> = {
 
 export const Row = <T,>(props: Props<T>) => {
   const { data, name, isShowingActions, isReordering, columns } = props;
+
+  const { i18n } = useTranslation();
 
   const {
     attributes,
@@ -61,7 +64,7 @@ export const Row = <T,>(props: Props<T>) => {
         {cells}
       </>
     );
-  }, [isReordering, isShowingActions, data]);
+  }, [isReordering, isShowingActions, data, i18n.language]);
 
   return (
     <TableRow

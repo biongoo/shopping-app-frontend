@@ -103,5 +103,9 @@
   "type": "Type",
   "local": "Local",
   "global": "Global",
-  "eof": "eof"
+  "orderType": {
+    "0": "At the top",
+    "1": "After item",
+    "2": "At the bottom"
+  }
 }

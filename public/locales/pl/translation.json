@@ -103,5 +103,9 @@
   "type": "Typ",
   "local": "Lokalny",
   "global": "Globalny",
-  "eof": "eof"
+  "orderType": {
+    "0": "Na początku",
+    "1": "Po",
+    "2": "Na końcu"
+  }
 }

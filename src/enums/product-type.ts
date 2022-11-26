@@ -1,4 +1,4 @@
 export enum ProductType {
-  local,
-  global,
+  local = 'local',
+  global = 'global',
 }

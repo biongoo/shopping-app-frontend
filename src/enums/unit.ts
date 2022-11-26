@@ -1,6 +1,6 @@
 export enum Unit {
-  grams,
-  milliliters,
-  packs,
-  pieces,
+  grams = 'grams',
+  milliliters = 'milliliters',
+  packs = 'packs',
+  pieces = 'pieces',
 }

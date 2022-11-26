@@ -87,8 +87,9 @@ export const EditSectionModal = (props: EditSectionModalProps) => {
         <ToggleButtonGroup
           fullWidth
           name="orderType"
-          titleKey="position"
           control={control}
+          titleKey="position"
+          translationKey="orderType"
           defaultValue={section.orderType}
           options={[
             OrderType.atTheTop,
