@@ -5,7 +5,6 @@ import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { getProducts } from '~/api';
 import { Breadcrumbs, IconButton, Table, TranslatedText } from '~/bits';
-import { ProductType } from '~/enums';
 import { Product } from '~/types';
 import { generateOnError, useModal } from '~/utils';
 import { ModifyData } from './components';
@@ -30,9 +29,7 @@ const getColumns = (
       labelKey: 'type',
       isOrdering: true,
       width: 20,
-      render: (x) => (
-        <>{t(x.type === ProductType.global ? 'global' : 'local')}</>
-      ),
+      render: (x) => <>{t(`productType.${x.type}`)}</>,
     },
     {
       dataKey: 'actions',

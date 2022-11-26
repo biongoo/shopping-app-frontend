@@ -77,9 +77,6 @@
   "deleteShop": "Usuń sklep",
   "areYouSureDelete": "Czy na pewno chcesz usunąć \"{{item}}\"?",
   "yes": "Tak",
-  "atTheTop": "Na początku",
-  "atTheBottom": "Na końcu",
-  "afterItem": "Po pozycji",
   "position": "Pozycja",
   "shop": "Sklep",
   "section": "Dział",
@@ -101,11 +98,19 @@
   "perPage": "Na stronę:",
   "ofTable": "z",
   "type": "Typ",
-  "local": "Lokalny",
-  "global": "Globalny",
   "orderType": {
     "0": "Na początku",
-    "1": "Po",
+    "1": "Po pozycji",
     "2": "Na końcu"
+  },
+  "productType": {
+    "0": "Lokalny",
+    "1": "Globalny"
+  },
+  "unit": {
+    "0": "Gramy",
+    "1": "Mililitry",
+    "2": "Opakowania",
+    "3": "Sztuki"
   }
 }

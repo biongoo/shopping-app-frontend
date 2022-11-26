@@ -77,9 +77,6 @@
   "deleteShop": "Delete shop",
   "areYouSureDelete": "Are you sure you want to delete \"{{item}}\"?",
   "yes": "Yes",
-  "atTheTop": "At the top",
-  "atTheBottom": "At the bottom",
-  "afterItem": "After item",
   "position": "Position",
   "shop": "Shop",
   "section": "Section",
@@ -101,11 +98,19 @@
   "perPage": "Per page:",
   "ofTable": "of",
   "type": "Type",
-  "local": "Local",
-  "global": "Global",
   "orderType": {
     "0": "At the top",
     "1": "After item",
     "2": "At the bottom"
+  },
+  "productType": {
+    "0": "Local",
+    "1": "Global"
+  },
+  "unit": {
+    "0": "Grams",
+    "1": "Milliliters",
+    "2": "Packs",
+    "3": "Pieces"
   }
 }
