@@ -86,7 +86,6 @@ export const AddProductModal = (props: Props) => {
       options={sections.map((x) => ({
         value: x.id,
         label: x.name,
-        shouldBeTranslated: false,
       }))}
     />
   ) : null;

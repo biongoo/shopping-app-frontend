@@ -63,7 +63,6 @@ export const EditSectionModal = (props: EditSectionModalProps) => {
           .map((x) => ({
             value: x.id,
             label: x.name,
-            shouldBeTranslated: false,
           }))}
       />
     ) : null;

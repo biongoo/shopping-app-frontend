@@ -59,7 +59,6 @@ export const AddShopModal = (props: Props) => {
         options={shops.map((x) => ({
           value: x.id,
           label: x.name,
-          shouldBeTranslated: false,
         }))}
       />
     ) : null;

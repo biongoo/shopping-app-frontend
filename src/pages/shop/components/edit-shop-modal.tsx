@@ -63,7 +63,6 @@ export const EditShopModal = (props: EditShopModalProps) => {
           .map((x) => ({
             value: x.id,
             label: x.name,
-            shouldBeTranslated: false,
           }))}
       />
     ) : null;
