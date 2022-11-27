@@ -5,6 +5,7 @@ import { addProduct, getSections, getShops } from '~/api';
 import { Autocomplete, FormModal, Input, ToggleButtonGroup } from '~/bits';
 import { Unit } from '~/enums';
 import { generateOnError, generateOnSuccess, useModal } from '~/utils';
+import { AddSectionModal } from './add-section-modal';
 import { AddShopModal } from './add-shop-modal';
 
 type Props = {
@@ -26,6 +27,7 @@ export const AddProductModal = (props: Props) => {
   const queryClient = useQueryClient();
   const mutation = useMutation(addProduct);
   const [shopModal, setOpenShop, setCloseShop] = useModal<string>();
+  const [sectionModal, setOpenSection, setCloseSection] = useModal<string>();
   const { control, handleSubmit, reset, setError, watch, setValue } =
     useForm<AddProductInputs>();
 
@@ -56,6 +58,17 @@ export const AddProductModal = (props: Props) => {
     setTimeout(onOpen, 200);
   };
 
+  const handleOpenSection = (name: string) => {
+    onHide();
+    setTimeout(() => setOpenSection(name), 200);
+  };
+
+  const handleCloseSection = (sectionId?: number) => {
+    setCloseSection();
+    setValue('sectionId', sectionId);
+    setTimeout(onOpen, 200);
+  };
+
   const shops = shopsQuery.data?.data ?? [];
   const sections = sectionsQuery.data?.data ?? [];
 
@@ -82,6 +95,11 @@ export const AddProductModal = (props: Props) => {
       name="sectionId"
       control={control}
       titleKey="section"
+      dynamicAdd={{
+        defaultValue: -1,
+        emptyAddKey: 'addSection',
+        onAddNewItem: handleOpenSection,
+      }}
       isInitialFetching={sectionsQuery.isInitialLoading}
       options={sections.map((x) => ({
         value: x.id,
@@ -94,10 +112,21 @@ export const AddProductModal = (props: Props) => {
     <AddShopModal
       shops={shops}
       isOpen={shopModal.isOpen}
-      onClose={handleCloseShop}
       defaultName={shopModal.data}
+      onClose={handleCloseShop}
     />
   ) : null;
+
+  const addSectionContent =
+    sectionModal.isRender && shopId !== undefined ? (
+      <AddSectionModal
+        shopId={shopId}
+        sections={sections}
+        isOpen={sectionModal.isOpen}
+        defaultName={sectionModal.data}
+        onClose={handleCloseSection}
+      />
+    ) : null;
 
   return (
     <>
@@ -133,6 +162,7 @@ export const AddProductModal = (props: Props) => {
             control={control}
             dynamicAdd={{
               defaultValue: -1,
+              emptyAddKey: 'addShop',
               onAddNewItem: handleOpenShop,
             }}
             isInitialFetching={shopsQuery.isInitialLoading}
@@ -145,6 +175,7 @@ export const AddProductModal = (props: Props) => {
         </Stack>
       </FormModal>
       {addShopContent}
+      {addSectionContent}
     </>
   );
 };

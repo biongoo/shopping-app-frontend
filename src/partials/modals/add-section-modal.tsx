@@ -12,7 +12,8 @@ type Props = {
   shopId: number;
   isOpen: boolean;
   sections: Section[];
-  onClose: () => void;
+  defaultName?: string;
+  onClose: (sectionId?: number) => void;
 };
 
 type AddSectionInputs = {
@@ -22,7 +23,7 @@ type AddSectionInputs = {
 };
 
 export const AddSectionModal = (props: Props) => {
-  const { sections, isOpen, shopId, onClose } = props;
+  const { sections, isOpen, shopId, defaultName, onClose } = props;
   const queryClient = useQueryClient();
   const mutation = useMutation(addSection);
   const { control, handleSubmit, reset, setError, setValue, watch } =
@@ -45,9 +46,9 @@ export const AddSectionModal = (props: Props) => {
         alertTime: 5,
         message: 'successfullyAdded',
         reset,
-        fn: () => {
+        fn: ({ data }) => {
           queryClient.invalidateQueries({ queryKey: ['shop', shopId] });
-          onClose();
+          onClose(data.id);
         },
       }),
       onError: generateOnError({ setError }),
@@ -78,7 +79,12 @@ export const AddSectionModal = (props: Props) => {
       handleSubmit={handleSubmit(onSubmit)}
     >
       <Stack spacing={2} direction="column">
-        <Input name="name" labelKey="name" control={control} defaultValue="" />
+        <Input
+          name="name"
+          labelKey="name"
+          control={control}
+          defaultValue={defaultName ?? ''}
+        />
         <ToggleButtonGroup
           fullWidth
           name="orderType"

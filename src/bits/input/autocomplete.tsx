@@ -46,6 +46,7 @@ type RenderOptions<T extends FieldValues> = {
 }[];
 
 type DynamicAddProps<T extends FieldValues> = {
+  emptyAddKey: string;
   defaultValue: PathValue<T, Path<T>>;
   onAddNewItem: (name: string) => void;
 };
@@ -220,14 +221,19 @@ export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
 
             const { inputValue } = state;
 
-            if (
-              inputValue !== '' &&
-              !options.some((x) => inputValue === x.label)
-            ) {
+            if (inputValue !== '') {
+              if (!options.some((x) => inputValue === x.label)) {
+                filtered.push({
+                  inputValue,
+                  value: dynamicAdd.defaultValue,
+                  label: t('addItem', { item: inputValue }),
+                });
+              }
+            } else {
               filtered.push({
-                inputValue,
+                inputValue: '',
                 value: dynamicAdd.defaultValue,
-                label: t('addItem', { item: inputValue }),
+                label: t(dynamicAdd.emptyAddKey),
               });
             }
 
@@ -241,7 +247,10 @@ export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
 
             const { value, inputValue } = newValue;
 
-            if (value === dynamicAdd?.defaultValue && inputValue) {
+            if (
+              value === dynamicAdd?.defaultValue &&
+              inputValue !== undefined
+            ) {
               setTimeout(() => {
                 field.onChange(undefined);
                 dynamicAdd?.onAddNewItem(inputValue);
