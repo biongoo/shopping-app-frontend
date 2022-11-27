@@ -23,6 +23,7 @@ type ToggleButtonGroupProps<T extends FieldValues> = {
   control: Control<T>;
   defaultValue: PathValue<T, Path<T>>;
   options: Array<PathValue<T, Path<T>>>;
+  multiple?: boolean;
   fullWidth?: boolean;
 };
 
@@ -39,6 +40,7 @@ export const ToggleButtonGroup = <T extends FieldValues>(props: Props<T>) => {
     titleKey,
     options,
     control,
+    multiple,
     fullWidth,
     defaultValue,
     translationKey,
@@ -64,11 +66,11 @@ export const ToggleButtonGroup = <T extends FieldValues>(props: Props<T>) => {
             sx={{ margin: 'auto' }}
             {...field}
             id={name}
-            exclusive
             color="primary"
             fullWidth={fullWidth}
             orientation={orientation}
             defaultValue={defaultValue}
+            exclusive={multiple !== true}
             onChange={(_e, value) => field.onChange(value)}
           >
             {content}

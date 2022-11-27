@@ -98,6 +98,10 @@
   "perPage": "Na stronę:",
   "ofTable": "z",
   "type": "Typ",
+  "addProduct": "Dodaj produkt",
+  "units": "Jednostki",
+  "shopOptional": "Sklep (Opcjonalnie)",
+  "addItem": "Dodaj \"{{item}}\"",
   "orderType": {
     "0": "Na początku",
     "1": "Po pozycji",

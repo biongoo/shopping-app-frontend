@@ -7,7 +7,7 @@ import { getProducts } from '~/api';
 import { Breadcrumbs, IconButton, Table, TranslatedText } from '~/bits';
 import { Product } from '~/types';
 import { generateOnError, useModal } from '~/utils';
-import { ModifyData } from './components';
+import { AddProduct, ModifyData } from './components';
 
 const breadcrumbs = [{ key: 'home' }, { key: 'products' }];
 
@@ -92,6 +92,7 @@ export const ProductPage = () => {
           <TranslatedText variant="h5" gutterBottom textKey="products" />
           <Breadcrumbs elements={breadcrumbs} />
         </Box>
+        <AddProduct />
       </Stack>
       <Table
         name="products"

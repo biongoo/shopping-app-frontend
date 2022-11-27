@@ -54,7 +54,7 @@ export const Header = <T,>(props: Props<T>) => {
     <TableHead
       sx={{
         backgroundColor: (theme) =>
-          emphasize(theme.palette.background.paper, 0.1),
+          emphasize(theme.palette.background.paper, 0.15),
       }}
     >
       <TableRow>

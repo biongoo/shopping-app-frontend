@@ -1,6 +1,8 @@
 import {
   Autocomplete as AutocompleteMui,
   autocompleteClasses,
+  CircularProgress,
+  InputAdornment,
   Popper,
   styled,
   TextField,
@@ -16,7 +18,6 @@ import {
   Ref,
   useContext,
 } from 'react';
-import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import {
   Control,
   Controller,
@@ -26,11 +27,12 @@ import {
   UseControllerProps,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
 type PropOption<T extends FieldValues> = {
   value: PathValue<T, Path<T>>;
   label: string;
-  shouldBeTranslated: boolean;
+  inputValue?: string;
 };
 
 type Option<T extends FieldValues> = {
@@ -43,12 +45,19 @@ type RenderOptions<T extends FieldValues> = {
   option: Option<T>;
 }[];
 
+type DynamicAddProps<T extends FieldValues> = {
+  defaultValue: PathValue<T, Path<T>>;
+  onAddNewItem: (name: string) => void;
+};
+
 type AutocompleteProps<T extends FieldValues> = {
   name: string;
   titleKey: string;
   control: Control<T>;
   options: Array<PropOption<T>>;
   required?: boolean;
+  isInitialFetching?: boolean;
+  dynamicAdd?: DynamicAddProps<T>;
 };
 
 type Props<T extends FieldValues> = UseControllerProps<T> &
@@ -133,21 +142,23 @@ const StyledPopper = styled(Popper)({
 export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
   const { t } = useTranslation();
 
-  const { name, titleKey, options, control, defaultValue, required } = props;
-
-  const translatedOptions = options.map((x) => ({
-    value: x.value,
-    label: x.shouldBeTranslated ? t(x.label) : x.label,
-  }));
+  const {
+    name,
+    options,
+    control,
+    required,
+    titleKey,
+    dynamicAdd,
+    defaultValue,
+    isInitialFetching,
+  } = props;
 
   return (
     <Controller
       name={name}
       control={control}
       defaultValue={defaultValue}
-      rules={{
-        required,
-      }}
+      rules={{ required }}
       render={({ field, fieldState: { error } }) => (
         <AutocompleteMui
           {...field}
@@ -155,8 +166,9 @@ export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
           blurOnSelect
           autoHighlight
           disableListWrap
+          options={options}
           value={field.value || null}
-          options={translatedOptions}
+          disabled={isInitialFetching}
           PopperComponent={StyledPopper}
           openText={t('open') ?? 'Open'}
           closeText={t('close') ?? 'Close'}
@@ -166,9 +178,23 @@ export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
           renderInput={(params) => (
             <TextField
               {...params}
+              label={t(titleKey)}
               error={Boolean(error)}
               helperText={error && t('requiredField')}
-              label={t(titleKey)}
+              {...(isInitialFetching
+                ? {
+                    InputProps: {
+                      endAdornment: (
+                        <InputAdornment
+                          position="end"
+                          sx={{ position: 'absolute', right: 14 }}
+                        >
+                          <CircularProgress size={26} />
+                        </InputAdornment>
+                      ),
+                    },
+                  }
+                : null)}
             />
           )}
           isOptionEqualToValue={(option, value) => option.value === value}
@@ -177,19 +203,52 @@ export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
           }
           getOptionLabel={(option) => {
             const value = option as PathValue<T, Path<T>>;
-            const item = translatedOptions.find((x) => x.value === value);
+            const item = options.find((x) => x.value === value);
 
             return item?.label ?? '';
           }}
-          filterOptions={(filterOptions, state) =>
-            filterOptions.filter((x) =>
+          filterOptions={(options, state) => {
+            const filtered = options.filter((x) =>
               x.label
                 .toLocaleLowerCase()
                 .includes(state.inputValue.toLocaleLowerCase())
-            )
-          }
+            );
+
+            if (!dynamicAdd) {
+              return filtered;
+            }
+
+            const { inputValue } = state;
+
+            if (
+              inputValue !== '' &&
+              !options.some((x) => inputValue === x.label)
+            ) {
+              filtered.push({
+                inputValue,
+                value: dynamicAdd.defaultValue,
+                label: t('addItem', { item: inputValue }),
+              });
+            }
+
+            return filtered;
+          }}
           onChange={(_e, newValue) => {
-            field.onChange(newValue?.value);
+            if (!newValue) {
+              field.onChange(undefined);
+              return;
+            }
+
+            const { value, inputValue } = newValue;
+
+            if (value === dynamicAdd?.defaultValue && inputValue) {
+              setTimeout(() => {
+                field.onChange(undefined);
+                dynamicAdd?.onAddNewItem(inputValue);
+              });
+            } else if (value) {
+              field.onChange(value);
+            }
           }}
         />
       )}

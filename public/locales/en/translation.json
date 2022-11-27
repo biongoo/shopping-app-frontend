@@ -98,6 +98,10 @@
   "perPage": "Per page:",
   "ofTable": "of",
   "type": "Type",
+  "addProduct": "Add product",
+  "units": "Units",
+  "shopOptional": "Shop (Optional)",
+  "addItem": "Add \"{{item}}\"",
   "orderType": {
     "0": "At the top",
     "1": "After item",

@@ -11,7 +11,8 @@ import { generateOnError, generateOnSuccess } from '~/utils';
 type Props = {
   shops: Shop[];
   isOpen: boolean;
-  onClose: () => void;
+  onClose: (shopId?: number) => void;
+  defaultName?: string;
 };
 
 type AddShopInputs = {
@@ -21,7 +22,7 @@ type AddShopInputs = {
 };
 
 export const AddShopModal = (props: Props) => {
-  const { shops, isOpen, onClose } = props;
+  const { shops, isOpen, onClose, defaultName } = props;
   const queryClient = useQueryClient();
   const mutation = useMutation(addShop);
   const { control, handleSubmit, reset, setError, setValue, watch } =
@@ -39,9 +40,9 @@ export const AddShopModal = (props: Props) => {
         alertTime: 5,
         message: 'successfullyAdded',
         reset,
-        fn: () => {
+        fn: ({ data }) => {
           queryClient.invalidateQueries({ queryKey: ['shops'] });
-          onClose();
+          onClose(data.id);
         },
       }),
       onError: generateOnError({ setError }),
@@ -73,7 +74,12 @@ export const AddShopModal = (props: Props) => {
       handleSubmit={handleSubmit(onSubmit)}
     >
       <Stack spacing={2} direction="column">
-        <Input name="name" labelKey="name" control={control} defaultValue="" />
+        <Input
+          name="name"
+          labelKey="name"
+          control={control}
+          defaultValue={defaultName ?? ''}
+        />
         <ToggleButtonGroup
           fullWidth
           name="orderType"
