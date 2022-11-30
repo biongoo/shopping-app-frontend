@@ -19,26 +19,36 @@ type Props = {
 type AddSectionInputs = {
   name: string;
   orderType: OrderType;
-  orderAfterId?: number;
+  orderAfterId: number | null;
 };
 
 export const AddSectionModal = (props: Props) => {
   const { sections, isOpen, shopId, defaultName, onClose } = props;
   const queryClient = useQueryClient();
   const mutation = useMutation(addSection);
-  const { control, handleSubmit, reset, setError, setValue, watch } =
-    useForm<AddSectionInputs>();
+  const {
+    control,
+    reset,
+    watch,
+    setError,
+    setValue,
+    clearErrors,
+    handleSubmit,
+  } = useForm<AddSectionInputs>();
 
   const orderType = watch('orderType');
 
   useEffect(() => {
-    setValue('orderAfterId', undefined);
+    clearErrors('orderAfterId');
+    setValue('orderAfterId', null);
   }, [orderType]);
 
   const onSubmit = (data: AddSectionInputs) => {
     const preparedData = {
       shopId,
-      ...data,
+      name: data.name,
+      orderType: data.orderType,
+      orderAfterId: data.orderAfterId ?? undefined,
     };
 
     mutation.mutate(preparedData, {

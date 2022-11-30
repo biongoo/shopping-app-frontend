@@ -18,23 +18,37 @@ type EditSectionModalProps = {
 type EditSectionInputs = {
   name: string;
   orderType: OrderType;
-  orderAfterId?: number;
+  orderAfterId: number | null;
 };
 
 export const EditSectionModal = (props: EditSectionModalProps) => {
   const { section, sections, isOpen, onClose } = props;
   const queryClient = useQueryClient();
   const mutation = useMutation(editSection);
-  const { control, handleSubmit, reset, setError, setValue, watch } =
-    useForm<EditSectionInputs>();
+  const {
+    control,
+    reset,
+    watch,
+    setError,
+    setValue,
+    clearErrors,
+    handleSubmit,
+  } = useForm<EditSectionInputs>();
   const orderType = watch('orderType') ?? section.orderType;
 
   useEffect(() => {
-    setValue('orderAfterId', section.orderAfterId);
+    clearErrors('orderAfterId');
+    setValue('orderAfterId', section.orderAfterId ?? null);
   }, [orderType]);
 
   const onSubmit = (data: EditSectionInputs) => {
-    const preparedData = { ...data, id: section.id, shopId: section.shopId };
+    const preparedData = {
+      id: section.id,
+      name: data.name,
+      shopId: section.shopId,
+      orderType: data.orderType,
+      orderAfterId: data.orderAfterId ?? undefined,
+    };
 
     mutation.mutate(preparedData, {
       onSuccess: generateOnSuccess({
@@ -89,7 +103,7 @@ export const EditSectionModal = (props: EditSectionModalProps) => {
           control={control}
           titleKey="position"
           translationKey="orderType"
-          defaultValue={section.orderType}
+          defaultValue={section.orderType ?? null}
           options={[
             OrderType.atTheTop,
             OrderType.atTheBottom,

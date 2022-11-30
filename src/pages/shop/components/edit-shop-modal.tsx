@@ -18,23 +18,36 @@ type EditShopModalProps = {
 type EditShopInputs = {
   name: string;
   orderType: OrderType;
-  orderAfterId?: number;
+  orderAfterId: number | null;
 };
 
 export const EditShopModal = (props: EditShopModalProps) => {
   const { shop, shops, isOpen, onClose } = props;
   const queryClient = useQueryClient();
   const mutation = useMutation(editShop);
-  const { control, handleSubmit, reset, setError, setValue, watch } =
-    useForm<EditShopInputs>();
+  const {
+    control,
+    reset,
+    watch,
+    setError,
+    setValue,
+    clearErrors,
+    handleSubmit,
+  } = useForm<EditShopInputs>();
   const orderType = watch('orderType') ?? shop.orderType;
 
   useEffect(() => {
-    setValue('orderAfterId', shop.orderAfterId);
+    clearErrors('orderAfterId');
+    setValue('orderAfterId', shop.orderAfterId ?? null);
   }, [orderType]);
 
   const onSubmit = (data: EditShopInputs) => {
-    const preparedData = { ...data, shopId: shop.id };
+    const preparedData = {
+      shopId: shop.id,
+      name: data.name,
+      orderType: data.orderType,
+      orderAfterId: data.orderAfterId ?? undefined,
+    };
 
     mutation.mutate(preparedData, {
       onSuccess: generateOnSuccess({
@@ -89,7 +102,7 @@ export const EditShopModal = (props: EditShopModalProps) => {
           control={control}
           titleKey="position"
           translationKey="orderType"
-          defaultValue={shop.orderType}
+          defaultValue={shop.orderType ?? null}
           options={[
             OrderType.atTheTop,
             OrderType.atTheBottom,

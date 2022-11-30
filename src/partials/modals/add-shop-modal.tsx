@@ -18,24 +18,38 @@ type Props = {
 type AddShopInputs = {
   name: string;
   orderType: OrderType;
-  orderAfterId?: number;
+  orderAfterId: number | null;
 };
 
 export const AddShopModal = (props: Props) => {
   const { shops, isOpen, onClose, defaultName } = props;
   const queryClient = useQueryClient();
   const mutation = useMutation(addShop);
-  const { control, handleSubmit, reset, setError, setValue, watch } =
-    useForm<AddShopInputs>();
+  const {
+    control,
+    reset,
+    watch,
+    setError,
+    setValue,
+    clearErrors,
+    handleSubmit,
+  } = useForm<AddShopInputs>();
 
   const orderType = watch('orderType');
 
   useEffect(() => {
-    setValue('orderAfterId', undefined);
+    clearErrors('orderAfterId');
+    setValue('orderAfterId', null);
   }, [orderType]);
 
   const onSubmit = (data: AddShopInputs) => {
-    mutation.mutate(data, {
+    const preparedData = {
+      name: data.name,
+      orderType: data.orderType,
+      orderAfterId: data.orderAfterId ?? undefined,
+    };
+
+    mutation.mutate(preparedData, {
       onSuccess: generateOnSuccess({
         alertTime: 5,
         message: 'successfullyAdded',

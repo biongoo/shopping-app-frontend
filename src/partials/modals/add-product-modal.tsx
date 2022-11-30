@@ -31,8 +31,15 @@ export const AddProductModal = (props: Props) => {
   const [shopModal, setOpenShop, setCloseShop] = useModal<string>();
   const [sectionIdToUpdate, setSectionIdToUpdate] = useState<number>();
   const [sectionModal, setOpenSection, setCloseSection] = useModal<string>();
-  const { control, handleSubmit, reset, setError, watch, setValue } =
-    useForm<AddProductInputs>();
+  const {
+    control,
+    reset,
+    watch,
+    setError,
+    setValue,
+    clearErrors,
+    handleSubmit,
+  } = useForm<AddProductInputs>();
 
   const shopId = watch('shopId');
   const isShop = typeof shopId === 'number';
@@ -74,6 +81,7 @@ export const AddProductModal = (props: Props) => {
   }, [sections, sectionIdToUpdate]);
 
   const handleChangeShopId = () => {
+    clearErrors('sectionId');
     setValue('sectionId', null);
   };
 
