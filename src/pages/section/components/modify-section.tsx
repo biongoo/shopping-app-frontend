@@ -1,4 +1,4 @@
-import AddBusinessIcon from '@mui/icons-material/AddBusiness';
+import CategoryIcon from '@mui/icons-material/Category';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { ListItemIcon, MenuItem, Popover } from '@mui/material';
@@ -114,7 +114,7 @@ export const ModifySection = (props: Props) => {
           }
         >
           <ListItemIcon>
-            <AddBusinessIcon />
+            <CategoryIcon />
           </ListItemIcon>
           <TranslatedText ml={1} textKey="products" />
         </MenuItem>

@@ -130,5 +130,5 @@ export const Input = <T extends FieldValues>(props: Props<T>) => {
 };
 
 const allowOnlyNumber = (value: string) => {
-  return value.replace(/\D/g, '');
+  return value.replaceAll(/\D/g, '');
 };

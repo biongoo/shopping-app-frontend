@@ -191,7 +191,9 @@ const TableComponent = <T,>(props: Props<T>) => {
       : null;
 
   const tableBodyContent =
-    isReordering !== undefined ? (
+    isReordering === undefined ? (
+      rows
+    ) : (
       <SortableContext
         items={data}
         strategy={verticalListSortingStrategy}
@@ -199,8 +201,6 @@ const TableComponent = <T,>(props: Props<T>) => {
       >
         {rows}
       </SortableContext>
-    ) : (
-      rows
     );
 
   const emptyRow =
@@ -240,9 +240,9 @@ const TableComponent = <T,>(props: Props<T>) => {
       />
       <TableBody
         sx={{
-          ...(isReordering !== undefined
-            ? { '& > tr:last-child > td': { border: 0 } }
-            : undefined),
+          ...(isReordering === undefined
+            ? undefined
+            : { '& > tr:last-child > td': { border: 0 } }),
         }}
       >
         {tableBodyContent}
@@ -252,7 +252,9 @@ const TableComponent = <T,>(props: Props<T>) => {
   );
 
   const tableContent =
-    isReordering !== undefined ? (
+    isReordering === undefined ? (
+      table
+    ) : (
       <DndContext
         sensors={sensors}
         onDragEnd={handleDragEnd}
@@ -266,8 +268,6 @@ const TableComponent = <T,>(props: Props<T>) => {
       >
         {table}
       </DndContext>
-    ) : (
-      table
     );
 
   const tablePagination =

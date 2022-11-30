@@ -34,7 +34,7 @@ export const Toolbar = (props: Props) => {
   const { t } = useTranslation();
 
   const reorderButton =
-    props.isReordering !== undefined ? (
+    props.isReordering === undefined ? null : (
       <IconButton
         open={props.isReordering}
         titleKey={props.isReordering ? 'save' : 'reorder'}
@@ -42,7 +42,7 @@ export const Toolbar = (props: Props) => {
       >
         {getReorderIcon(props.isReordering, props.isFetchingReorder)}
       </IconButton>
-    ) : null;
+    );
 
   return (
     <Stack

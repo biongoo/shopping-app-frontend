@@ -223,7 +223,13 @@ export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
 
             const { inputValue } = state;
 
-            if (inputValue !== '') {
+            if (inputValue === '') {
+              filtered.push({
+                inputValue: '',
+                value: dynamicAdd.defaultValue,
+                label: t(dynamicAdd.emptyAddKey),
+              });
+            } else {
               if (!options.some((x) => inputValue === x.label)) {
                 filtered.push({
                   inputValue,
@@ -231,12 +237,6 @@ export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
                   label: t('addItem', { item: inputValue }),
                 });
               }
-            } else {
-              filtered.push({
-                inputValue: '',
-                value: dynamicAdd.defaultValue,
-                label: t(dynamicAdd.emptyAddKey),
-              });
             }
 
             return filtered;
