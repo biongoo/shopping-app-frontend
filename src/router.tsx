@@ -6,6 +6,7 @@ import {
   ProductPage,
   LogInPage,
   SectionPage,
+  SectionProductPage,
   ShopPage,
   SignUpPage,
 } from './pages';
@@ -101,8 +102,17 @@ export const router = createBrowserRouter([
             element: <ShopPage />,
           },
           {
-            path: ':shopId/',
-            element: <SectionPage />,
+            path: ':shopId',
+            children: [
+              {
+                index: true,
+                element: <SectionPage />,
+              },
+              {
+                path: ':sectionId',
+                element: <SectionProductPage />,
+              },
+            ],
           },
         ],
       },
