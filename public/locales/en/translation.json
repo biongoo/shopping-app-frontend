@@ -99,9 +99,12 @@
   "ofTable": "of",
   "type": "Type",
   "addProduct": "Add product",
+  "editProduct": "Edit product",
+  "deleteProduct": "Delete product",
   "units": "Units",
   "shopOptional": "Shop (Optional)",
   "addItem": "Add \"{{item}}\"",
+  "atLeastOneValue": "At least one value must be selected",
   "orderType": {
     "0": "At the top",
     "1": "After item",

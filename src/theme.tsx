@@ -21,7 +21,7 @@ const getDesignTokens = (mode: PaletteMode, color: Color): ThemeOptions => ({
       ? {
           // light mode
           text: {
-            primary: '#2a343d',
+            primary: '#161d24',
           },
           icon: {
             primary: '#6d7b87',

@@ -7,7 +7,7 @@ import { getProducts } from '~/api';
 import { Breadcrumbs, IconButton, Table, TranslatedText } from '~/bits';
 import { Product } from '~/types';
 import { generateOnError, useModal } from '~/utils';
-import { AddProduct, ModifyData } from './components';
+import { AddProduct, ModifyData, ModifyProduct } from './components';
 
 const breadcrumbs = [{ key: 'home' }, { key: 'products' }];
 
@@ -59,7 +59,7 @@ const getColumns = (
 
 export const ProductPage = () => {
   const { t } = useTranslation();
-  const [options, setOpenOptions /* setCloseOptions, setHideOptions */] =
+  const [options, setOpenOptions, setCloseOptions, setHideOptions] =
     useModal<ModifyData>();
 
   const { data, isInitialLoading } = useQuery({
@@ -78,30 +78,44 @@ export const ProductPage = () => {
 
   const products = data?.data ?? [];
 
+  const optionsContent =
+    options.isRender && options.data ? (
+      <ModifyProduct
+        data={options.data}
+        products={products}
+        isOpen={options.isOpen}
+        onHide={setHideOptions}
+        onClose={setCloseOptions}
+      />
+    ) : null;
+
   const optionsId = options.isOpen ? options.data?.id : undefined;
 
   return (
-    <Stack sx={{ flexGrow: 1, overflow: 'auto' }}>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        mb={4}
-      >
-        <Box>
-          <TranslatedText variant="h5" gutterBottom textKey="products" />
-          <Breadcrumbs elements={breadcrumbs} />
-        </Box>
-        <AddProduct />
+    <>
+      <Stack sx={{ flexGrow: 1, overflow: 'auto' }}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={4}
+        >
+          <Box>
+            <TranslatedText variant="h5" gutterBottom textKey="products" />
+            <Breadcrumbs elements={breadcrumbs} />
+          </Box>
+          <AddProduct />
+        </Stack>
+        <Table
+          name="products"
+          data={products}
+          emptyKey="addYourProducts"
+          defaultOrderBy="name"
+          isShowingActions={options.isOpen}
+          columns={getColumns(t, setOpenOptions, optionsId)}
+        />
       </Stack>
-      <Table
-        name="products"
-        data={products}
-        emptyKey="addYourProducts"
-        defaultOrderBy="name"
-        isShowingActions={options.isOpen}
-        columns={getColumns(t, setOpenOptions, optionsId)}
-      />
-    </Stack>
+      {optionsContent}
+    </>
   );
 };

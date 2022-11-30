@@ -19,9 +19,10 @@ export const LanguageOptions = (props: Props) => {
       return;
     }
 
-    queryClient.invalidateQueries({ queryKey: ['products'] });
-
-    setTimeout(() => i18n.changeLanguage(value), 100);
+    setTimeout(() => {
+      i18n.changeLanguage(value), 100;
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    });
   };
 
   const content = langs.map((lang) => (

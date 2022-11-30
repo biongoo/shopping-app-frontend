@@ -1,8 +1,9 @@
 import {
-  Box,
+  FormControl,
+  FormHelperText,
+  FormLabel,
   ToggleButton,
   ToggleButtonGroup as ToggleButtonGroupMui,
-  Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
@@ -24,6 +25,7 @@ type ToggleButtonGroupProps<T extends FieldValues> = {
   defaultValue: PathValue<T, Path<T>>;
   options: Array<PathValue<T, Path<T>>>;
   multiple?: boolean;
+  disabled?: boolean;
   fullWidth?: boolean;
 };
 
@@ -41,6 +43,7 @@ export const ToggleButtonGroup = <T extends FieldValues>(props: Props<T>) => {
     options,
     control,
     multiple,
+    disabled,
     fullWidth,
     defaultValue,
     translationKey,
@@ -58,24 +61,47 @@ export const ToggleButtonGroup = <T extends FieldValues>(props: Props<T>) => {
     <Controller
       name={name}
       control={control}
+      rules={{ required: true }}
       defaultValue={defaultValue}
-      render={({ field }) => (
-        <Box>
-          <Typography mb={1}>{t(titleKey)}:</Typography>
+      render={({ field, fieldState: { error } }) => (
+        <FormControl error={Boolean(error)}>
+          <FormLabel sx={{ mb: 1 }}>{t(titleKey)}:</FormLabel>
           <ToggleButtonGroupMui
-            sx={{ margin: 'auto' }}
+            sx={{
+              margin: 'auto',
+              ...(error
+                ? {
+                    '& > button': {
+                      borderColor: 'error.main',
+                      color: 'error.main',
+                    },
+                  }
+                : null),
+            }}
             {...field}
             id={name}
             color="primary"
+            disabled={disabled}
             fullWidth={fullWidth}
             orientation={orientation}
             defaultValue={defaultValue}
             exclusive={multiple !== true}
-            onChange={(_e, value) => field.onChange(value)}
+            onChange={(_e, value) => {
+              if (value === null) {
+                return;
+              }
+
+              field.onChange(value);
+            }}
           >
             {content}
           </ToggleButtonGroupMui>
-        </Box>
+          {error ? (
+            <FormHelperText sx={{ m: 0, mt: 0.5 }}>
+              {t(error?.message || 'atLeastOneValue')}
+            </FormHelperText>
+          ) : null}
+        </FormControl>
       )}
     />
   );

@@ -59,6 +59,7 @@ type AutocompleteProps<T extends FieldValues> = {
   required?: boolean;
   isInitialFetching?: boolean;
   dynamicAdd?: DynamicAddProps<T>;
+  onChangeId?: () => void;
 };
 
 type Props<T extends FieldValues> = UseControllerProps<T> &
@@ -152,6 +153,7 @@ export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
     dynamicAdd,
     defaultValue,
     isInitialFetching,
+    onChangeId,
   } = props;
 
   return (
@@ -168,7 +170,7 @@ export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
           autoHighlight
           disableListWrap
           options={options}
-          value={field.value || null}
+          value={field.value ?? null}
           disabled={isInitialFetching}
           PopperComponent={StyledPopper}
           openText={t('open') ?? 'Open'}
@@ -240,8 +242,14 @@ export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
             return filtered;
           }}
           onChange={(_e, newValue) => {
+            if (newValue?.value === field.value) {
+              return;
+            }
+
+            onChangeId?.();
+
             if (!newValue) {
-              field.onChange(undefined);
+              field.onChange(null);
               return;
             }
 
@@ -252,8 +260,8 @@ export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
               inputValue !== undefined
             ) {
               setTimeout(() => {
-                field.onChange(undefined);
                 dynamicAdd?.onAddNewItem(inputValue);
+                field.onChange(null);
               });
             } else if (value) {
               field.onChange(value);

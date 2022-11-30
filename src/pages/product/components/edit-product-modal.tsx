@@ -2,37 +2,38 @@ import { Stack } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { addProduct, getSections, getShops } from '~/api';
+import { editProduct, getSections, getShops } from '~/api';
 import { Autocomplete, FormModal, Input, ToggleButtonGroup } from '~/bits';
-import { Unit } from '~/enums';
+import { ProductType, Unit } from '~/enums';
+import { AddSectionModal, AddShopModal } from '~/partials';
+import { Product } from '~/types';
 import { generateOnError, generateOnSuccess, useModal } from '~/utils';
-import { AddSectionModal } from './add-section-modal';
-import { AddShopModal } from './add-shop-modal';
 
 type Props = {
   isOpen: boolean;
+  product: Product;
   onHide: () => void;
   onOpen: () => void;
   onClose: () => void;
 };
 
-type AddProductInputs = {
+type EditProductInputs = {
   name: string;
   units: Unit[];
   shopId: number | null;
   sectionId: number | null;
 };
 
-export const AddProductModal = (props: Props) => {
-  const { isOpen, onClose, onHide, onOpen } = props;
+export const EditProductModal = (props: Props) => {
+  const { isOpen, product, onClose, onHide, onOpen } = props;
   const queryClient = useQueryClient();
-  const mutation = useMutation(addProduct);
+  const mutation = useMutation(editProduct);
   const [shopIdToUpdate, setShopIdToUpdate] = useState<number>();
   const [shopModal, setOpenShop, setCloseShop] = useModal<string>();
   const [sectionIdToUpdate, setSectionIdToUpdate] = useState<number>();
   const [sectionModal, setOpenSection, setCloseSection] = useModal<string>();
   const { control, handleSubmit, reset, setError, watch, setValue } =
-    useForm<AddProductInputs>();
+    useForm<EditProductInputs>();
 
   const shopId = watch('shopId');
   const isShop = typeof shopId === 'number';
@@ -54,11 +55,16 @@ export const AddProductModal = (props: Props) => {
   const sections = sectionsQuery.data?.data ?? [];
 
   useEffect(() => {
+    setValue('shopId', product.shopId ?? null);
+    setValue('sectionId', product.sectionId ?? null);
+  }, []);
+
+  useEffect(() => {
     if (
       shopIdToUpdate !== undefined &&
       shops.some((x) => x.id === shopIdToUpdate)
     ) {
-      setValue('shopId', shopIdToUpdate);
+      setValue('shopId', shopIdToUpdate, { shouldValidate: true });
       setShopIdToUpdate(undefined);
     }
   }, [shops, shopIdToUpdate]);
@@ -68,7 +74,7 @@ export const AddProductModal = (props: Props) => {
       sectionIdToUpdate !== undefined &&
       sections.some((x) => x.id === sectionIdToUpdate)
     ) {
-      setValue('sectionId', sectionIdToUpdate);
+      setValue('sectionId', sectionIdToUpdate, { shouldValidate: true });
       setSectionIdToUpdate(undefined);
     }
   }, [sections, sectionIdToUpdate]);
@@ -99,17 +105,19 @@ export const AddProductModal = (props: Props) => {
     setTimeout(onOpen, 200);
   };
 
-  const onSubmit = (data: AddProductInputs) => {
+  const onSubmit = (data: EditProductInputs) => {
     const preparedData = {
+      id: product.id,
       name: data.name,
       units: data.units,
+      type: product.type,
       sectionId: data.sectionId ?? undefined,
     };
 
     mutation.mutate(preparedData, {
       onSuccess: generateOnSuccess({
         alertTime: 5,
-        message: 'successfullyAdded',
+        message: 'successfullyEdited',
         reset,
         fn: () => {
           queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -164,7 +172,7 @@ export const AddProductModal = (props: Props) => {
   return (
     <>
       <FormModal
-        titleKey="addProduct"
+        titleKey="editProduct"
         isOpen={isOpen}
         isLoading={mutation.isLoading}
         reset={reset}
@@ -176,7 +184,8 @@ export const AddProductModal = (props: Props) => {
             name="name"
             labelKey="name"
             control={control}
-            defaultValue=""
+            defaultValue={product.name}
+            disabled={product.type === ProductType.global}
           />
           <ToggleButtonGroup
             fullWidth
@@ -184,8 +193,9 @@ export const AddProductModal = (props: Props) => {
             multiple={true}
             titleKey="units"
             control={control}
-            defaultValue={[]}
             translationKey="unit"
+            defaultValue={product.units}
+            disabled={product.type === ProductType.global}
             options={[Unit.grams, Unit.milliliters, Unit.packs, Unit.pieces]}
           />
           <Autocomplete

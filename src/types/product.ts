@@ -5,5 +5,6 @@ export type Product = {
   name: string;
   type: ProductType;
   units: Unit[];
+  shopId?: number;
   sectionId?: number;
 };

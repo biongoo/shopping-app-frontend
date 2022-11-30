@@ -115,10 +115,12 @@ const TableComponent = <T,>(props: Props<T>) => {
 
     setOrderBy(property);
     setOrder(isAsc ? 'desc' : 'asc');
+    setPage(0);
   };
 
   const handleSearch = (value: string) => {
     setSearch(value);
+    setPage(0);
   };
 
   const handleReorder = () => {
@@ -164,6 +166,10 @@ const TableComponent = <T,>(props: Props<T>) => {
         )
       : filteredData
     : filteredData;
+
+  if (page > 0 && sortedData.length <= page * rowsPerPage) {
+    setPage((state) => state - 1);
+  }
 
   const rowsData =
     isReordering === undefined
