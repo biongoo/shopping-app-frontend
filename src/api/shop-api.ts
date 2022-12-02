@@ -23,7 +23,7 @@ type DeleteShopDto = {
 type PostShopsOrderDto = {
   shops: Array<{
     id: number;
-    orderNumber: number;
+    order: number;
   }>;
 };
 

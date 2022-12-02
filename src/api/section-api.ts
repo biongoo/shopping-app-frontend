@@ -31,7 +31,7 @@ type PostSectionsOrderDto = {
   shopId: number;
   sections: Array<{
     id: number;
-    orderNumber: number;
+    order: number;
   }>;
 };
 

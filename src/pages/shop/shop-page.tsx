@@ -24,11 +24,11 @@ const getColumns = (
 ) =>
   Table.createColumns<Shop>(() => [
     {
-      dataKey: 'orderNumber',
+      dataKey: 'order',
       labelKey: '#',
       isOrdering: true,
       width: 0,
-      render: (x) => <>{x.orderNumber}</>,
+      render: (x) => <>{x.order}</>,
     },
     {
       dataKey: 'name',
@@ -108,7 +108,7 @@ export const ShopPage = () => {
     const data = {
       shops: reorderedShops.map((x) => ({
         id: x.id,
-        orderNumber: x.orderNumber,
+        order: x.order,
       })),
     };
 
@@ -155,9 +155,9 @@ export const ShopPage = () => {
       </Stack>
       <Table
         name="shops"
+        defaultOrderBy="order"
         emptyKey="addYourShops"
         isReordering={isReordering}
-        defaultOrderBy="orderNumber"
         isShowingActions={options.isOpen}
         data={reorderedShops ?? shops ?? []}
         isFetchingReorder={mutation.isLoading}

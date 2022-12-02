@@ -4,7 +4,7 @@ type Id = string | number;
 
 type Element = {
   id: number;
-  orderNumber: number;
+  order: number;
 };
 
 export const changeOrder =
@@ -19,6 +19,6 @@ export const changeOrder =
 
     return arrayMove(array, activeIndex, overIndex).map((x, i) => ({
       ...x,
-      orderNumber: i + 1,
+      order: i + 1,
     }));
   };

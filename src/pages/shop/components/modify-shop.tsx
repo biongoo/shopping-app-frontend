@@ -40,15 +40,13 @@ export const ModifyShop = (props: Props) => {
     let orderType: OrderType | undefined;
     let orderAfterId: number | undefined;
 
-    if (shop.orderNumber === 1) {
+    if (shop.order === 1) {
       orderType = OrderType.atTheTop;
-    } else if (shop.orderNumber === props.shops.length) {
+    } else if (shop.order === props.shops.length) {
       orderType = OrderType.atTheBottom;
     } else {
       orderType = OrderType.afterItem;
-      orderAfterId = props.shops.find(
-        (x) => x.orderNumber === shop.orderNumber - 1
-      )?.id;
+      orderAfterId = props.shops.find((x) => x.order === shop.order - 1)?.id;
     }
 
     setOpenEdit({ ...shop, orderType, orderAfterId });

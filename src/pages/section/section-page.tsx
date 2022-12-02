@@ -23,11 +23,11 @@ const getColumns = (
 ) =>
   Table.createColumns<Section>(() => [
     {
-      dataKey: 'orderNumber',
+      dataKey: 'order',
       labelKey: '#',
       isOrdering: true,
       width: 0,
-      render: (x) => <>{x.orderNumber}</>,
+      render: (x) => <>{x.order}</>,
     },
     {
       dataKey: 'name',
@@ -121,7 +121,7 @@ export const SectionPage = () => {
       shopId: shopIdAsNumber,
       sections: reorderedSections.map((x) => ({
         id: x.id,
-        orderNumber: x.orderNumber,
+        order: x.order,
       })),
     };
 
@@ -173,9 +173,9 @@ export const SectionPage = () => {
         </Stack>
         <Table
           name="sections"
+          defaultOrderBy="order"
           emptyKey="addYourSections"
           isReordering={isReordering}
-          defaultOrderBy="orderNumber"
           isShowingActions={options.isOpen}
           isFetchingReorder={mutation.isLoading}
           data={reorderedSections ?? res.sections}

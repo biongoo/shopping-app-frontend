@@ -3,7 +3,7 @@ import { OrderType } from '~/enums';
 export type Shop = {
   id: number;
   name: string;
-  orderNumber: number;
+  order: number;
   orderType?: OrderType;
   orderAfterId?: number;
 };

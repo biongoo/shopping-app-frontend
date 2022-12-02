@@ -41,14 +41,14 @@ export const ModifySection = (props: Props) => {
     let orderType: OrderType | undefined;
     let orderAfterId: number | undefined;
 
-    if (section.orderNumber === 1) {
+    if (section.order === 1) {
       orderType = OrderType.atTheTop;
-    } else if (section.orderNumber === props.sections.length) {
+    } else if (section.order === props.sections.length) {
       orderType = OrderType.atTheBottom;
     } else {
       orderType = OrderType.afterItem;
       orderAfterId = props.sections.find(
-        (x) => x.orderNumber === section.orderNumber - 1
+        (x) => x.order === section.order - 1
       )?.id;
     }
 
