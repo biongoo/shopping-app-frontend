@@ -1,13 +1,19 @@
-import { ProductType, Unit } from '~/enums';
+import { OrderType, ProductType, Unit } from '~/enums';
 import i18n from '~/i18n';
 import { ApiData } from '~/models';
 import { Product } from '~/types';
 import { connectApi } from './connect-api';
 
+type GetSectionProductsDto = {
+  sectionId: number;
+};
+
 type PostProductDto = {
   name: string;
   units: Unit[];
   sectionId?: number;
+  orderType: OrderType;
+  orderAfterId?: number;
 };
 
 type PatchProductDto = {
@@ -15,6 +21,8 @@ type PatchProductDto = {
   name: string;
   units: Unit[];
   type: ProductType;
+  orderType: OrderType;
+  orderAfterId?: number;
   sectionId?: number;
 };
 
@@ -25,6 +33,13 @@ type DeleteProductDto = {
 export const getProducts = (): Promise<ApiData<Product[]>> =>
   connectApi({
     endpoint: `product?lang=${i18n.resolvedLanguage}`,
+  });
+
+export const getSectionProducts = (
+  body: GetSectionProductsDto
+): Promise<ApiData<Product[]>> =>
+  connectApi({
+    endpoint: `product/section?sectionId=${body.sectionId}&lang=${i18n.resolvedLanguage}`,
   });
 
 export const addProduct = (body: PostProductDto): Promise<ApiData<Product>> =>
@@ -47,6 +62,8 @@ export const editProduct = (
         body: {
           id: body.id,
           sectionId: body.sectionId,
+          orderType: body.orderType,
+          orderAfterId: body.orderAfterId,
         },
       })
     : connectApi({
@@ -57,7 +74,9 @@ export const editProduct = (
           name: body.name,
           units: body.units,
           sectionId: body.sectionId,
+          orderType: body.orderType,
           lang: i18n.resolvedLanguage,
+          orderAfterId: body.orderAfterId,
         },
       });
 };

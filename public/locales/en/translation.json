@@ -105,6 +105,7 @@
   "shopOptional": "Shop (Optional)",
   "addItem": "Add \"{{item}}\"",
   "atLeastOneValue": "At least one value must be selected",
+  "notExistingItem": "Missing data",
   "orderType": {
     "0": "At the top",
     "1": "After item",

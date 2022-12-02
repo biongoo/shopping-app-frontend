@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { editProduct, getSections, getShops } from '~/api';
 import { Autocomplete, FormModal, Input, ToggleButtonGroup } from '~/bits';
-import { ProductType, Unit } from '~/enums';
+import { OrderType, ProductType, Unit } from '~/enums';
 import { AddSectionModal, AddShopModal } from '~/partials';
 import { Product } from '~/types';
 import { generateOnError, generateOnSuccess, useModal } from '~/utils';
@@ -22,6 +22,8 @@ type EditProductInputs = {
   units: Unit[];
   shopId: number | null;
   sectionId: number | null;
+  orderType: OrderType | null;
+  orderAfterId: number | null;
 };
 
 export const EditProductModal = (props: Props) => {
