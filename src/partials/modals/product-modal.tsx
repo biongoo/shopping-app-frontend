@@ -1,8 +1,15 @@
 import { Box, CircularProgress, Stack } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { editProduct, getSectionProducts, getSections, getShops } from '~/api';
+import { useForm, UseFormReset, UseFormSetError } from 'react-hook-form';
+import {
+  addProduct,
+  editProduct,
+  getSectionProducts,
+  getSections,
+  getShops,
+  PostProductDto,
+} from '~/api';
 import { Autocomplete, FormModal, Input, ToggleButtonGroup } from '~/bits';
 import { OrderType, ProductType, Unit } from '~/enums';
 import { AddSectionModal, AddShopModal } from '~/partials';
@@ -16,13 +23,13 @@ import {
 
 type Props = {
   isOpen: boolean;
-  product: Product;
+  product?: Product;
   onHide: () => void;
   onOpen: () => void;
   onClose: () => void;
 };
 
-type EditProductInputs = {
+type ProductInputs = {
   name: string;
   units: Unit[];
   shopId: number | null;
@@ -31,19 +38,91 @@ type EditProductInputs = {
   orderAfterId: number | null;
 };
 
+type OnSubmitProps = {
+  data: PostProductDto;
+  fn: () => void;
+  reset: UseFormReset<ProductInputs>;
+  setError: UseFormSetError<ProductInputs>;
+};
+
+type ProductModalProps = Props & {
+  isLoading: boolean;
+  onSubmitForm: (props: OnSubmitProps) => void;
+};
+
+export const AddProductModal = (props: Props) => {
+  const mutation = useMutation(addProduct);
+
+  const handleSubmit = (onSubmitProps: OnSubmitProps) => {
+    mutation.mutate(onSubmitProps.data, {
+      onSuccess: generateOnSuccess({
+        alertTime: 5,
+        message: 'successfullyEdited',
+        reset: onSubmitProps.reset,
+        fn: onSubmitProps.fn,
+      }),
+      onError: generateOnError({ setError: onSubmitProps.setError }),
+    });
+  };
+
+  return (
+    <ProductModal
+      {...props}
+      onSubmitForm={handleSubmit}
+      isLoading={mutation.isLoading}
+    />
+  );
+};
+
 export const EditProductModal = (props: Props) => {
-  const { isOpen, product, onClose, onHide, onOpen } = props;
-  const queryClient = useQueryClient();
+  const { product, onClose } = props;
   const mutation = useMutation(editProduct);
+
+  if (product === undefined) {
+    onClose();
+    return null;
+  }
+
+  const handleSubmit = (onSubmitProps: OnSubmitProps) => {
+    const preparedData = {
+      ...onSubmitProps.data,
+      id: product.id,
+      type: product.type,
+    };
+
+    mutation.mutate(preparedData, {
+      onSuccess: generateOnSuccess({
+        alertTime: 5,
+        message: 'successfullyEdited',
+        reset: onSubmitProps.reset,
+        fn: onSubmitProps.fn,
+      }),
+      onError: generateOnError({ setError: onSubmitProps.setError }),
+    });
+  };
+
+  return (
+    <ProductModal
+      {...props}
+      onSubmitForm={handleSubmit}
+      isLoading={mutation.isLoading}
+    />
+  );
+};
+
+const ProductModal = (props: ProductModalProps) => {
+  const { isOpen, product, isLoading, onClose, onHide, onOpen, onSubmitForm } =
+    props;
+  const queryClient = useQueryClient();
   const [shopModal, setOpenShop, setCloseShop] = useModal<string>();
   const [sectionModal, setOpenSection, setCloseSection] = useModal<string>();
-  const { control, reset, watch, setError, setValue, handleSubmit } =
-    useForm<EditProductInputs>({
+  const { control, reset, watch, setError, setValue, getValues, handleSubmit } =
+    useForm<ProductInputs>({
       defaultValues: {
-        name: product.name,
-        units: product.units,
-        shopId: product.shopId,
-        sectionId: product.sectionId,
+        name: product?.name ?? '',
+        units: product?.units ?? [],
+        shopId: product?.shopId ?? null,
+        sectionId: product?.sectionId ?? null,
       },
     });
 
@@ -51,18 +130,36 @@ export const EditProductModal = (props: Props) => {
   const sectionId = watch('sectionId');
   const orderType = watch('orderType');
 
+  const isShop = typeof shopId === 'number';
+  const isSection = typeof sectionId === 'number';
   const { shops, sections, sectionProducts } = useQueries(shopId, sectionId);
-  const sectionProduct = sectionProducts.data.find((x) => x.id === product.id);
+  const sectionProduct = sectionProducts.data.find((x) => x.id === product?.id);
 
   useEffect(() => {
+    if (!isSection) {
+      setValue('orderType', null);
+      setValue('orderAfterId', null);
+      return;
+    }
+
     setValue('orderType', sectionProduct?.orderType ?? OrderType.atTheBottom, {
       shouldValidate: true,
     });
 
     setValue('orderAfterId', sectionProduct?.orderAfterId ?? null, {
-      shouldValidate: Boolean(sectionProduct),
+      shouldValidate: Boolean(sectionProduct?.orderAfterId),
     });
-  }, [sectionProduct]);
+  }, [sectionId, sectionProduct]);
+
+  useEffect(() => {
+    if (getValues('orderAfterId') === (sectionProduct?.orderAfterId ?? null)) {
+      return;
+    }
+
+    setValue('orderAfterId', sectionProduct?.orderAfterId ?? null, {
+      shouldValidate: Boolean(sectionProduct?.orderAfterId),
+    });
+  }, [orderType]);
 
   const [shopIdToUpdate, setShopIdToUpdate] = useExistsItem(shops.data, (x) =>
     setValue('shopId', x, { shouldValidate: true })
@@ -99,36 +196,28 @@ export const EditProductModal = (props: Props) => {
     setValue('sectionId', null);
   };
 
-  const onSubmit = (data: EditProductInputs) => {
+  const onSubmit = (data: ProductInputs) => {
     const preparedData = {
-      id: product.id,
       name: data.name,
       units: data.units,
-      type: product.type,
       sectionId: data.sectionId ?? undefined,
       orderType: data.orderType ?? undefined,
       orderAfterId: data.orderAfterId ?? undefined,
     };
 
-    mutation.mutate(preparedData, {
-      onSuccess: generateOnSuccess({
-        alertTime: 5,
-        message: 'successfullyEdited',
-        reset,
-        fn: () => {
-          queryClient.invalidateQueries({ queryKey: ['products'] });
-          queryClient.invalidateQueries({
-            queryKey: ['shop', shopId, sectionId],
-          });
-          onClose();
-        },
-      }),
-      onError: generateOnError({ setError }),
+    onSubmitForm({
+      data: preparedData,
+      reset,
+      setError,
+      fn: () => {
+        queryClient.invalidateQueries({ queryKey: ['products'] });
+        queryClient.invalidateQueries({
+          queryKey: ['shop', shopId, sectionId],
+        });
+        onClose();
+      },
     });
   };
-
-  const isShop = typeof shopId === 'number';
-  const isSection = typeof sectionId === 'number';
 
   const sectionsInput = isShop ? (
     <Autocomplete
@@ -212,7 +301,7 @@ export const EditProductModal = (props: Props) => {
       <FormModal
         titleKey="editProduct"
         isOpen={isOpen}
-        isLoading={mutation.isLoading}
+        isLoading={isLoading}
         reset={reset}
         onClose={onClose}
         handleSubmit={handleSubmit(onSubmit)}
@@ -222,7 +311,7 @@ export const EditProductModal = (props: Props) => {
             name="name"
             labelKey="name"
             control={control}
-            disabled={product.type === ProductType.global}
+            disabled={product?.type === ProductType.global}
           />
           <ToggleButtonGroup
             fullWidth
@@ -231,7 +320,7 @@ export const EditProductModal = (props: Props) => {
             titleKey="units"
             control={control}
             translationKey="unit"
-            disabled={product.type === ProductType.global}
+            disabled={product?.type === ProductType.global}
             options={[Unit.grams, Unit.milliliters, Unit.packs, Unit.pieces]}
           />
           <Autocomplete

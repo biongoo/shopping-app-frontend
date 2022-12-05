@@ -3,10 +3,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import { ListItemIcon, MenuItem, Popover } from '@mui/material';
 import { TranslatedText } from '~/bits';
 import { ProductType } from '~/enums';
+import { EditProductModal } from '~/partials';
 import { Product } from '~/types';
 import { useModal } from '~/utils';
 import { DeleteProductModal } from './delete-product-modal';
-import { EditProductModal } from './edit-product-modal';
 
 export type ModifyData = {
   id: number;

@@ -8,12 +8,8 @@ type GetSectionProductsDto = {
   sectionId: number;
 };
 
-type PostProductDto = {
-  name: string;
-  units: Unit[];
-  sectionId?: number;
-  orderType?: OrderType;
-  orderAfterId?: number;
+type DeleteProductDto = {
+  id: number;
 };
 
 type PatchProductDto = {
@@ -26,8 +22,12 @@ type PatchProductDto = {
   sectionId?: number;
 };
 
-type DeleteProductDto = {
-  id: number;
+export type PostProductDto = {
+  name: string;
+  units: Unit[];
+  sectionId?: number;
+  orderType?: OrderType;
+  orderAfterId?: number;
 };
 
 export const getProducts = (): Promise<ApiData<Product[]>> =>
