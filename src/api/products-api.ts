@@ -12,7 +12,7 @@ type PostProductDto = {
   name: string;
   units: Unit[];
   sectionId?: number;
-  orderType: OrderType;
+  orderType?: OrderType;
   orderAfterId?: number;
 };
 
@@ -21,7 +21,7 @@ type PatchProductDto = {
   name: string;
   units: Unit[];
   type: ProductType;
-  orderType: OrderType;
+  orderType?: OrderType;
   orderAfterId?: number;
   sectionId?: number;
 };

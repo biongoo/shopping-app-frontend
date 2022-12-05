@@ -18,13 +18,13 @@ type InputProps<T extends FieldValues> = {
   name: string;
   labelKey: string;
   control: Control<T>;
-  defaultValue: PathValue<T, Path<T>>;
   sx?: SxProps;
   type?: 'password';
   disabled?: boolean;
   fullWidth?: boolean;
   onlyNumbers?: boolean;
   patternErrorMessage?: string;
+  defaultValue?: PathValue<T, Path<T>>;
 };
 
 type Props<T extends FieldValues> = UseControllerProps<T> & InputProps<T>;

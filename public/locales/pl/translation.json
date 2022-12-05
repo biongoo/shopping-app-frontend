@@ -106,6 +106,7 @@
   "addItem": "Dodaj \"{{item}}\"",
   "atLeastOneValue": "Należy wybrać co najmniej jedną wartość",
   "notExistingItem": "Brakujące dane",
+  "product": "Produkt",
   "orderType": {
     "0": "Na początku",
     "1": "Po pozycji",

@@ -22,11 +22,11 @@ type ToggleButtonGroupProps<T extends FieldValues> = {
   titleKey: string;
   translationKey: string;
   control: Control<T>;
-  defaultValue: PathValue<T, Path<T>>;
   options: Array<PathValue<T, Path<T>>>;
   multiple?: boolean;
   disabled?: boolean;
   fullWidth?: boolean;
+  defaultValue?: PathValue<T, Path<T>>;
 };
 
 type Props<T extends FieldValues> = UseControllerProps<T> &

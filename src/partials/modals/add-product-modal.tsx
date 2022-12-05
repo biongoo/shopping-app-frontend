@@ -1,11 +1,16 @@
 import { Stack } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { addProduct, getSections, getShops } from '~/api';
+import { addProduct, getSectionProducts, getSections, getShops } from '~/api';
 import { Autocomplete, FormModal, Input, ToggleButtonGroup } from '~/bits';
 import { OrderType, Unit } from '~/enums';
-import { generateOnError, generateOnSuccess, useModal } from '~/utils';
+import {
+  generateOnError,
+  generateOnSuccess,
+  useExistsItem,
+  useModal,
+} from '~/utils';
 import { AddSectionModal } from './add-section-modal';
 import { AddShopModal } from './add-shop-modal';
 
@@ -19,9 +24,9 @@ type Props = {
 type AddProductInputs = {
   name: string;
   units: Unit[];
+  orderType: OrderType;
   shopId: number | null;
   sectionId: number | null;
-  orderType: OrderType | null;
   orderAfterId: number | null;
 };
 
@@ -29,9 +34,7 @@ export const AddProductModal = (props: Props) => {
   const { isOpen, onClose, onHide, onOpen } = props;
   const queryClient = useQueryClient();
   const mutation = useMutation(addProduct);
-  const [shopIdToUpdate, setShopIdToUpdate] = useState<number>();
   const [shopModal, setOpenShop, setCloseShop] = useModal<string>();
-  const [sectionIdToUpdate, setSectionIdToUpdate] = useState<number>();
   const [sectionModal, setOpenSection, setCloseSection] = useModal<string>();
   const {
     control,
@@ -44,7 +47,11 @@ export const AddProductModal = (props: Props) => {
   } = useForm<AddProductInputs>();
 
   const shopId = watch('shopId');
+  const sectionId = watch('sectionId');
+  const orderType = watch('orderType');
+
   const isShop = typeof shopId === 'number';
+  const isSection = typeof sectionId === 'number';
 
   const shopsQuery = useQuery({
     queryKey: ['shops'],
@@ -59,28 +66,33 @@ export const AddProductModal = (props: Props) => {
     enabled: isShop,
   });
 
+  const sectionProductsQuery = useQuery({
+    queryKey: ['shop', shopId, sectionId],
+    queryFn: () => (isSection ? getSectionProducts({ sectionId }) : undefined),
+    onError: generateOnError(),
+    enabled: orderType === OrderType.afterItem,
+  });
+
   const shops = shopsQuery.data?.data ?? [];
   const sections = sectionsQuery.data?.data ?? [];
+  const products = sectionProductsQuery.data?.data ?? [];
+
+  const [shopIdToUpdate, setShopIdToUpdate] = useExistsItem(shops, (x) =>
+    setValue('shopId', x)
+  );
+
+  const [sectionIdToUpdate, setSectionIdToUpdate] = useExistsItem(shops, (x) =>
+    setValue('sectionId', x)
+  );
 
   useEffect(() => {
-    if (
-      shopIdToUpdate !== undefined &&
-      shops.some((x) => x.id === shopIdToUpdate)
-    ) {
-      setValue('shopId', shopIdToUpdate);
-      setShopIdToUpdate(undefined);
+    if (!sectionId) {
+      return;
     }
-  }, [shops, shopIdToUpdate]);
 
-  useEffect(() => {
-    if (
-      sectionIdToUpdate !== undefined &&
-      sections.some((x) => x.id === sectionIdToUpdate)
-    ) {
-      setValue('sectionId', sectionIdToUpdate);
-      setSectionIdToUpdate(undefined);
-    }
-  }, [sections, sectionIdToUpdate]);
+    clearErrors('orderAfterId');
+    setValue('orderAfterId', null);
+  }, [orderType, sectionId]);
 
   const handleChangeShopId = () => {
     clearErrors('sectionId');
@@ -114,6 +126,8 @@ export const AddProductModal = (props: Props) => {
       name: data.name,
       units: data.units,
       sectionId: data.sectionId ?? undefined,
+      orderType: data.orderType ?? undefined,
+      orderAfterId: data.orderAfterId ?? undefined,
     };
 
     mutation.mutate(preparedData, {
@@ -123,6 +137,9 @@ export const AddProductModal = (props: Props) => {
         reset,
         fn: () => {
           queryClient.invalidateQueries({ queryKey: ['products'] });
+          queryClient.invalidateQueries({
+            queryKey: ['shop', shopId, sectionId],
+          });
           onClose();
         },
       }),
@@ -150,6 +167,33 @@ export const AddProductModal = (props: Props) => {
       }))}
     />
   ) : null;
+
+  const orderTypeInput = isSection ? (
+    <ToggleButtonGroup
+      fullWidth
+      name="orderType"
+      control={control}
+      titleKey="position"
+      translationKey="orderType"
+      defaultValue={OrderType.atTheBottom}
+      options={[OrderType.atTheTop, OrderType.atTheBottom, OrderType.afterItem]}
+    />
+  ) : null;
+
+  const orderAfterIdInput =
+    orderType === OrderType.afterItem ? (
+      <Autocomplete
+        required={true}
+        control={control}
+        titleKey="product"
+        name="orderAfterId"
+        isInitialFetching={sectionProductsQuery.isInitialLoading}
+        options={products.map((x) => ({
+          value: x.id,
+          label: x.name,
+        }))}
+      />
+    ) : null;
 
   const addShopContent = shopModal.isRender ? (
     <AddShopModal
@@ -218,6 +262,8 @@ export const AddProductModal = (props: Props) => {
             }))}
           />
           {sectionsInput}
+          {orderTypeInput}
+          {orderAfterIdInput}
         </Stack>
       </FormModal>
       {addShopContent}

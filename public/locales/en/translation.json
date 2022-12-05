@@ -106,6 +106,7 @@
   "addItem": "Add \"{{item}}\"",
   "atLeastOneValue": "At least one value must be selected",
   "notExistingItem": "Missing data",
+  "product": "Product",
   "orderType": {
     "0": "At the top",
     "1": "After item",
