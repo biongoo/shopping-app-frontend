@@ -11,3 +11,8 @@ export type Product = {
   orderType?: OrderType;
   orderAfterId?: number;
 };
+
+export type ProductWithOrder = Product & {
+  order: number;
+  sectionId: number;
+};

@@ -1,7 +1,7 @@
 import { OrderType, ProductType, Unit } from '~/enums';
 import i18n from '~/i18n';
 import { ApiData } from '~/models';
-import { Product } from '~/types';
+import { Product, ProductWithOrder, Section, Shop } from '~/types';
 import { connectApi } from './connect-api';
 
 type GetSectionProductsDto = {
@@ -12,6 +12,11 @@ type DeleteProductDto = {
   id: number;
 };
 
+type DeleteSectionProductDto = {
+  id: number;
+  sectionId: number;
+};
+
 type PatchProductDto = {
   id: number;
   name: string;
@@ -20,6 +25,27 @@ type PatchProductDto = {
   orderType?: OrderType;
   orderAfterId?: number;
   sectionId?: number;
+};
+
+type PostProductsOrderDto = {
+  sectionId: number;
+  products: Array<{
+    id: number;
+    order: number;
+  }>;
+};
+
+type ProductsWithShop = {
+  shop: Shop;
+  section: Section;
+  products: ProductWithOrder[];
+};
+
+type PutSectionProductDto = {
+  id: number;
+  sectionId: number;
+  orderType: OrderType;
+  orderAfterId?: number;
 };
 
 export type PostProductDto = {
@@ -35,11 +61,25 @@ export const getProducts = (): Promise<ApiData<Product[]>> =>
     endpoint: `product?lang=${i18n.resolvedLanguage}`,
   });
 
+export const getAvailableProducts = (
+  body: GetSectionProductsDto
+): Promise<ApiData<Product[]>> =>
+  connectApi({
+    endpoint: `product/available?sectionId=${body.sectionId}&lang=${i18n.resolvedLanguage}`,
+  });
+
 export const getSectionProducts = (
   body: GetSectionProductsDto
 ): Promise<ApiData<Product[]>> =>
   connectApi({
-    endpoint: `product/section?sectionId=${body.sectionId}&lang=${i18n.resolvedLanguage}`,
+    endpoint: `product/section?sectionId=${body.sectionId}&lang=${i18n.resolvedLanguage}&withShop=false`,
+  });
+
+export const getSectionProductsWithShop = (
+  body: GetSectionProductsDto
+): Promise<ApiData<ProductsWithShop>> =>
+  connectApi({
+    endpoint: `product/section?sectionId=${body.sectionId}&lang=${i18n.resolvedLanguage}&withShop=true`,
   });
 
 export const addProduct = (body: PostProductDto): Promise<ApiData<Product>> =>
@@ -84,6 +124,33 @@ export const editProduct = (
 export const deleteProduct = (body: DeleteProductDto): Promise<ApiData> =>
   connectApi({
     endpoint: 'product',
+    method: 'DELETE',
+    body,
+  });
+
+export const reorderSectionProducts = (
+  body: PostProductsOrderDto
+): Promise<ApiData> =>
+  connectApi({
+    endpoint: 'product/section/reorder',
+    method: 'POST',
+    body,
+  });
+
+export const putSectionProduct = (
+  body: PutSectionProductDto
+): Promise<ApiData<Product>> =>
+  connectApi({
+    endpoint: 'product/section',
+    method: 'PUT',
+    body,
+  });
+
+export const deleteSectionProduct = (
+  body: DeleteSectionProductDto
+): Promise<ApiData> =>
+  connectApi({
+    endpoint: 'product/section',
     method: 'DELETE',
     body,
   });

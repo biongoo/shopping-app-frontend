@@ -56,7 +56,9 @@ export const EditSectionModal = (props: EditSectionModalProps) => {
         message: 'successfullyEdited',
         reset,
         fn: () => {
-          queryClient.invalidateQueries({ queryKey: ['shop', section.shopId] });
+          queryClient.invalidateQueries({ queryKey: ['products'] });
+          queryClient.invalidateQueries({ queryKey: ['sections'] });
+          queryClient.invalidateQueries({ queryKey: ['section-products'] });
           onClose();
         },
       }),

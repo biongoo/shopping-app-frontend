@@ -56,6 +56,9 @@ export const EditShopModal = (props: EditShopModalProps) => {
         reset,
         fn: () => {
           queryClient.invalidateQueries({ queryKey: ['shops'] });
+          queryClient.invalidateQueries({ queryKey: ['products'] });
+          queryClient.invalidateQueries({ queryKey: ['sections'] });
+          queryClient.invalidateQueries({ queryKey: ['section-products'] });
           onClose();
         },
       }),

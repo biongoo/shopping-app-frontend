@@ -1,18 +1,15 @@
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Box, CircularProgress, Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { TFunction } from 'i18next';
-import { useTranslation } from 'react-i18next';
 import { getProducts } from '~/api';
 import { Breadcrumbs, IconButton, Table, TranslatedText } from '~/bits';
-import { Product } from '~/types';
+import { ModifyData, Product } from '~/types';
 import { generateOnError, useModal } from '~/utils';
-import { AddProduct, ModifyData, ModifyProduct } from './components';
+import { AddProduct, ModifyProduct } from './components';
 
 const breadcrumbs = [{ key: 'home' }, { key: 'products' }];
 
 const getColumns = (
-  t: TFunction<'translation', undefined>,
   setOpenOptions: (data?: ModifyData | undefined) => void,
   optionsId?: number
 ) =>
@@ -29,7 +26,7 @@ const getColumns = (
       labelKey: 'type',
       isOrdering: true,
       width: 20,
-      render: (x) => <>{t(`productType.${x.type}`)}</>,
+      render: (x) => <TranslatedText textKey={`productType.${x.type}`} />,
     },
     {
       dataKey: 'actions',
@@ -58,7 +55,6 @@ const getColumns = (
   ]);
 
 export const ProductPage = () => {
-  const { t } = useTranslation();
   const [options, setOpenOptions, setCloseOptions, setHideOptions] =
     useModal<ModifyData>();
 
@@ -112,7 +108,7 @@ export const ProductPage = () => {
           emptyKey="addYourProducts"
           defaultOrderBy="name"
           isShowingActions={options.isOpen}
-          columns={getColumns(t, setOpenOptions, optionsId)}
+          columns={getColumns(setOpenOptions, optionsId)}
         />
       </Stack>
       {optionsContent}

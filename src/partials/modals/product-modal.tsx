@@ -12,6 +12,7 @@ import {
 } from '~/api';
 import { Autocomplete, FormModal, Input, ToggleButtonGroup } from '~/bits';
 import { OrderType, ProductType, Unit } from '~/enums';
+import { ApiData } from '~/models';
 import { AddSectionModal, AddShopModal } from '~/partials';
 import { Product } from '~/types';
 import {
@@ -24,9 +25,11 @@ import {
 type Props = {
   isOpen: boolean;
   product?: Product;
+  defaultName?: string;
+  withoutShop?: boolean;
   onHide: () => void;
   onOpen: () => void;
-  onClose: () => void;
+  onClose: (productId?: number) => void;
 };
 
 type ProductInputs = {
@@ -40,7 +43,7 @@ type ProductInputs = {
 
 type OnSubmitProps = {
   data: PostProductDto;
-  fn: () => void;
+  fn: (data: ApiData<Product>, variables: PostProductDto) => void;
   reset: UseFormReset<ProductInputs>;
   setError: UseFormSetError<ProductInputs>;
 };
@@ -111,15 +114,24 @@ export const EditProductModal = (props: Props) => {
 };
 
 const ProductModal = (props: ProductModalProps) => {
-  const { isOpen, product, isLoading, onClose, onHide, onOpen, onSubmitForm } =
-    props;
+  const {
+    isOpen,
+    product,
+    isLoading,
+    defaultName,
+    withoutShop,
+    onClose,
+    onHide,
+    onOpen,
+    onSubmitForm,
+  } = props;
   const queryClient = useQueryClient();
   const [shopModal, setOpenShop, setCloseShop] = useModal<string>();
   const [sectionModal, setOpenSection, setCloseSection] = useModal<string>();
   const { control, reset, watch, setError, setValue, getValues, handleSubmit } =
     useForm<ProductInputs>({
       defaultValues: {
-        name: product?.name ?? '',
+        name: product?.name ?? defaultName ?? '',
         units: product?.units ?? [],
         shopId: product?.shopId ?? null,
         sectionId: product?.sectionId ?? null,
@@ -132,7 +144,11 @@ const ProductModal = (props: ProductModalProps) => {
 
   const isShop = typeof shopId === 'number';
   const isSection = typeof sectionId === 'number';
-  const { shops, sections, sectionProducts } = useQueries(shopId, sectionId);
+  const { shops, sections, sectionProducts } = useQueries(
+    shopId,
+    sectionId,
+    withoutShop
+  );
   const sectionProduct = sectionProducts.data.find((x) => x.id === product?.id);
 
   useEffect(() => {
@@ -209,15 +225,36 @@ const ProductModal = (props: ProductModalProps) => {
       data: preparedData,
       reset,
       setError,
-      fn: () => {
+      fn: ({ data }) => {
         queryClient.invalidateQueries({ queryKey: ['products'] });
-        queryClient.invalidateQueries({
-          queryKey: ['shop', shopId, sectionId],
-        });
-        onClose();
+        queryClient.invalidateQueries({ queryKey: ['section-products'] });
+        onClose(data.id);
       },
     });
   };
+
+  const shopInput =
+    withoutShop === true ? null : (
+      <Autocomplete
+        name="shopId"
+        titleKey="shopOptional"
+        required={false}
+        control={control}
+        onChangeId={handleChangeShopId}
+        dynamicAdd={{
+          defaultValue: -1,
+          emptyAddKey: 'addShop',
+          onAddNewItem: handleOpenShop,
+        }}
+        isInitialFetching={
+          shops.isInitialLoading || shopIdToUpdate !== undefined
+        }
+        options={shops.data.map((x) => ({
+          value: x.id,
+          label: x.name,
+        }))}
+      />
+    );
 
   const sectionsInput = isShop ? (
     <Autocomplete
@@ -299,9 +336,9 @@ const ProductModal = (props: ProductModalProps) => {
   return (
     <>
       <FormModal
-        titleKey="editProduct"
         isOpen={isOpen}
         isLoading={isLoading}
+        titleKey={product ? 'editProduct' : 'addProduct'}
         reset={reset}
         onClose={onClose}
         handleSubmit={handleSubmit(onSubmit)}
@@ -323,25 +360,7 @@ const ProductModal = (props: ProductModalProps) => {
             disabled={product?.type === ProductType.global}
             options={[Unit.grams, Unit.milliliters, Unit.packs, Unit.pieces]}
           />
-          <Autocomplete
-            name="shopId"
-            titleKey="shopOptional"
-            required={false}
-            control={control}
-            onChangeId={handleChangeShopId}
-            dynamicAdd={{
-              defaultValue: -1,
-              emptyAddKey: 'addShop',
-              onAddNewItem: handleOpenShop,
-            }}
-            isInitialFetching={
-              shops.isInitialLoading || shopIdToUpdate !== undefined
-            }
-            options={shops.data.map((x) => ({
-              value: x.id,
-              label: x.name,
-            }))}
-          />
+          {shopInput}
           {sectionsInput}
           {orderTypeInput}
           {orderAfterIdInput}
@@ -353,7 +372,11 @@ const ProductModal = (props: ProductModalProps) => {
   );
 };
 
-const useQueries = (shopId: number | null, sectionId: number | null) => {
+const useQueries = (
+  shopId: number | null,
+  sectionId: number | null,
+  withoutShop?: boolean
+) => {
   const isShop = typeof shopId === 'number';
   const isSection = typeof sectionId === 'number';
 
@@ -361,17 +384,18 @@ const useQueries = (shopId: number | null, sectionId: number | null) => {
     queryKey: ['shops'],
     queryFn: getShops,
     onError: generateOnError(),
+    enabled: withoutShop !== true,
   });
 
   const sectionsQuery = useQuery({
-    queryKey: ['shop', shopId],
+    queryKey: ['sections', shopId],
     queryFn: () => (isShop ? getSections({ shopId }) : undefined),
     onError: generateOnError(),
     enabled: isShop,
   });
 
   const sectionProductsQuery = useQuery({
-    queryKey: ['shop', shopId, sectionId],
+    queryKey: ['section-products', sectionId],
     queryFn: () => (isSection ? getSectionProducts({ sectionId }) : undefined),
     onError: generateOnError(),
     enabled: isSection,

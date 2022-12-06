@@ -57,7 +57,9 @@ export const AddSectionModal = (props: Props) => {
         message: 'successfullyAdded',
         reset,
         fn: ({ data }) => {
-          queryClient.invalidateQueries({ queryKey: ['shop', shopId] });
+          queryClient.invalidateQueries({ queryKey: ['products'] });
+          queryClient.invalidateQueries({ queryKey: ['sections'] });
+          queryClient.invalidateQueries({ queryKey: ['section-products'] });
           onClose(data.id);
         },
       }),

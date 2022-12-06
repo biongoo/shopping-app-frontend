@@ -24,6 +24,7 @@ export const DeleteProductModal = (props: DeleteProductModalProps) => {
         message: 'successfullyDeleted',
         fn: () => {
           queryClient.invalidateQueries({ queryKey: ['products'] });
+          queryClient.invalidateQueries({ queryKey: ['section-products'] });
           onClose();
         },
       }),

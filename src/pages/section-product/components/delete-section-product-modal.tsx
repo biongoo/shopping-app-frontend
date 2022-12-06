@@ -1,31 +1,32 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteShop } from '~/api';
+import { deleteSectionProduct } from '~/api';
 import { AlertModal, TranslatedText } from '~/bits';
-import { Shop } from '~/types';
+import { Product } from '~/types';
 import { generateOnError, generateOnSuccess } from '~/utils';
 
-type DeleteShopModalProps = {
-  shop: Shop;
+type Props = {
   isOpen: boolean;
+  product: Product;
   onClose: () => void;
 };
 
-export const DeleteShopModal = (props: DeleteShopModalProps) => {
-  const { shop, isOpen, onClose } = props;
+export const DeleteSectionProductModal = (props: Props) => {
+  const { product, isOpen, onClose } = props;
   const queryClient = useQueryClient();
-  const mutation = useMutation(deleteShop);
+  const mutation = useMutation(deleteSectionProduct);
 
   const handleSubmit = () => {
-    const data = { shopId: shop.id };
+    const data = {
+      id: product.id,
+      sectionId: product.sectionId ?? 0,
+    };
 
     mutation.mutate(data, {
       onSuccess: generateOnSuccess({
         alertTime: 5,
         message: 'successfullyDeleted',
         fn: () => {
-          queryClient.invalidateQueries({ queryKey: ['shops'] });
           queryClient.invalidateQueries({ queryKey: ['products'] });
-          queryClient.invalidateQueries({ queryKey: ['sections'] });
           queryClient.invalidateQueries({ queryKey: ['section-products'] });
           onClose();
         },
@@ -36,7 +37,7 @@ export const DeleteShopModal = (props: DeleteShopModalProps) => {
 
   return (
     <AlertModal
-      titleKey="deleteShop"
+      titleKey="deleteSectionProduct"
       isOpen={isOpen}
       isLoading={mutation.isLoading}
       onClose={onClose}
@@ -44,7 +45,7 @@ export const DeleteShopModal = (props: DeleteShopModalProps) => {
     >
       <TranslatedText
         textKey="areYouSureDelete"
-        options={{ item: shop.name }}
+        options={{ item: product.name }}
       />
     </AlertModal>
   );

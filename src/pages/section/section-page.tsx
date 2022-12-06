@@ -5,17 +5,16 @@ import { useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { getSectionsWithShop, reorderSections } from '~/api';
 import { Breadcrumbs, IconButton, Table, TranslatedText } from '~/bits';
-import { Section } from '~/types';
+import { ModifyData, Section } from '~/types';
 import {
   changeOrder,
   generateOnError,
   generateOnSuccess,
   hasOrderChanged,
+  Id,
   useModal,
 } from '~/utils';
-import { AddSection, ModifyData, ModifySection } from './components';
-
-type Id = string | number;
+import { AddSection, ModifySection } from './components';
 
 const getColumns = (
   setOpenOptions: (data?: ModifyData | undefined) => void,
@@ -52,7 +51,6 @@ const getColumns = (
           onClick={(e) =>
             setOpenOptions({
               id: x.id,
-              shopId: x.shopId,
               element: e.currentTarget,
             })
           }
@@ -78,7 +76,7 @@ export const SectionPage = () => {
   const shopIdAsNumber = +shopId;
 
   const { data, isInitialLoading, refetch } = useQuery({
-    queryKey: ['shop', shopIdAsNumber, { withShop: true }],
+    queryKey: ['sections', shopIdAsNumber, { withShop: true }],
     queryFn: () => getSectionsWithShop({ shopId: shopIdAsNumber }),
     enabled: !isReordering,
     onError: generateOnError(),

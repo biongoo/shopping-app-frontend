@@ -5,16 +5,10 @@ import { ListItemIcon, MenuItem, Popover } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { TranslatedText } from '~/bits';
 import { OrderType } from '~/enums';
-import { Section } from '~/types';
+import { ModifyData, Section } from '~/types';
 import { useModal } from '~/utils';
 import { DeleteSectionModal } from './delete-section-modal';
 import { EditSectionModal } from './edit-section-modal';
-
-export type ModifyData = {
-  id: number;
-  shopId: number;
-  element: HTMLElement;
-};
 
 type Props = {
   isOpen: boolean;
@@ -110,7 +104,7 @@ export const ModifySection = (props: Props) => {
       >
         <MenuItem
           onClick={() =>
-            navigate(`/app/shop/${props.data.shopId}/${props.data.id}`)
+            navigate(`/app/shop/${section.shopId}/${props.data.id}`)
           }
         >
           <ListItemIcon>

@@ -2,25 +2,25 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { ListItemIcon, MenuItem, Popover } from '@mui/material';
 import { TranslatedText } from '~/bits';
-import { ProductType } from '~/enums';
-import { EditProductModal } from '~/partials';
-import { ModifyData, Product } from '~/types';
+import { SectionProductModal } from '~/partials';
+import { ModifyData, ProductWithOrder } from '~/types';
 import { useModal } from '~/utils';
-import { DeleteProductModal } from './delete-product-modal';
+import { DeleteSectionProductModal } from './delete-section-product-modal';
 
 type Props = {
   isOpen: boolean;
   data: ModifyData;
-  products: Product[];
+  products: ProductWithOrder[];
   onHide: () => void;
   onClose: () => void;
 };
 
-export const ModifyProduct = (props: Props) => {
+export const ModifySectionProduct = (props: Props) => {
   const { data, isOpen, products, onHide, onClose } = props;
   const [editModal, setOpenEdit, setCloseEdit, setHideEdit] =
-    useModal<Product>();
-  const [deleteModal, setOpenDelete, setCloseDelete] = useModal<Product>();
+    useModal<ProductWithOrder>();
+  const [deleteModal, setOpenDelete, setCloseDelete] =
+    useModal<ProductWithOrder>();
 
   const product = products.find((x) => x.id === data.id);
 
@@ -50,48 +50,41 @@ export const ModifyProduct = (props: Props) => {
 
   const editContent =
     editModal.isRender && editModal.data ? (
-      <EditProductModal
+      <SectionProductModal
         product={product}
+        isOpen={editModal.isOpen}
+        sectionId={product.sectionId}
         onHide={setHideEdit}
         onOpen={setOpenEdit}
-        isOpen={editModal.isOpen}
         onClose={handleCloseEdit}
       />
     ) : null;
 
   const deleteContent =
     deleteModal.isRender && deleteModal.data ? (
-      <DeleteProductModal
+      <DeleteSectionProductModal
         product={deleteModal.data}
         isOpen={deleteModal.isOpen}
         onClose={handleCloseDelete}
       />
     ) : null;
 
-  const popoverContent =
-    product.type === ProductType.local ? (
-      <>
-        <MenuItem onClick={handleOpenEdit}>
-          <ListItemIcon>
-            <EditIcon />
-          </ListItemIcon>
-          <TranslatedText ml={1} textKey="edit" />
-        </MenuItem>
-        <MenuItem onClick={handleOpenDelete}>
-          <ListItemIcon>
-            <DeleteIcon />
-          </ListItemIcon>
-          <TranslatedText ml={1} textKey="delete" />
-        </MenuItem>
-      </>
-    ) : (
+  const popoverContent = (
+    <>
       <MenuItem onClick={handleOpenEdit}>
         <ListItemIcon>
           <EditIcon />
         </ListItemIcon>
         <TranslatedText ml={1} textKey="edit" />
       </MenuItem>
-    );
+      <MenuItem onClick={handleOpenDelete}>
+        <ListItemIcon>
+          <DeleteIcon />
+        </ListItemIcon>
+        <TranslatedText ml={1} textKey="delete" />
+      </MenuItem>
+    </>
+  );
 
   return (
     <>

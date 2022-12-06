@@ -22,6 +22,7 @@ export const LanguageOptions = (props: Props) => {
     setTimeout(() => {
       i18n.changeLanguage(value), 100;
       queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['section-products'] });
     });
   };
 

@@ -1,6 +1,6 @@
 import { arrayMove } from '@dnd-kit/sortable';
 
-type Id = string | number;
+export type Id = string | number;
 
 type Element = {
   id: number;

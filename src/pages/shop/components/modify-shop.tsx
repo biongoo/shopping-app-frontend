@@ -5,15 +5,10 @@ import { ListItemIcon, MenuItem, Popover } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { TranslatedText } from '~/bits';
 import { OrderType } from '~/enums';
-import { Shop } from '~/types';
+import { ModifyData, Shop } from '~/types';
 import { useModal } from '~/utils';
 import { DeleteShopModal } from './delete-shop-modal';
 import { EditShopModal } from './edit-shop-modal';
-
-export type ModifyData = {
-  id: number;
-  element: HTMLElement;
-};
 
 type Props = {
   shops: Shop[];

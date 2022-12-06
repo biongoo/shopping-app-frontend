@@ -4,17 +4,16 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { getShops, reorderShops } from '~/api';
 import { Breadcrumbs, IconButton, Table, TranslatedText } from '~/bits';
-import { Shop } from '~/types';
+import { ModifyData, Shop } from '~/types';
 import {
   changeOrder,
   generateOnError,
   generateOnSuccess,
   hasOrderChanged,
+  Id,
   useModal,
 } from '~/utils';
-import { AddShop, ModifyData, ModifyShop } from './components';
-
-type Id = string | number;
+import { AddShop, ModifyShop } from './components';
 
 const breadcrumbs = [{ key: 'home' }, { key: 'shops' }];
 
