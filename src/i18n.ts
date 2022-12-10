@@ -1,3 +1,4 @@
+import { enUS, pl } from 'date-fns/locale';
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
@@ -15,6 +16,11 @@ export const langs = [
     icon: '/icons/pl.svg',
   },
 ];
+
+export const locales = {
+  en: enUS,
+  pl,
+};
 
 const missingKeys = new Set();
 
