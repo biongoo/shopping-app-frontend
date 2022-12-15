@@ -14,6 +14,7 @@ type Props = PropsWithChildren & {
   isOpen: boolean;
   titleKey: string;
   isLoading: boolean;
+  saveKey?: string;
   reset: () => void;
   onClose: () => void;
   handleSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
@@ -65,7 +66,7 @@ export const FormModal = (props: Props) => {
         <DialogActions sx={{ pr: 2 }}>
           <Button
             type="submit"
-            textKey="save"
+            textKey={props.saveKey ?? 'save'}
             color="success"
             loading={props.isLoading}
           />

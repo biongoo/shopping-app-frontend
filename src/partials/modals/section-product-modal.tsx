@@ -99,7 +99,7 @@ export const SectionProductModal = (props: Props) => {
     mutation.mutate(preparedData, {
       onSuccess: generateOnSuccess({
         alertTime: 5,
-        message: 'successfullyEdited',
+        message: isProduct ? 'successfullyEdited' : 'successfullyAdded',
         reset,
         fn: () => {
           queryClient.invalidateQueries({ queryKey: ['products'] });

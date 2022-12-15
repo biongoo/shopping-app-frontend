@@ -1,5 +1,6 @@
 export * from './error';
 export * from './home';
+export * from './list';
 export * from './log-in';
 export * from './product';
 export * from './section';

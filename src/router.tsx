@@ -3,8 +3,9 @@ import {
   ErrorPage,
   ForgotPage,
   HomePage,
-  ProductPage,
+  ListPage,
   LogInPage,
+  ProductPage,
   SectionPage,
   SectionProductPage,
   ShopPage,
@@ -92,7 +93,16 @@ export const router = createBrowserRouter([
       },
       {
         path: 'home',
-        element: <HomePage />,
+        children: [
+          {
+            index: true,
+            element: <HomePage />,
+          },
+          {
+            path: ':listId',
+            element: <ListPage />,
+          },
+        ],
       },
       {
         path: 'shop',
