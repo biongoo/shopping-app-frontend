@@ -33,7 +33,13 @@ type SecondStepInputs = {
 const SecondStep = ({ type, onNext }: SecondStepProps) => {
   const navigate = useNavigate();
   const { email, key } = useParams();
-  const { control, handleSubmit, setError } = useForm<SecondStepInputs>();
+  const { control, handleSubmit, setError } = useForm<SecondStepInputs>({
+    defaultValues: {
+      email: email ?? '',
+      password: '',
+      confirmPassword: '',
+    },
+  });
 
   if (!email || !key) {
     return <Navigate to="/" />;
@@ -105,18 +111,11 @@ const SecondStep = ({ type, onNext }: SecondStepProps) => {
           <ArrowBackIosNewIcon />
         </IconButton>
       </Stack>
-      <Input
-        name="email"
-        labelKey="email"
-        control={control}
-        defaultValue={email ?? ''}
-        disabled={true}
-      />
+      <Input name="email" labelKey="email" control={control} disabled={true} />
       <Input
         name="password"
         labelKey={passwordInput}
         control={control}
-        defaultValue=""
         type="password"
         rules={{ minLength: 8 }}
       />
@@ -124,7 +123,6 @@ const SecondStep = ({ type, onNext }: SecondStepProps) => {
         name="confirmPassword"
         labelKey="confirmPassword"
         control={control}
-        defaultValue=""
         type="password"
         rules={{ minLength: 8 }}
       />

@@ -18,7 +18,11 @@ export const LogInPage = () => {
   const mutation = useMutation(logIn);
   const logInStore = useAuthStore((state) => state.logIn);
   const { control, handleSubmit, reset, setError } = useForm<LoginInputs>({
-    defaultValues: { email: '', password: '', rememberMe: true },
+    defaultValues: {
+      email: '',
+      password: '',
+      rememberMe: true,
+    },
   });
 
   const onSubmit = (data: LoginInputs) => {

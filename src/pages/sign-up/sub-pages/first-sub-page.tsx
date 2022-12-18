@@ -18,10 +18,14 @@ type FirstSubInputs = {
 
 export const FirstSubPage = ({ type }: Props) => {
   const navigate = useNavigate();
-  const { control, handleSubmit, setError, reset } = useForm<FirstSubInputs>();
   const mutation = useMutation(
     type === 'signUp' ? createRegistrationUser : createForgotUser
   );
+  const { control, handleSubmit, setError, reset } = useForm<FirstSubInputs>({
+    defaultValues: {
+      email: '',
+    },
+  });
 
   const onSubmit = (data: FirstSubInputs) => {
     mutation.mutate(data, {
@@ -60,7 +64,6 @@ export const FirstSubPage = ({ type }: Props) => {
         name="email"
         labelKey="email"
         control={control}
-        defaultValue=""
         patternErrorMessage="invalidEmail"
         rules={{
           pattern:
