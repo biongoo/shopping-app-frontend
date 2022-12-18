@@ -10,5 +10,5 @@ type Props = Omit<ComponentProps<typeof Typography>, 'children'> & {
 export const TranslatedText = ({ textKey, options, ...props }: Props) => {
   const { t } = useTranslation();
 
-  return <Typography {...props}>{t(textKey, options)}</Typography>;
+  return <Typography {...props}>{t(textKey, options ?? {})}</Typography>;
 };

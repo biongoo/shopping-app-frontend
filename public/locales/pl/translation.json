@@ -50,7 +50,7 @@
   "home": "Strona główna",
   "shoppingLists": "Listy zakupów",
   "shops": "Sklepy",
-  "successfullyLoggedIn": "Pomyślnie zalogowany",
+  "successfullyLoggedIn": "Pomyślnie zalogowano",
   "account": "Konto",
   "settings": "Ustawienia",
   "logout": "Wyloguj",
@@ -117,6 +117,7 @@
   "deleteList": "Usuń listę zakupów",
   "nameOptional": "Nazwa (Opcjonalnie)",
   "create": "Utwórz",
+  "emptyList": "Pusta lista",
   "orderType": {
     "0": "Na początku",
     "1": "Po pozycji",

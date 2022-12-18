@@ -1,7 +1,5 @@
-import CloseIcon from '@mui/icons-material/Close';
 import { Alert as AlertMui, AlertTitle, Snackbar } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { IconButton } from '~/bits/button';
 import { useUiStore } from '~/stores';
 
 export const Alert = () => {
@@ -21,7 +19,7 @@ export const Alert = () => {
     <Snackbar
       open={alert.open}
       autoHideDuration={alert.time}
-      sx={{ maxWidth: { sm: 500, md: 600 }, opacity: 0.85 }}
+      sx={{ maxWidth: { sm: 500, md: 600 } }}
       anchorOrigin={{
         horizontal: 'right',
         vertical: 'bottom',
@@ -32,17 +30,7 @@ export const Alert = () => {
         variant="filled"
         sx={{ width: '100%' }}
         severity={alert.variant}
-        action={
-          <IconButton
-            open={false}
-            scale={0.7}
-            color="inherit"
-            titleKey="close"
-            onClick={hideAlert}
-          >
-            <CloseIcon fontSize="inherit" />
-          </IconButton>
-        }
+        onClose={hideAlert}
       >
         {title}
         {body}

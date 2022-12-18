@@ -1,23 +1,38 @@
-import { Box, Stack, Unstable_Grid2 as Grid } from '@mui/material';
+import {
+  Box,
+  CircularProgress,
+  Stack,
+  Unstable_Grid2 as Grid,
+} from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { getLists } from '~/api';
 import { Breadcrumbs, TranslatedText } from '~/bits';
+import { QueryKey } from '~/enums';
 import { generateOnError } from '~/utils';
 import { AddList, Card } from './components';
-import { list } from './mock-list';
 
 const breadcrumbs = [{ key: 'home' }];
 
 export const HomePage = () => {
-  const lists = list.map((x, i) => <Card key={`list-${x.id}-${i}`} list={x} />);
-
   const listsQuery = useQuery({
-    queryKey: ['lists'],
+    queryKey: [QueryKey.lists],
     queryFn: getLists,
     onError: generateOnError(),
   });
 
-  listsQuery;
+  const lists = listsQuery.data?.data ?? [];
+
+  const cards = lists.map((x, i) => (
+    <Card key={`list-${x.id}-${i}`} list={x} />
+  ));
+
+  if (listsQuery.isInitialLoading) {
+    return (
+      <Box textAlign="center">
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Stack sx={{ flexGrow: 1 }}>
@@ -34,7 +49,7 @@ export const HomePage = () => {
         <AddList />
       </Stack>
       <Grid container spacing={2}>
-        {lists}
+        {cards}
       </Grid>
     </Stack>
   );

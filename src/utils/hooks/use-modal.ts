@@ -17,7 +17,7 @@ export const useModal = <T = never>() => {
   });
 
   useEffect(() => {
-    let timeout: number;
+    let timeout: NodeJS.Timeout;
 
     if (!state.isOpen && !state.isInit && !state.isHide) {
       timeout = setTimeout(

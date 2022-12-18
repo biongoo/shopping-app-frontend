@@ -3,7 +3,7 @@ import { ApiData } from '~/models';
 import { Shop } from '~/types';
 import { connectApi } from './connect-api';
 
-type PostShopDto = {
+export type PostShopDto = {
   name: string;
   orderType: OrderType;
   orderAfterId?: number;

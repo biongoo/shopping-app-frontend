@@ -5,10 +5,10 @@ import { ListItemIcon, MenuItem, Popover } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { TranslatedText } from '~/bits';
 import { OrderType } from '~/enums';
+import { EditShopModal } from '~/partials';
 import { ModifyData, Shop } from '~/types';
 import { useModal } from '~/utils';
 import { DeleteShopModal } from './delete-shop-modal';
-import { EditShopModal } from './edit-shop-modal';
 
 type Props = {
   shops: Shop[];
@@ -26,6 +26,7 @@ export const ModifyShop = (props: Props) => {
   const shop = props.shops.find((x) => x.id === props.data.id);
 
   if (!shop) {
+    props.onClose();
     return null;
   }
 
@@ -65,7 +66,6 @@ export const ModifyShop = (props: Props) => {
   const editContent =
     editModal.isRender && editModal.data ? (
       <EditShopModal
-        shops={props.shops}
         shop={editModal.data}
         isOpen={editModal.isOpen}
         onClose={handleCloseEdit}

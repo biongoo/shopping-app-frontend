@@ -1,11 +1,16 @@
 export type ListPreview = {
   id: number;
   name: string;
-  editDate: Date;
-  products: ProductPreview[];
+  updatedAt: string;
+  items: ListItemPreview[];
 };
 
-export type ProductPreview = {
-  name: string;
+export type ListItemPreview = {
   checked: boolean;
+  product: ProductPreview;
+};
+
+type ProductPreview = {
+  id: number;
+  name: string;
 };

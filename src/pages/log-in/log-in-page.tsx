@@ -17,7 +17,9 @@ export const LogInPage = () => {
   const navigate = useNavigate();
   const mutation = useMutation(logIn);
   const logInStore = useAuthStore((state) => state.logIn);
-  const { control, handleSubmit, reset, setError } = useForm<LoginInputs>();
+  const { control, handleSubmit, reset, setError } = useForm<LoginInputs>({
+    defaultValues: { email: '', password: '', rememberMe: true },
+  });
 
   const onSubmit = (data: LoginInputs) => {
     const preparedData = {
@@ -67,7 +69,6 @@ export const LogInPage = () => {
         name="email"
         labelKey="email"
         control={control}
-        defaultValue=""
         patternErrorMessage="invalidEmail"
         rules={{
           pattern:
@@ -77,10 +78,9 @@ export const LogInPage = () => {
       />
       <Input
         name="password"
-        labelKey="password"
-        control={control}
-        defaultValue=""
         type="password"
+        control={control}
+        labelKey="password"
         rules={{ minLength: 8 }}
       />
       <Stack
@@ -89,12 +89,7 @@ export const LogInPage = () => {
         alignItems="center"
         spacing={2}
       >
-        <Checkbox
-          name="rememberMe"
-          labelKey="rememberMe"
-          control={control}
-          defaultValue={true}
-        />
+        <Checkbox name="rememberMe" labelKey="rememberMe" control={control} />
         <Link component={LinkRR} to="/forgot" color="inherit">
           <TranslatedText variant="body1" textKey="forgotPasswordQuestion" />
         </Link>

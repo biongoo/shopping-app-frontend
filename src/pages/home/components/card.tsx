@@ -9,6 +9,7 @@ import {
 import { format, isToday } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { TranslatedText } from '~/bits';
 import { locales } from '~/i18n';
 import { ListPreview } from '~/types';
 import { ListItem } from './list-item';
@@ -21,13 +22,33 @@ export const Card = ({ list }: Props) => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
 
-  const products = list.products.map((x, i) => (
-    <ListItem key={`list-item-${x.name}-${i}`} product={x} />
+  const products = list.items.map((x, i) => (
+    <ListItem key={`list-item-${x.product.id}-${i}`} item={x} />
   ));
 
   const handleClick = () => {
     navigate(`${list.id}`);
   };
+
+  const updatedAt = new Date(list.updatedAt);
+
+  const productsContent =
+    products.length > 0 ? (
+      <List dense={true} sx={{ p: 0 }}>
+        {products}
+      </List>
+    ) : (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          mt: 0.5,
+        }}
+      >
+        <TranslatedText textKey="emptyList" />
+      </Box>
+    );
 
   return (
     <Grid xs={12} sm={6} lg={4}>
@@ -65,14 +86,12 @@ export const Card = ({ list }: Props) => {
             {list.name}
           </Typography>
           <Typography variant="subtitle2">
-            {format(list.editDate, isToday(list.editDate) ? 'p' : 'd MMM', {
+            {format(updatedAt, isToday(updatedAt) ? 'p' : 'd MMM', {
               locale: locales[i18n.resolvedLanguage as keyof typeof locales],
             })}
           </Typography>
         </Box>
-        <List dense={true} sx={{ p: 0 }}>
-          {products}
-        </List>
+        {productsContent}
       </Paper>
     </Grid>
   );

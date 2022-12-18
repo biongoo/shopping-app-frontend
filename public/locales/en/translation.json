@@ -117,6 +117,7 @@
   "deleteList": "Delete shopping list",
   "nameOptional": "Name (Optional)",
   "create": "Create",
+  "emptyList": "Empty list",
   "orderType": {
     "0": "At the top",
     "1": "After item",

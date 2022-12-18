@@ -60,7 +60,7 @@ export const AddProductModal = (props: Props) => {
     mutation.mutate(onSubmitProps.data, {
       onSuccess: generateOnSuccess({
         alertTime: 5,
-        message: 'successfullyEdited',
+        message: 'successfullyAdded',
         reset: onSubmitProps.reset,
         fn: onSubmitProps.fn,
       }),
@@ -315,7 +315,6 @@ const ProductModal = (props: ProductModalProps) => {
 
   const addShopContent = shopModal.isRender ? (
     <AddShopModal
-      shops={shops.data}
       isOpen={shopModal.isOpen}
       defaultName={shopModal.data}
       onClose={handleCloseShop}

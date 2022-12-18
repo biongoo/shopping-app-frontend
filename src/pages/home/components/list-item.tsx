@@ -5,25 +5,25 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import { ProductPreview } from '~/types';
+import { ListItemPreview } from '~/types';
 
 type Props = {
-  product: ProductPreview;
+  item: ListItemPreview;
 };
 
-export const ListItem = ({ product }: Props) => {
-  const icon = product.checked ? (
+export const ListItem = ({ item }: Props) => {
+  const icon = item.checked ? (
     <CheckBoxIcon fontSize="inherit" />
   ) : (
     <CheckBoxOutlineBlankIcon fontSize="inherit" />
   );
 
-  const textDecoration = product.checked ? 'line-through' : 'none';
+  const textDecoration = item.checked ? 'line-through' : 'none';
 
   return (
     <ListItemMui disableGutters sx={{ p: 0 }}>
       <ListItemIcon sx={{ minWidth: 30 }}>{icon}</ListItemIcon>
-      <ListItemText sx={{ textDecoration }}>{product.name}</ListItemText>
+      <ListItemText sx={{ textDecoration }}>{item.product.name}</ListItemText>
     </ListItemMui>
   );
 };

@@ -4,6 +4,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { getShops, reorderShops } from '~/api';
 import { Breadcrumbs, IconButton, Table, TranslatedText } from '~/bits';
+import { QueryKey } from '~/enums';
 import { ModifyData, Shop } from '~/types';
 import {
   changeOrder,
@@ -70,7 +71,7 @@ export const ShopPage = () => {
     useModal<ModifyData>();
 
   const { data, isInitialLoading, refetch } = useQuery({
-    queryKey: ['shops'],
+    queryKey: [QueryKey.shops],
     queryFn: getShops,
     enabled: !isReordering,
     onError: generateOnError(),
@@ -84,7 +85,7 @@ export const ShopPage = () => {
     );
   }
 
-  const shops = data?.data;
+  const shops = data?.data ?? [];
 
   const handleStartReorder = () => {
     setReorderedShops(shops);
@@ -128,8 +129,8 @@ export const ShopPage = () => {
   const optionsContent =
     options.isRender && options.data ? (
       <ModifyShop
+        shops={shops}
         data={options.data}
-        shops={shops ?? []}
         isOpen={options.isOpen}
         onHide={setHideOptions}
         onClose={setCloseOptions}
@@ -150,15 +151,15 @@ export const ShopPage = () => {
           <TranslatedText variant="h5" gutterBottom textKey="shops" />
           <Breadcrumbs elements={breadcrumbs} />
         </Box>
-        <AddShop isReordering={isReordering} shops={shops ?? []} />
+        <AddShop isReordering={isReordering} />
       </Stack>
       <Table
         name="shops"
         defaultOrderBy="order"
         emptyKey="addYourShops"
         isReordering={isReordering}
+        data={reorderedShops ?? shops}
         isShowingActions={options.isOpen}
-        data={reorderedShops ?? shops ?? []}
         isFetchingReorder={mutation.isLoading}
         columns={getColumns(setOpenOptions, optionsId)}
         onDrag={handleDrag}

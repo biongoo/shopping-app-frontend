@@ -151,7 +151,6 @@ export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
     required,
     titleKey,
     dynamicAdd,
-    defaultValue,
     isInitialFetching,
     onChangeId,
   } = props;
@@ -160,7 +159,6 @@ export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
     <Controller
       name={name}
       control={control}
-      defaultValue={defaultValue}
       rules={{ required }}
       render={({ field, fieldState: { error } }) => (
         <AutocompleteMui

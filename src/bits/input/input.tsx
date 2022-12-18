@@ -7,8 +7,6 @@ import {
   Controller,
   FieldError,
   FieldValues,
-  Path,
-  PathValue,
   UseControllerProps,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +22,6 @@ type InputProps<T extends FieldValues> = {
   fullWidth?: boolean;
   onlyNumbers?: boolean;
   patternErrorMessage?: string;
-  defaultValue?: PathValue<T, Path<T>>;
 };
 
 type Props<T extends FieldValues> = UseControllerProps<T> & InputProps<T>;
@@ -34,7 +31,6 @@ export const Input = <T extends FieldValues>(props: Props<T>) => {
     name,
     control,
     labelKey,
-    defaultValue,
     sx,
     type,
     rules,
@@ -75,7 +71,6 @@ export const Input = <T extends FieldValues>(props: Props<T>) => {
     <Controller
       name={name}
       control={control}
-      defaultValue={defaultValue}
       rules={{
         ...rules,
         required: rules?.required ?? true,
