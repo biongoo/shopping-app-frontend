@@ -1,5 +1,5 @@
 import { Stack } from '@mui/material';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useForm, UseFormReset, UseFormSetError } from 'react-hook-form';
 import { addShop, editShop, getShops, PostShopDto } from '~/api';
@@ -7,7 +7,7 @@ import { Autocomplete, FormModal, Input, ToggleButtonGroup } from '~/bits';
 import { OrderType, QueryKey } from '~/enums';
 import { ApiData } from '~/models';
 import { Shop } from '~/types';
-import { generateOnError, generateOnSuccess } from '~/utils';
+import { generateOnError, generateOnSuccess, useClearCache } from '~/utils';
 
 type Props = {
   isOpen: boolean;
@@ -95,7 +95,7 @@ export const EditShopModal = (props: Props) => {
 
 const ShopModal = (props: ShopModalProps) => {
   const { shop, isOpen, defaultName, isLoading, onClose, onSubmitForm } = props;
-  const queryClient = useQueryClient();
+  const clearCache = useClearCache(QueryKey.shops);
   const { control, reset, watch, setError, setValue, getValues, handleSubmit } =
     useForm<ShopInputs>({
       defaultValues: {
@@ -130,11 +130,7 @@ const ShopModal = (props: ShopModalProps) => {
       reset,
       setError,
       fn: ({ data }) => {
-        queryClient.invalidateQueries({ queryKey: [QueryKey.shops] });
-        queryClient.invalidateQueries({ queryKey: [QueryKey.products] });
-        queryClient.invalidateQueries({ queryKey: [QueryKey.sections] });
-        queryClient.invalidateQueries({ queryKey: [QueryKey.sectionProducts] });
-        queryClient.invalidateQueries({ queryKey: [QueryKey.lists] });
+        clearCache();
         onClose(data.id);
       },
     });

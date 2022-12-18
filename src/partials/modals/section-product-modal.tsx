@@ -1,5 +1,5 @@
 import { Stack } from '@mui/material';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import {
@@ -13,6 +13,7 @@ import { Product } from '~/types';
 import {
   generateOnError,
   generateOnSuccess,
+  useClearCache,
   useExistsItem,
   useModal,
 } from '~/utils';
@@ -36,8 +37,8 @@ type SectionProductInputs = {
 export const SectionProductModal = (props: Props) => {
   const { isOpen, product, sectionId, onClose, onHide, onOpen } = props;
   const isProduct = product !== undefined;
-  const queryClient = useQueryClient();
   const mutation = useMutation(putSectionProduct);
+  const clearCache = useClearCache(QueryKey.sectionProducts);
   const [productModal, setOpenProduct, setCloseProduct, setHideProduct] =
     useModal<string>();
 
@@ -102,8 +103,7 @@ export const SectionProductModal = (props: Props) => {
         message: isProduct ? 'successfullyEdited' : 'successfullyAdded',
         reset,
         fn: () => {
-          queryClient.invalidateQueries({ queryKey: ['products'] });
-          queryClient.invalidateQueries({ queryKey: ['section-products'] });
+          clearCache();
           onClose();
         },
       }),

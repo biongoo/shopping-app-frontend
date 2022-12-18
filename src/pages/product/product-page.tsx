@@ -3,6 +3,7 @@ import { Box, CircularProgress, Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { getProducts } from '~/api';
 import { Breadcrumbs, IconButton, Table, TranslatedText } from '~/bits';
+import { QueryKey } from '~/enums';
 import { ModifyData, Product } from '~/types';
 import { generateOnError, useModal } from '~/utils';
 import { AddProduct, ModifyProduct } from './components';
@@ -59,7 +60,7 @@ export const ProductPage = () => {
     useModal<ModifyData>();
 
   const { data, isInitialLoading } = useQuery({
-    queryKey: ['products'],
+    queryKey: [QueryKey.products],
     queryFn: getProducts,
     onError: generateOnError(),
   });

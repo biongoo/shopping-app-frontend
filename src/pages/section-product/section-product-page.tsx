@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { getSectionProductsWithShop, reorderSectionProducts } from '~/api';
 import { Breadcrumbs, IconButton, Table, TranslatedText } from '~/bits';
+import { QueryKey } from '~/enums';
 import { ModifyData, ProductWithOrder } from '~/types';
 import {
   changeOrder,
@@ -83,7 +84,11 @@ export const SectionProductPage = () => {
   const sectionIdIdAsNumber = +sectionId;
 
   const { data, isInitialLoading, refetch } = useQuery({
-    queryKey: ['section-products', sectionIdIdAsNumber, { withShop: true }],
+    queryKey: [
+      QueryKey.sectionProducts,
+      sectionIdIdAsNumber,
+      { withShop: true },
+    ],
     queryFn: () =>
       getSectionProductsWithShop({ sectionId: sectionIdIdAsNumber }),
     enabled: !isReordering,

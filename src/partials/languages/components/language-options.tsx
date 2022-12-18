@@ -1,7 +1,8 @@
 import { ListItemIcon, MenuItem, Typography } from '@mui/material';
-import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { QueryKey } from '~/enums';
 import { langs } from '~/i18n';
+import { useClearCache } from '~/utils';
 import { LanguageIcon } from './language-icon';
 
 type Props = {
@@ -10,7 +11,7 @@ type Props = {
 
 export const LanguageOptions = (props: Props) => {
   const { i18n } = useTranslation();
-  const queryClient = useQueryClient();
+  const clearCache = useClearCache(QueryKey.products);
 
   const handleChangeLang = (value: string) => {
     props.onClose();
@@ -21,8 +22,7 @@ export const LanguageOptions = (props: Props) => {
 
     setTimeout(() => {
       i18n.changeLanguage(value), 100;
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-      queryClient.invalidateQueries({ queryKey: ['section-products'] });
+      clearCache();
     });
   };
 

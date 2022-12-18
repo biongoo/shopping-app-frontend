@@ -1,9 +1,10 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { addList } from '~/api';
 import { FormModal, Input } from '~/bits';
-import { generateOnError, generateOnSuccess } from '~/utils';
+import { QueryKey } from '~/enums';
+import { generateOnError, generateOnSuccess, useClearCache } from '~/utils';
 
 type Props = {
   isOpen: boolean;
@@ -17,8 +18,8 @@ type ListInputs = {
 export const AddListModal = (props: Props) => {
   const { isOpen, onClose } = props;
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const mutation = useMutation(addList);
+  const clearCache = useClearCache(QueryKey.lists);
   const { control, reset, setError, handleSubmit } = useForm<ListInputs>({
     defaultValues: {
       name: '',
@@ -36,7 +37,7 @@ export const AddListModal = (props: Props) => {
         message: 'successfullyCreated',
         reset,
         fn: ({ data }) => {
-          queryClient.invalidateQueries({ queryKey: ['lists'] });
+          clearCache();
           navigate(`${data}`);
         },
       }),

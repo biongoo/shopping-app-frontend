@@ -1,8 +1,9 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { deleteSectionProduct } from '~/api';
 import { AlertModal, TranslatedText } from '~/bits';
+import { QueryKey } from '~/enums';
 import { Product } from '~/types';
-import { generateOnError, generateOnSuccess } from '~/utils';
+import { generateOnError, generateOnSuccess, useClearCache } from '~/utils';
 
 type Props = {
   isOpen: boolean;
@@ -12,8 +13,8 @@ type Props = {
 
 export const DeleteSectionProductModal = (props: Props) => {
   const { product, isOpen, onClose } = props;
-  const queryClient = useQueryClient();
   const mutation = useMutation(deleteSectionProduct);
+  const clearCache = useClearCache(QueryKey.sectionProducts);
 
   const handleSubmit = () => {
     const data = {
@@ -26,8 +27,7 @@ export const DeleteSectionProductModal = (props: Props) => {
         alertTime: 5,
         message: 'successfullyDeleted',
         fn: () => {
-          queryClient.invalidateQueries({ queryKey: ['products'] });
-          queryClient.invalidateQueries({ queryKey: ['section-products'] });
+          clearCache();
           onClose();
         },
       }),

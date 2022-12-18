@@ -1,5 +1,5 @@
 import { Box, CircularProgress, Stack } from '@mui/material';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useForm, UseFormReset, UseFormSetError } from 'react-hook-form';
 import {
@@ -18,6 +18,7 @@ import { Product } from '~/types';
 import {
   generateOnError,
   generateOnSuccess,
+  useClearCache,
   useExistsItem,
   useModal,
 } from '~/utils';
@@ -125,7 +126,7 @@ const ProductModal = (props: ProductModalProps) => {
     onOpen,
     onSubmitForm,
   } = props;
-  const queryClient = useQueryClient();
+  const clearCache = useClearCache(QueryKey.products);
   const [shopModal, setOpenShop, setCloseShop] = useModal<string>();
   const [sectionModal, setOpenSection, setCloseSection] = useModal<string>();
   const { control, reset, watch, setError, setValue, getValues, handleSubmit } =
@@ -226,8 +227,7 @@ const ProductModal = (props: ProductModalProps) => {
       reset,
       setError,
       fn: ({ data }) => {
-        queryClient.invalidateQueries({ queryKey: ['products'] });
-        queryClient.invalidateQueries({ queryKey: ['section-products'] });
+        clearCache();
         onClose(data.id);
       },
     });
