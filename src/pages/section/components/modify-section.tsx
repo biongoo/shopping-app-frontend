@@ -5,10 +5,10 @@ import { ListItemIcon, MenuItem, Popover } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { TranslatedText } from '~/bits';
 import { OrderType } from '~/enums';
+import { EditSectionModal } from '~/partials';
 import { ModifyData, Section } from '~/types';
 import { useModal } from '~/utils';
 import { DeleteSectionModal } from './delete-section-modal';
-import { EditSectionModal } from './edit-section-modal';
 
 type Props = {
   isOpen: boolean;
@@ -68,8 +68,8 @@ export const ModifySection = (props: Props) => {
     editModal.isRender && editModal.data ? (
       <EditSectionModal
         section={editModal.data}
-        sections={props.sections}
         isOpen={editModal.isOpen}
+        shopId={editModal.data.shopId}
         onClose={handleCloseEdit}
       />
     ) : null;

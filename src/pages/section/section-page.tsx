@@ -163,11 +163,7 @@ export const SectionPage = () => {
             <TranslatedText variant="h5" gutterBottom textKey="sections" />
             <Breadcrumbs elements={breadcrumbs} />
           </Box>
-          <AddSection
-            shopId={shopIdAsNumber}
-            isReordering={isReordering}
-            sections={res.sections}
-          />
+          <AddSection shopId={shopIdAsNumber} isReordering={isReordering} />
         </Stack>
         <Table
           name="sections"

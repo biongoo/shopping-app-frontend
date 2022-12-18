@@ -11,7 +11,7 @@ import {
   PostProductDto,
 } from '~/api';
 import { Autocomplete, FormModal, Input, ToggleButtonGroup } from '~/bits';
-import { OrderType, ProductType, Unit } from '~/enums';
+import { OrderType, ProductType, QueryKey, Unit } from '~/enums';
 import { ApiData } from '~/models';
 import { AddSectionModal, AddShopModal } from '~/partials';
 import { Product } from '~/types';
@@ -325,7 +325,6 @@ const ProductModal = (props: ProductModalProps) => {
     sectionModal.isRender && isShop ? (
       <AddSectionModal
         shopId={shopId}
-        sections={sections.data}
         isOpen={sectionModal.isOpen}
         defaultName={sectionModal.data}
         onClose={handleCloseSection}
@@ -380,21 +379,21 @@ const useQueries = (
   const isSection = typeof sectionId === 'number';
 
   const shopsQuery = useQuery({
-    queryKey: ['shops'],
+    queryKey: [QueryKey.shops],
     queryFn: getShops,
     onError: generateOnError(),
     enabled: withoutShop !== true,
   });
 
   const sectionsQuery = useQuery({
-    queryKey: ['sections', shopId],
+    queryKey: [QueryKey.sections],
     queryFn: () => (isShop ? getSections({ shopId }) : undefined),
     onError: generateOnError(),
     enabled: isShop,
   });
 
   const sectionProductsQuery = useQuery({
-    queryKey: ['section-products', sectionId],
+    queryKey: [QueryKey.sectionProducts, sectionId],
     queryFn: () => (isSection ? getSectionProducts({ sectionId }) : undefined),
     onError: generateOnError(),
     enabled: isSection,

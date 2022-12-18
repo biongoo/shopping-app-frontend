@@ -2,40 +2,41 @@ import { Stack } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useForm, UseFormReset, UseFormSetError } from 'react-hook-form';
-import { addShop, editShop, getShops, PostShopDto } from '~/api';
+import { addSection, editSection, getSections, PostSectionDto } from '~/api';
 import { Autocomplete, FormModal, Input, ToggleButtonGroup } from '~/bits';
 import { OrderType, QueryKey } from '~/enums';
 import { ApiData } from '~/models';
-import { Shop } from '~/types';
+import { Section } from '~/types';
 import { generateOnError, generateOnSuccess } from '~/utils';
 
 type Props = {
+  shopId: number;
   isOpen: boolean;
-  shop?: Shop;
+  section?: Section;
   defaultName?: string;
-  onClose: (shopId?: number) => void;
+  onClose: (sectionId?: number) => void;
 };
 
-type ShopInputs = {
+type SectionInputs = {
   name: string;
   orderType: OrderType;
   orderAfterId: number | null;
 };
 
 type OnSubmitProps = {
-  data: PostShopDto;
-  fn: (data: ApiData<Shop>, variables: PostShopDto) => void;
-  reset: UseFormReset<ShopInputs>;
-  setError: UseFormSetError<ShopInputs>;
+  data: PostSectionDto;
+  fn: (data: ApiData<Section>, variables: PostSectionDto) => void;
+  reset: UseFormReset<SectionInputs>;
+  setError: UseFormSetError<SectionInputs>;
 };
 
-type ShopModalProps = Props & {
+type SectionModalProps = Props & {
   isLoading: boolean;
   onSubmitForm: (props: OnSubmitProps) => void;
 };
 
-export const AddShopModal = (props: Props) => {
-  const mutation = useMutation(addShop);
+export const AddSectionModal = (props: Props) => {
+  const mutation = useMutation(addSection);
 
   const handleSubmit = (onSubmitProps: OnSubmitProps) => {
     mutation.mutate(onSubmitProps.data, {
@@ -50,7 +51,7 @@ export const AddShopModal = (props: Props) => {
   };
 
   return (
-    <ShopModal
+    <SectionModal
       {...props}
       onSubmitForm={handleSubmit}
       isLoading={mutation.isLoading}
@@ -58,11 +59,11 @@ export const AddShopModal = (props: Props) => {
   );
 };
 
-export const EditShopModal = (props: Props) => {
-  const { shop, onClose } = props;
-  const mutation = useMutation(editShop);
+export const EditSectionModal = (props: Props) => {
+  const { section, onClose } = props;
+  const mutation = useMutation(editSection);
 
-  if (shop === undefined) {
+  if (section === undefined) {
     onClose();
     return null;
   }
@@ -70,7 +71,7 @@ export const EditShopModal = (props: Props) => {
   const handleSubmit = (onSubmitProps: OnSubmitProps) => {
     const preparedData = {
       ...onSubmitProps.data,
-      shopId: shop.id,
+      id: section.id,
     };
 
     mutation.mutate(preparedData, {
@@ -85,7 +86,7 @@ export const EditShopModal = (props: Props) => {
   };
 
   return (
-    <ShopModal
+    <SectionModal
       {...props}
       onSubmitForm={handleSubmit}
       isLoading={mutation.isLoading}
@@ -93,33 +94,42 @@ export const EditShopModal = (props: Props) => {
   );
 };
 
-const ShopModal = (props: ShopModalProps) => {
-  const { shop, isOpen, defaultName, isLoading, onClose, onSubmitForm } = props;
+const SectionModal = (props: SectionModalProps) => {
+  const {
+    isOpen,
+    shopId,
+    section,
+    isLoading,
+    defaultName,
+    onClose,
+    onSubmitForm,
+  } = props;
   const queryClient = useQueryClient();
   const { control, reset, watch, setError, setValue, getValues, handleSubmit } =
-    useForm<ShopInputs>({
+    useForm<SectionInputs>({
       defaultValues: {
-        name: shop?.name ?? defaultName ?? '',
-        orderType: shop?.orderType ?? OrderType.atTheBottom,
-        orderAfterId: shop?.orderAfterId ?? null,
+        name: section?.name ?? defaultName ?? '',
+        orderType: section?.orderType ?? OrderType.atTheBottom,
+        orderAfterId: section?.orderAfterId ?? null,
       },
     });
 
   const orderType = watch('orderType');
-  const { shops } = useQueries();
+  const { sections } = useQueries(shopId);
 
   useEffect(() => {
-    if (getValues('orderAfterId') === (shop?.orderAfterId ?? null)) {
+    if (getValues('orderAfterId') === (section?.orderAfterId ?? null)) {
       return;
     }
 
-    setValue('orderAfterId', shop?.orderAfterId ?? null, {
-      shouldValidate: Boolean(shop?.orderAfterId),
+    setValue('orderAfterId', section?.orderAfterId ?? null, {
+      shouldValidate: Boolean(section?.orderAfterId),
     });
   }, [orderType]);
 
-  const onSubmit = (data: ShopInputs) => {
+  const onSubmit = (data: SectionInputs) => {
     const preparedData = {
+      shopId,
       name: data.name,
       orderType: data.orderType,
       orderAfterId: data.orderAfterId ?? undefined,
@@ -130,7 +140,6 @@ const ShopModal = (props: ShopModalProps) => {
       reset,
       setError,
       fn: ({ data }) => {
-        queryClient.invalidateQueries({ queryKey: [QueryKey.shops] });
         queryClient.invalidateQueries({ queryKey: [QueryKey.products] });
         queryClient.invalidateQueries({ queryKey: [QueryKey.sections] });
         queryClient.invalidateQueries({ queryKey: [QueryKey.sectionProducts] });
@@ -144,12 +153,12 @@ const ShopModal = (props: ShopModalProps) => {
     orderType === OrderType.afterItem ? (
       <Autocomplete
         required={true}
-        titleKey="shop"
         control={control}
+        titleKey="section"
         name="orderAfterId"
-        isInitialFetching={shops.isInitialLoading}
-        options={shops.data
-          .filter((x) => x.id !== shop?.id)
+        isInitialFetching={sections.isInitialLoading}
+        options={sections.data
+          .filter((x) => x.id !== section?.id)
           .map((x) => ({
             value: x.id,
             label: x.name,
@@ -161,7 +170,7 @@ const ShopModal = (props: ShopModalProps) => {
     <FormModal
       isOpen={isOpen}
       isLoading={isLoading}
-      titleKey={shop ? 'editShop' : 'addShop'}
+      titleKey={section ? 'editSection' : 'addSection'}
       reset={reset}
       onClose={onClose}
       handleSubmit={handleSubmit(onSubmit)}
@@ -186,19 +195,19 @@ const ShopModal = (props: ShopModalProps) => {
   );
 };
 
-const useQueries = () => {
-  const shopsQuery = useQuery({
-    queryKey: [QueryKey.shops],
-    queryFn: getShops,
+const useQueries = (shopId: number) => {
+  const sectionsQuery = useQuery({
+    queryKey: [QueryKey.sections, shopId],
+    queryFn: () => getSections({ shopId }),
     onError: generateOnError(),
   });
 
-  const shops = shopsQuery.data?.data ?? [];
+  const sections = sectionsQuery.data?.data ?? [];
 
   return {
-    shops: {
-      data: shops,
-      isInitialLoading: shopsQuery.isInitialLoading,
+    sections: {
+      data: sections,
+      isInitialLoading: sectionsQuery.isInitialLoading,
     },
   };
 };

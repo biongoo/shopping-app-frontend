@@ -1,13 +1,11 @@
 import AddIcon from '@mui/icons-material/Add';
 import { IconButton } from '~/bits';
 import { AddSectionModal } from '~/partials';
-import { Section } from '~/types';
 import { useModal } from '~/utils';
 
 type Props = {
   shopId: number;
   isReordering: boolean;
-  sections: Section[];
 };
 
 export const AddSection = (props: Props) => {
@@ -17,7 +15,6 @@ export const AddSection = (props: Props) => {
     <AddSectionModal
       isOpen={modal.isOpen}
       shopId={props.shopId}
-      sections={props.sections}
       onClose={setClose}
     />
   ) : null;

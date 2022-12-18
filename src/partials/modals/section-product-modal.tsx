@@ -8,7 +8,7 @@ import {
   putSectionProduct,
 } from '~/api';
 import { Autocomplete, FormModal, ToggleButtonGroup } from '~/bits';
-import { OrderType } from '~/enums';
+import { OrderType, QueryKey } from '~/enums';
 import { Product } from '~/types';
 import {
   generateOnError,
@@ -192,13 +192,13 @@ export const SectionProductModal = (props: Props) => {
 
 const useQueries = (sectionId: number, isProduct: boolean) => {
   const sectionProductsQuery = useQuery({
-    queryKey: ['section-products', sectionId, { withShop: true }],
+    queryKey: [QueryKey.sectionProducts, sectionId, { withShop: true }],
     queryFn: () => getSectionProductsWithShop({ sectionId }),
     onError: generateOnError(),
   });
 
   const availableSectionProductsQuery = useQuery({
-    queryKey: ['products', sectionId],
+    queryKey: [QueryKey.products, sectionId],
     queryFn: () => getAvailableProducts({ sectionId }),
     onError: generateOnError(),
     enabled: !isProduct,

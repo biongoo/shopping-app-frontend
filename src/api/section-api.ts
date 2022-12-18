@@ -3,15 +3,15 @@ import { ApiData } from '~/models';
 import { Section, Shop } from '~/types';
 import { connectApi } from './connect-api';
 
-type GetSectionDto = {
-  shopId: number;
-};
-
-type PostSectionDto = {
+export type PostSectionDto = {
   name: string;
   shopId: number;
   orderType: OrderType;
   orderAfterId?: number;
+};
+
+type GetSectionDto = {
+  shopId: number;
 };
 
 type PatchSectionDto = {
