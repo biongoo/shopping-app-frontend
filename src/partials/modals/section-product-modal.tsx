@@ -51,17 +51,11 @@ export const SectionProductModal = (props: Props) => {
       },
     });
 
-  const productId = watch('productId');
   const orderType = watch('orderType');
   const { availableProducts, sectionProducts } = useQueries(
     sectionId,
     isProduct
   );
-
-  useEffect(() => {
-    setValue('orderType', OrderType.atTheBottom);
-    setValue('orderAfterId', null);
-  }, [productId]);
 
   useEffect(() => {
     if (getValues('orderAfterId') === (product?.orderAfterId ?? null)) {

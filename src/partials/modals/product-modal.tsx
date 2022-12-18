@@ -386,7 +386,7 @@ const useQueries = (
   });
 
   const sectionsQuery = useQuery({
-    queryKey: [QueryKey.sections],
+    queryKey: [QueryKey.sections, shopId],
     queryFn: () => (isShop ? getSections({ shopId }) : undefined),
     onError: generateOnError(),
     enabled: isShop,
