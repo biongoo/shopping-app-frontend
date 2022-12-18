@@ -1,3 +1,5 @@
+import { Unit } from '~/enums';
+
 export type ListPreview = {
   id: number;
   name: string;
@@ -6,6 +8,8 @@ export type ListPreview = {
 };
 
 export type ListItemPreview = {
+  unit: Unit;
+  count: number;
   checked: boolean;
   product: ProductPreview;
 };

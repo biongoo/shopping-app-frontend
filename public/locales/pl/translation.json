@@ -118,6 +118,13 @@
   "nameOptional": "Nazwa (Opcjonalnie)",
   "create": "Utwórz",
   "emptyList": "Pusta lista",
+  "unitG": "{{localCount}} g",
+  "unitDag": "{{localCount}} dag",
+  "unitKg": "{{localCount}} kg",
+  "unitMl": "{{localCount}} ml",
+  "unitL": "{{localCount}} l",
+  "unitPkg": "{{localCount}} op.",
+  "unitPcs": "{{localCount}} szt.",
   "orderType": {
     "0": "Na początku",
     "1": "Po pozycji",

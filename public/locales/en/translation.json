@@ -118,6 +118,13 @@
   "nameOptional": "Name (Optional)",
   "create": "Create",
   "emptyList": "Empty list",
+  "unitG": "{{localCount}} g",
+  "unitDag": "{{localCount}} dag",
+  "unitKg": "{{localCount}} kg",
+  "unitMl": "{{localCount}} ml",
+  "unitL": "{{localCount}} l",
+  "unitPkg": "{{localCount}} pkg",
+  "unitPcs": "{{localCount}} pcs",
   "orderType": {
     "0": "At the top",
     "1": "After item",

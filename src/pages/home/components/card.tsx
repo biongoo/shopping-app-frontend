@@ -22,19 +22,19 @@ export const Card = ({ list }: Props) => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
 
-  const products = list.items.map((x, i) => (
-    <ListItem key={`list-item-${x.product.id}-${i}`} item={x} />
-  ));
-
   const handleClick = () => {
     navigate(`${list.id}`);
   };
 
   const updatedAt = new Date(list.updatedAt);
 
+  const products = list.items.map((x, i) => (
+    <ListItem key={`list-item-${x.product.id}-${i}`} item={x} />
+  ));
+
   const productsContent =
     products.length > 0 ? (
-      <List dense={true} sx={{ p: 0 }}>
+      <List dense={true} sx={{ p: 0, mt: 0.5 }}>
         {products}
       </List>
     ) : (

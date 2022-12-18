@@ -22,10 +22,6 @@ export const HomePage = () => {
 
   const lists = listsQuery.data?.data ?? [];
 
-  const cards = lists.map((x, i) => (
-    <Card key={`list-${x.id}-${i}`} list={x} />
-  ));
-
   if (listsQuery.isInitialLoading) {
     return (
       <Box textAlign="center">
@@ -33,6 +29,10 @@ export const HomePage = () => {
       </Box>
     );
   }
+
+  const cards = lists.map((x, i) => (
+    <Card key={`list-${x.id}-${i}`} list={x} />
+  ));
 
   return (
     <Stack sx={{ flexGrow: 1 }}>
