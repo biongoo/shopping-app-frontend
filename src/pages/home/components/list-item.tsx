@@ -40,7 +40,7 @@ export const ListItem = ({ item }: Props) => {
           variant="body2"
           sx={{ width: 1, overflow: 'hidden', textOverflow: 'ellipsis' }}
         >
-          {item.product.name}
+          {item.name}
         </Typography>
         <Typography variant="body2" sx={{ flexShrink: 0 }}>
           {convertedItem}

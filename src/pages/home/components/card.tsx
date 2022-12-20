@@ -29,7 +29,7 @@ export const Card = ({ list }: Props) => {
   const updatedAt = new Date(list.updatedAt);
 
   const products = list.items.map((x, i) => (
-    <ListItem key={`list-item-${x.product.id}-${i}`} item={x} />
+    <ListItem key={`list-item-${x.id}-${i}`} item={x} />
   ));
 
   const productsContent =

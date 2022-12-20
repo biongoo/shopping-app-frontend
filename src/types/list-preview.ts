@@ -8,13 +8,9 @@ export type ListPreview = {
 };
 
 export type ListItemPreview = {
+  id: number;
   unit: Unit;
+  name: string;
   count: number;
   checked: boolean;
-  product: ProductPreview;
-};
-
-type ProductPreview = {
-  id: number;
-  name: string;
 };
