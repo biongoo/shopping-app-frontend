@@ -1,14 +1,8 @@
-import CommentIcon from '@mui/icons-material/Comment';
 import {
   Box,
-  Checkbox,
   CircularProgress,
-  IconButton,
+  Divider,
   List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
   ListSubheader,
   Stack,
   Typography,
@@ -19,7 +13,9 @@ import { Navigate, useParams } from 'react-router-dom';
 import { getList } from '~/api';
 import { Breadcrumbs } from '~/bits';
 import { QueryKey } from '~/enums';
+import { ListItem } from '~/types';
 import { generateOnError } from '~/utils';
+import { AddListItem, Item } from './components';
 
 export const ListPage = () => {
   const { listId } = useParams();
@@ -56,7 +52,7 @@ export const ListPage = () => {
     { key: list.name, ignoreTranslation: true },
   ];
 
-  const handleToggle = (value: number) => () => {
+  const handleToggle = (value: number) => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -68,6 +64,30 @@ export const ListPage = () => {
 
     setChecked(newChecked);
   };
+
+  const shops = list.shops.map((shop, i) => {
+    const items: ListItem[] = [];
+
+    for (const section of shop.sections) {
+      items.push(...section.items);
+    }
+
+    const shopContent = items.map((item, index) => (
+      <div key={`item-${item.id}-${index}`}>
+        <Item item={item} onCheck={handleToggle} />
+        {index + 1 === items.length ? null : <Divider />}
+      </div>
+    ));
+
+    return (
+      <li key={`shop-${shop.id}-${i}`}>
+        <ul>
+          <ListSubheader>{shop.name}</ListSubheader>
+          {shopContent}
+        </ul>
+      </li>
+    );
+  });
 
   return (
     <Stack sx={{ flexGrow: 1, overflow: 'hidden' }}>
@@ -83,7 +103,7 @@ export const ListPage = () => {
           </Typography>
           <Breadcrumbs elements={breadcrumbs} />
         </Box>
-        {/* <AddItem /> */}
+        <AddListItem listId={listIdAsNumber} />
       </Stack>
       <List
         sx={{
@@ -95,44 +115,7 @@ export const ListPage = () => {
         }}
         subheader={<li />}
       >
-        {[0, 1, 2, 3, 4].map((sectionId) => (
-          <li key={`section-${sectionId}`}>
-            <ul>
-              <ListSubheader>{`I'm sticky ${sectionId}`}</ListSubheader>
-              {[0, 1, 2, 3, 4].map((value) => (
-                <ListItem
-                  key={value}
-                  secondaryAction={
-                    <IconButton edge="end" aria-label="comments">
-                      <CommentIcon />
-                    </IconButton>
-                  }
-                  disablePadding
-                  dense={true}
-                >
-                  <ListItemButton
-                    role={undefined}
-                    onClick={handleToggle(value)}
-                    dense
-                  >
-                    <ListItemIcon>
-                      <Checkbox
-                        edge="start"
-                        checked={checked.includes(value)}
-                        tabIndex={-1}
-                        disableRipple
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      id={`checkbox-list-label-${value}`}
-                      primary={`Line item ${value + 1}`}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </ul>
-          </li>
-        ))}
+        {shops}
       </List>
     </Stack>
   );

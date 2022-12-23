@@ -118,6 +118,7 @@
   "nameOptional": "Name (Optional)",
   "create": "Create",
   "emptyList": "Empty list",
+  "unit": "Unit",
   "unitG": "{{localCount}} g",
   "unitDag": "{{localCount}} dag",
   "unitKg": "{{localCount}} kg",
@@ -125,6 +126,12 @@
   "unitL": "{{localCount}} l",
   "unitPkg": "{{localCount}} pkg",
   "unitPcs": "{{localCount}} pcs",
+  "information": "Information:",
+  "once": "Once",
+  "global": "Global",
+  "assignProduct": "Assign the product to the selected section:",
+  "count": "Count",
+  "description": "Description (Optional)",
   "orderType": {
     "0": "At the top",
     "1": "After item",
@@ -134,10 +141,19 @@
     "0": "Local",
     "1": "Global"
   },
-  "unit": {
+  "enumUnit": {
     "0": "Grams",
     "1": "Milliliters",
     "2": "Packs",
     "3": "Pieces"
+  },
+  "enumG": {
+    "0": "G",
+    "1": "DAG",
+    "2": "KG"
+  },
+  "enumMl": {
+    "0": "ML",
+    "1": "L"
   }
 }

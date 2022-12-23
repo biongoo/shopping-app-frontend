@@ -354,7 +354,7 @@ const ProductModal = (props: ProductModalProps) => {
             multiple={true}
             titleKey="units"
             control={control}
-            translationKey="unit"
+            translationKey="enumUnit"
             disabled={product?.type === ProductType.global}
             options={[Unit.grams, Unit.milliliters, Unit.packs, Unit.pieces]}
           />

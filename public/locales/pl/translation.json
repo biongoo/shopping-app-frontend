@@ -118,6 +118,7 @@
   "nameOptional": "Nazwa (Opcjonalnie)",
   "create": "Utwórz",
   "emptyList": "Pusta lista",
+  "unit": "Jednostka",
   "unitG": "{{localCount}} g",
   "unitDag": "{{localCount}} dag",
   "unitKg": "{{localCount}} kg",
@@ -125,6 +126,12 @@
   "unitL": "{{localCount}} l",
   "unitPkg": "{{localCount}} op.",
   "unitPcs": "{{localCount}} szt.",
+  "information": "Informacje:",
+  "once": "Jednorazowo",
+  "global": "Globalnie",
+  "assignProduct": "Przypisz produkt do wybranego działu:",
+  "count": "Ilość",
+  "description": "Opis (Opcjonalnie)",
   "orderType": {
     "0": "Na początku",
     "1": "Po pozycji",
@@ -134,10 +141,19 @@
     "0": "Lokalny",
     "1": "Globalny"
   },
-  "unit": {
+  "enumUnit": {
     "0": "Gramy",
     "1": "Mililitry",
     "2": "Opakowania",
     "3": "Sztuki"
+  },
+  "enumG": {
+    "0": "G",
+    "1": "DAG",
+    "2": "KG"
+  },
+  "enumMl": {
+    "0": "ML",
+    "1": "L"
   }
 }

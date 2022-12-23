@@ -1,7 +1,7 @@
 import { Unit } from '~/enums';
 import i18n from '~/i18n';
 import { ApiData } from '~/models';
-import { ListPreview } from '~/types';
+import { List, ListPreview } from '~/types';
 import { connectApi } from './connect-api';
 
 type PostListDto = {
@@ -55,7 +55,7 @@ export const deleteList = (body: DeleteListDto): Promise<ApiData> =>
     body,
   });
 
-export const getList = (body: GetListDto): Promise<ApiData<ListPreview>> =>
+export const getList = (body: GetListDto): Promise<ApiData<List>> =>
   connectApi({
     endpoint: `list/item?id=${body.id}&lang=${i18n.resolvedLanguage}`,
   });

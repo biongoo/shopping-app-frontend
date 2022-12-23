@@ -19,11 +19,14 @@ type ListSection = {
   items: ListItem[];
 };
 
-type ListItem = {
+export type ListItem = {
   id: number;
   unit: Unit;
   name: string;
   count: number;
+  shopId: number;
   checked: boolean;
   productId: number;
+  sectionId: number;
+  description?: string;
 };
