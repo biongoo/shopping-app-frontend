@@ -19,13 +19,15 @@ import { useTranslation } from 'react-i18next';
 
 type ToggleButtonGroupProps<T extends FieldValues> = {
   name: string;
-  titleKey: string;
   control: Control<T>;
   translationKey: string;
   options: Array<PathValue<T, Path<T>>>;
+  titleKey?: string;
   multiple?: boolean;
   disabled?: boolean;
   fullWidth?: boolean;
+  withoutLabel?: boolean;
+  onChange?: (value: number, prev: number) => void;
 };
 
 type Props<T extends FieldValues> = UseControllerProps<T> &
@@ -44,7 +46,9 @@ export const ToggleButtonGroup = <T extends FieldValues>(props: Props<T>) => {
     multiple,
     disabled,
     fullWidth,
+    withoutLabel,
     translationKey,
+    onChange,
   } = props;
 
   const orientation = isSm ? 'vertical' : 'horizontal';
@@ -62,7 +66,9 @@ export const ToggleButtonGroup = <T extends FieldValues>(props: Props<T>) => {
       rules={{ required: true }}
       render={({ field, fieldState: { error } }) => (
         <FormControl error={Boolean(error)}>
-          <FormLabel sx={{ mb: 1 }}>{t(titleKey)}:</FormLabel>
+          {withoutLabel === true ? null : (
+            <FormLabel sx={{ mb: 1 }}>{t(titleKey ?? '')}:</FormLabel>
+          )}
           <ToggleButtonGroupMui
             sx={{
               margin: 'auto',
@@ -87,6 +93,7 @@ export const ToggleButtonGroup = <T extends FieldValues>(props: Props<T>) => {
                 return;
               }
 
+              onChange?.(value, field.value);
               field.onChange(value);
             }}
           >

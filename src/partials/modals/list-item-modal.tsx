@@ -3,6 +3,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import StoreIcon from '@mui/icons-material/Store';
 import {
   Box,
+  InputAdornment,
   List,
   ListItem as ListItemMui,
   ListItemIcon,
@@ -10,11 +11,10 @@ import {
   MenuItem,
   Popover,
   Stack,
-  ToggleButton,
-  ToggleButtonGroup as ToggleButtonGroupMui,
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { Decimal } from 'decimal.js';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { getProducts, getSections, getShops, putListItem } from '~/api';
@@ -73,7 +73,7 @@ export const ListItemModal = (props: Props) => {
     useModal<HTMLElement | null>();
   const [shopModal, setOpenShop, setCloseShop] = useModal<string>();
   const [sectionModal, setOpenSection, setCloseSection] = useModal<string>();
-  const { control, reset, watch, setError, setValue, handleSubmit } =
+  const { control, reset, watch, setError, setValue, getValues, handleSubmit } =
     useForm<ListItemInputs>({
       defaultValues: {
         productId: listItem?.productId ?? null,
@@ -126,13 +126,6 @@ export const ListItemModal = (props: Props) => {
       });
     }
 
-    const count = isSameProduct ? listItem?.count : '';
-    setValue('count', count?.toString() ?? '', {
-      shouldValidate: Boolean(count),
-    });
-
-    // TODO unitSizeType
-
     const description = isSameProduct ? listItem?.description : '';
     setValue('description', description ?? '', {
       shouldValidate: Boolean(description),
@@ -151,7 +144,65 @@ export const ListItemModal = (props: Props) => {
     }
   }, [shopId]);
 
-  // TODO useEffect to change unit to change unitSizeType
+  useEffect(() => {
+    if (product?.id === listItem?.productId && unit === listItem?.unit) {
+      let count = listItem?.count ?? 0;
+      let unitSizeType = 1;
+
+      switch (listItem?.unit) {
+        case Unit.grams: {
+          if (count < 10) {
+            break;
+          }
+
+          if (count < 1000) {
+            count /= 10;
+            unitSizeType = 10;
+            break;
+          }
+
+          count /= 1000;
+          unitSizeType = 1000;
+          break;
+        }
+        case Unit.milliliters: {
+          if (count < 10) {
+            break;
+          }
+
+          count /= 1000;
+          unitSizeType = 1000;
+          break;
+        }
+      }
+
+      setValue('count', count.toString(), {
+        shouldValidate: true,
+      });
+
+      setValue('unitSizeType', unitSizeType);
+    } else {
+      let unitSizeType = 1;
+
+      switch (unit) {
+        case Unit.grams: {
+          unitSizeType = 10;
+          break;
+        }
+        case Unit.milliliters: {
+          unitSizeType = 1000;
+          break;
+        }
+        default: {
+          unitSizeType = 1;
+          break;
+        }
+      }
+
+      setValue('count', '');
+      setValue('unitSizeType', unitSizeType);
+    }
+  }, [unit]);
 
   const [productIdToUpdate, setProductIdToUpdate] = useExistsItem(
     products.data,
@@ -215,18 +266,38 @@ export const ListItemModal = (props: Props) => {
     setTimeout(() => setOpenProduct(product), 200);
   };
 
-  const onSubmit = (data: ListItemInputs) => {
-    const { count, description, productId, sectionId, unit } = data;
-    const countAsNumber = Number(count);
+  const handleChangeUnitType = (value: number, prevValue: number) => {
+    const count = Number(getValues('count'));
 
-    if (
-      !count ||
-      !description ||
-      !productId ||
-      !sectionId ||
-      !unit ||
-      Number.isNaN(countAsNumber)
-    ) {
+    if (value === prevValue) {
+      return;
+    }
+
+    if (Number.isNaN(count) || count === 0) {
+      setValue('count', '');
+      return;
+    }
+
+    const decimalCount = new Decimal(count);
+    const decimalValue = new Decimal(value);
+    const decimalPrevValue = new Decimal(prevValue);
+    const divider = decimalValue.div(decimalPrevValue);
+
+    setValue('count', `${decimalCount.div(divider)}`);
+  };
+
+  const onSubmit = (data: ListItemInputs) => {
+    const { count, description, productId, sectionId, unit, unitSizeType } =
+      data;
+    const countAsDecimal = new Decimal(count).mul(unitSizeType);
+    const countAsNumber = countAsDecimal.toNumber();
+
+    if (!countAsDecimal.isInt() || !countAsNumber) {
+      setError('count', {});
+      return;
+    }
+
+    if (!productId || !sectionId || unit === null) {
       return;
     }
 
@@ -376,41 +447,78 @@ export const ListItemModal = (props: Props) => {
       />
     ) : null;
 
+  const unitOptions: number[] = [];
+
+  switch (unit) {
+    case Unit.grams: {
+      unitOptions.push(1, 10, 1000);
+      break;
+    }
+    case Unit.milliliters: {
+      unitOptions.push(1, 1000);
+      break;
+    }
+    case Unit.packs:
+    case Unit.pieces: {
+      unitOptions.push(1);
+      break;
+    }
+  }
+
   const countInput =
     isProduct && isSection && isUnit ? (
-      <Stack
-        direction="row"
-        justifyContent="center"
-        alignItems="stretch"
-        sx={{
-          '& .MuiInputBase-root': {
-            borderTopRightRadius: 0,
-            borderBottomRightRadius: 0,
-          },
-          '& .MuiToggleButtonGroup-root > button:first-of-type': {
-            borderTopLeftRadius: 0,
-            borderBottomLeftRadius: 0,
-          },
-        }}
-      >
-        <Input fullWidth name="count" labelKey="count" control={control} />
-        <ToggleButtonGroupMui
-          value={'left'}
-          exclusive
-          /* onChange={handleAlignment} */
-          aria-label="text alignment"
+      <>
+        <Box
+          sx={{
+            '& .MuiInputBase-root': {
+              pr: 0,
+            },
+            '& .MuiInputAdornment-root': {
+              height: '3.5em',
+              maxHeight: '3.5rem',
+              alignItems: 'stretch',
+              '& > .MuiFormControl-root': {
+                flexDirection: 'row',
+                '& .MuiToggleButtonGroup-root': {
+                  margin: 0,
+                  '& > button:first-of-type': {
+                    borderTopLeftRadius: 0,
+                    borderBottomLeftRadius: 0,
+                  },
+                },
+              },
+            },
+          }}
         >
-          <ToggleButton value="left" aria-label="left aligned">
-            G
-          </ToggleButton>
-          <ToggleButton value="center" aria-label="centered">
-            DAG
-          </ToggleButton>
-          <ToggleButton value="right" aria-label="right aligned">
-            KG
-          </ToggleButton>
-        </ToggleButtonGroupMui>
-      </Stack>
+          <Input
+            fullWidth
+            name="count"
+            labelKey="count"
+            control={control}
+            onlyNumbers={true}
+            rules={{ minLength: 1 }}
+            endAdornment={
+              <InputAdornment position="end">
+                <ToggleButtonGroup
+                  control={control}
+                  name="unitSizeType"
+                  withoutLabel={true}
+                  options={unitOptions}
+                  translationKey={`enumUnitShort.${unit}`}
+                  onChange={handleChangeUnitType}
+                />
+              </InputAdornment>
+            }
+          />
+        </Box>
+        <Input
+          fullWidth
+          control={control}
+          name="description"
+          labelKey="description"
+          rules={{ required: false }}
+        />
+      </>
     ) : null;
 
   const addProductContent = productModal.isRender ? (

@@ -21,6 +21,7 @@ type InputProps<T extends FieldValues> = {
   disabled?: boolean;
   fullWidth?: boolean;
   onlyNumbers?: boolean;
+  endAdornment?: JSX.Element;
   patternErrorMessage?: string;
 };
 
@@ -37,6 +38,7 @@ export const Input = <T extends FieldValues>(props: Props<T>) => {
     disabled,
     fullWidth,
     onlyNumbers,
+    endAdornment,
     patternErrorMessage,
   } = props;
 
@@ -104,16 +106,17 @@ export const Input = <T extends FieldValues>(props: Props<T>) => {
                 </InputAdornment>
               ),
             }),
+            ...(endAdornment && { endAdornment }),
           }}
           onChange={(x) => {
-            let value = x.target.value;
+            const value = x.target.value;
 
             if (rules?.maxLength && value.length > rules?.maxLength) {
               return;
             }
 
-            if (onlyNumbers) {
-              value = allowOnlyNumber(value);
+            if (onlyNumbers && Number.isNaN(Number(value))) {
+              return;
             }
 
             return field.onChange(value);
@@ -122,8 +125,4 @@ export const Input = <T extends FieldValues>(props: Props<T>) => {
       )}
     />
   );
-};
-
-const allowOnlyNumber = (value: string) => {
-  return value.replaceAll(/\D/g, '');
 };
