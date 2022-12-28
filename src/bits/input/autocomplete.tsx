@@ -59,7 +59,7 @@ type AutocompleteProps<T extends FieldValues> = {
   required?: boolean;
   isInitialFetching?: boolean;
   dynamicAdd?: DynamicAddProps<T>;
-  onChangeId?: () => void;
+  onChangeId?: (value?: PathValue<T, Path<T>>) => void;
 };
 
 type Props<T extends FieldValues> = UseControllerProps<T> &
@@ -244,7 +244,7 @@ export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
               return;
             }
 
-            onChangeId?.();
+            onChangeId?.(newValue?.value);
 
             if (!newValue) {
               field.onChange(null);

@@ -7,16 +7,17 @@ import {
   ListItemText,
 } from '@mui/material';
 import { IconButton } from '~/bits';
-import { ListItem } from '~/types';
+import { ListItem, ModifyData } from '~/types';
 import { useConvertUnit } from '~/utils';
 
 type Props = {
   item: ListItem;
   onCheck: (id: number) => void;
+  setOpenOptions: (data: ModifyData) => void;
 };
 
 export const Item = (props: Props) => {
-  const { item, onCheck } = props;
+  const { item, onCheck, setOpenOptions } = props;
   const convertedItem = useConvertUnit(item.count, item.unit);
 
   return (
@@ -27,12 +28,12 @@ export const Item = (props: Props) => {
           placement="left"
           titleKey="options"
           open={false}
-          /* onClick={(e) =>
+          onClick={(e) =>
             setOpenOptions({
-              id: x.id,
+              id: item.id,
               element: e.currentTarget,
             })
-          } */
+          }
         >
           <MoreVertIcon />
         </IconButton>

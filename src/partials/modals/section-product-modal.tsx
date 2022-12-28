@@ -1,6 +1,5 @@
 import { Stack } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   getAvailableProducts,
@@ -57,16 +56,6 @@ export const SectionProductModal = (props: Props) => {
     isProduct
   );
 
-  useEffect(() => {
-    if (getValues('orderAfterId') === (product?.orderAfterId ?? null)) {
-      return;
-    }
-
-    setValue('orderAfterId', product?.orderAfterId ?? null, {
-      shouldValidate: Boolean(product?.orderAfterId),
-    });
-  }, [orderType]);
-
   const [productIdToUpdate, setProductIdToUpdate] = useExistsItem(
     availableProducts.data,
     (x) => setValue('productId', x, { shouldValidate: true })
@@ -81,6 +70,20 @@ export const SectionProductModal = (props: Props) => {
     setCloseProduct();
     setProductIdToUpdate(productId);
     setTimeout(onOpen, 200);
+  };
+
+  const handleChangeOrderType = (value: number, prevValue: number) => {
+    if (value === prevValue) {
+      return;
+    }
+
+    if (getValues('orderAfterId') === (product?.orderAfterId ?? null)) {
+      return;
+    }
+
+    setValue('orderAfterId', product?.orderAfterId ?? null, {
+      shouldValidate: Boolean(product?.orderAfterId),
+    });
   };
 
   const onSubmit = (data: SectionProductInputs) => {
@@ -170,6 +173,7 @@ export const SectionProductModal = (props: Props) => {
             control={control}
             titleKey="position"
             translationKey="orderType"
+            onChange={handleChangeOrderType}
             options={[
               OrderType.atTheTop,
               OrderType.atTheBottom,

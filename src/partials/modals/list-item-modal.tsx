@@ -135,16 +135,6 @@ export const ListItemModal = (props: Props) => {
   }, [productId, product?.shopId, product?.sectionId]);
 
   useEffect(() => {
-    if (product?.shopId === shopId) {
-      setValue('sectionId', product?.sectionId ?? null, {
-        shouldValidate: Boolean(product?.sectionId),
-      });
-    } else {
-      setValue('sectionId', null);
-    }
-  }, [shopId]);
-
-  useEffect(() => {
     if (product?.id === listItem?.productId && unit === listItem?.unit) {
       let count = listItem?.count ?? 0;
       let unitSizeType = 1;
@@ -286,6 +276,18 @@ export const ListItemModal = (props: Props) => {
     setValue('count', `${decimalCount.div(divider)}`);
   };
 
+  const handleChangeShopId = (value?: string | number | null) => {
+    if (product?.shopId === value) {
+      setValue('sectionId', product?.sectionId ?? null, {
+        shouldValidate: Boolean(product?.sectionId),
+      });
+
+      return;
+    }
+
+    setValue('sectionId', null);
+  };
+
   const onSubmit = (data: ListItemInputs) => {
     const { count, description, productId, sectionId, unit, unitSizeType } =
       data;
@@ -400,6 +402,7 @@ export const ListItemModal = (props: Props) => {
       titleKey="shop"
       required={true}
       control={control}
+      onChangeId={handleChangeShopId}
       dynamicAdd={{
         defaultValue: -1,
         emptyAddKey: 'addShop',

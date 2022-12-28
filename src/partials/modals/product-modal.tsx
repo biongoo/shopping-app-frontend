@@ -168,16 +168,6 @@ const ProductModal = (props: ProductModalProps) => {
     });
   }, [sectionId, sectionProduct]);
 
-  useEffect(() => {
-    if (getValues('orderAfterId') === (sectionProduct?.orderAfterId ?? null)) {
-      return;
-    }
-
-    setValue('orderAfterId', sectionProduct?.orderAfterId ?? null, {
-      shouldValidate: Boolean(sectionProduct?.orderAfterId),
-    });
-  }, [orderType]);
-
   const [shopIdToUpdate, setShopIdToUpdate] = useExistsItem(shops.data, (x) =>
     setValue('shopId', x, { shouldValidate: true })
   );
@@ -209,8 +199,44 @@ const ProductModal = (props: ProductModalProps) => {
     setTimeout(onOpen, 200);
   };
 
-  const handleChangeShopId = () => {
+  const handleChangeShopId = (value?: string | number | Unit[] | null) => {
+    if (product?.shopId === value) {
+      setValue('sectionId', product?.sectionId ?? null, {
+        shouldValidate: Boolean(product?.sectionId),
+      });
+
+      setValue(
+        'orderType',
+        sectionProduct?.orderType ?? OrderType.atTheBottom,
+        {
+          shouldValidate: true,
+        }
+      );
+
+      setValue('orderAfterId', sectionProduct?.orderAfterId ?? null, {
+        shouldValidate: Boolean(sectionProduct?.orderAfterId),
+      });
+
+      return;
+    }
+
     setValue('sectionId', null);
+    setValue('orderType', null);
+    setValue('orderAfterId', null);
+  };
+
+  const handleChangeOrderType = (value: number, prevValue: number) => {
+    if (value === prevValue) {
+      return;
+    }
+
+    if (getValues('orderAfterId') === (sectionProduct?.orderAfterId ?? null)) {
+      return;
+    }
+
+    setValue('orderAfterId', sectionProduct?.orderAfterId ?? null, {
+      shouldValidate: Boolean(sectionProduct?.orderAfterId),
+    });
   };
 
   const onSubmit = (data: ProductInputs) => {
@@ -289,6 +315,7 @@ const ProductModal = (props: ProductModalProps) => {
         control={control}
         titleKey="position"
         translationKey="orderType"
+        onChange={handleChangeOrderType}
         options={[
           OrderType.atTheTop,
           OrderType.atTheBottom,

@@ -1,6 +1,5 @@
 import { Stack } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
 import { useForm, UseFormReset, UseFormSetError } from 'react-hook-form';
 import { addSection, editSection, getSections, PostSectionDto } from '~/api';
 import { Autocomplete, FormModal, Input, ToggleButtonGroup } from '~/bits';
@@ -117,7 +116,11 @@ const SectionModal = (props: SectionModalProps) => {
   const orderType = watch('orderType');
   const { sections } = useQueries(shopId);
 
-  useEffect(() => {
+  const handleChangeOrderType = (value: number, prevValue: number) => {
+    if (value === prevValue) {
+      return;
+    }
+
     if (getValues('orderAfterId') === (section?.orderAfterId ?? null)) {
       return;
     }
@@ -125,7 +128,7 @@ const SectionModal = (props: SectionModalProps) => {
     setValue('orderAfterId', section?.orderAfterId ?? null, {
       shouldValidate: Boolean(section?.orderAfterId),
     });
-  }, [orderType]);
+  };
 
   const onSubmit = (data: SectionInputs) => {
     const preparedData = {
@@ -180,6 +183,7 @@ const SectionModal = (props: SectionModalProps) => {
           control={control}
           titleKey="position"
           translationKey="orderType"
+          onChange={handleChangeOrderType}
           options={[
             OrderType.atTheTop,
             OrderType.atTheBottom,

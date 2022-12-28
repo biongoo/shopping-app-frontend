@@ -1,6 +1,5 @@
 import { Stack } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
 import { useForm, UseFormReset, UseFormSetError } from 'react-hook-form';
 import { addShop, editShop, getShops, PostShopDto } from '~/api';
 import { Autocomplete, FormModal, Input, ToggleButtonGroup } from '~/bits';
@@ -108,7 +107,11 @@ const ShopModal = (props: ShopModalProps) => {
   const orderType = watch('orderType');
   const { shops } = useQueries();
 
-  useEffect(() => {
+  const handleChangeOrderType = (value: number, prevValue: number) => {
+    if (value === prevValue) {
+      return;
+    }
+
     if (getValues('orderAfterId') === (shop?.orderAfterId ?? null)) {
       return;
     }
@@ -116,7 +119,7 @@ const ShopModal = (props: ShopModalProps) => {
     setValue('orderAfterId', shop?.orderAfterId ?? null, {
       shouldValidate: Boolean(shop?.orderAfterId),
     });
-  }, [orderType]);
+  };
 
   const onSubmit = (data: ShopInputs) => {
     const preparedData = {
@@ -170,6 +173,7 @@ const ShopModal = (props: ShopModalProps) => {
           control={control}
           titleKey="position"
           translationKey="orderType"
+          onChange={handleChangeOrderType}
           options={[
             OrderType.atTheTop,
             OrderType.atTheBottom,

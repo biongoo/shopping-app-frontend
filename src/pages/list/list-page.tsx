@@ -1,25 +1,24 @@
 import {
   Box,
   CircularProgress,
-  Divider,
   List,
   ListSubheader,
   Stack,
   Typography,
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { getList } from '~/api';
 import { Breadcrumbs } from '~/bits';
 import { QueryKey } from '~/enums';
-import { ListItem } from '~/types';
-import { generateOnError } from '~/utils';
-import { AddListItem, Item } from './components';
+import { ListItem, ModifyData } from '~/types';
+import { generateOnError, useModal } from '~/utils';
+import { AddListItem, Item, ModifyListItem } from './components';
 
 export const ListPage = () => {
   const { listId } = useParams();
-  const [checked, setChecked] = React.useState([0]);
+  const [options, setOpenOptions, setCloseOptions, setHideOptions] =
+    useModal<ModifyData>();
 
   if (!listId || Number.isNaN(listId)) {
     return <Navigate to="/" />;
@@ -52,31 +51,25 @@ export const ListPage = () => {
     { key: list.name, ignoreTranslation: true },
   ];
 
-  const handleToggle = (value: number) => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+  const handleToggle = (value: number) => {};
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
-  };
+  const listItems: ListItem[] = [];
 
   const shops = list.shops.map((shop, i) => {
-    const items: ListItem[] = [];
+    const shopItems: ListItem[] = [];
 
     for (const section of shop.sections) {
-      items.push(...section.items);
+      shopItems.push(...section.items);
+      listItems.push(...section.items);
     }
 
-    const shopContent = items.map((item, index) => (
-      <div key={`item-${item.id}-${index}`}>
-        <Item item={item} onCheck={handleToggle} />
-        {index + 1 === items.length ? null : <Divider />}
-      </div>
+    const shopContent = shopItems.map((item, index) => (
+      <Item
+        key={`item-${item.id}-${index}`}
+        item={item}
+        onCheck={handleToggle}
+        setOpenOptions={setOpenOptions}
+      />
     ));
 
     return (
@@ -89,34 +82,49 @@ export const ListPage = () => {
     );
   });
 
+  const optionsContent =
+    options.isRender && options.data ? (
+      <ModifyListItem
+        listId={list.id}
+        data={options.data}
+        listItems={listItems}
+        isOpen={options.isOpen}
+        onHide={setHideOptions}
+        onClose={setCloseOptions}
+      />
+    ) : null;
+
   return (
-    <Stack sx={{ flexGrow: 1, overflow: 'hidden' }}>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        mb={4}
-      >
-        <Box>
-          <Typography variant="h5" gutterBottom>
-            {list.name}
-          </Typography>
-          <Breadcrumbs elements={breadcrumbs} />
-        </Box>
-        <AddListItem listId={listIdAsNumber} />
+    <>
+      <Stack sx={{ flexGrow: 1, overflow: 'hidden' }}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={4}
+        >
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              {list.name}
+            </Typography>
+            <Breadcrumbs elements={breadcrumbs} />
+          </Box>
+          <AddListItem listId={listIdAsNumber} />
+        </Stack>
+        <List
+          sx={{
+            width: '100%',
+            bgcolor: 'background.paper',
+            position: 'relative',
+            overflow: 'auto',
+            '& ul': { padding: 0 },
+          }}
+          subheader={<li />}
+        >
+          {shops}
+        </List>
       </Stack>
-      <List
-        sx={{
-          width: '100%',
-          bgcolor: 'background.paper',
-          position: 'relative',
-          overflow: 'auto',
-          '& ul': { padding: 0 },
-        }}
-        subheader={<li />}
-      >
-        {shops}
-      </List>
-    </Stack>
+      {optionsContent}
+    </>
   );
 };
