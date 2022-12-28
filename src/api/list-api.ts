@@ -22,6 +22,7 @@ type PutListItemDto = {
   sectionId: number;
   unit: Unit;
   count: number;
+  id?: number;
   description?: string;
 };
 

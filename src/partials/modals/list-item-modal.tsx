@@ -309,6 +309,7 @@ export const ListItemModal = (props: Props) => {
       productId,
       sectionId,
       description,
+      id: listItem?.id,
       count: countAsNumber,
     };
 
