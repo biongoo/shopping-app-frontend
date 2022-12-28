@@ -537,6 +537,7 @@ export const ListItemModal = (props: Props) => {
     ) : (
       <EditProductModal
         product={product}
+        listItemId={listItem?.id}
         isOpen={productModal.isOpen}
         onClose={handleCloseProduct}
         onHide={setHideProduct}

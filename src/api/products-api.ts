@@ -22,9 +22,10 @@ type PatchProductDto = {
   name: string;
   units: Unit[];
   type: ProductType;
+  sectionId?: number;
+  listItemId?: number;
   orderType?: OrderType;
   orderAfterId?: number;
-  sectionId?: number;
 };
 
 type PostProductsOrderDto = {
@@ -103,6 +104,7 @@ export const editProduct = (
           id: body.id,
           sectionId: body.sectionId,
           orderType: body.orderType,
+          listItemId: body.listItemId,
           orderAfterId: body.orderAfterId,
         },
       })
@@ -116,6 +118,7 @@ export const editProduct = (
           sectionId: body.sectionId,
           orderType: body.orderType,
           lang: i18n.resolvedLanguage,
+          listItemId: body.listItemId,
           orderAfterId: body.orderAfterId,
         },
       });

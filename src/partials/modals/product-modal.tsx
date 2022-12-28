@@ -26,6 +26,7 @@ import {
 type Props = {
   isOpen: boolean;
   product?: Product;
+  listItemId?: number;
   defaultName?: string;
   withoutShop?: boolean;
   onHide: () => void;
@@ -79,7 +80,7 @@ export const AddProductModal = (props: Props) => {
 };
 
 export const EditProductModal = (props: Props) => {
-  const { product, onClose } = props;
+  const { product, listItemId, onClose } = props;
   const mutation = useMutation(editProduct);
 
   if (product === undefined) {
@@ -92,6 +93,7 @@ export const EditProductModal = (props: Props) => {
       ...onSubmitProps.data,
       id: product.id,
       type: product.type,
+      listItemId,
     };
 
     mutation.mutate(preparedData, {
