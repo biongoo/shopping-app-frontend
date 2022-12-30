@@ -30,8 +30,11 @@ type DeleteListItemDto = {
   id: number;
 };
 
-type PostCheckListItem = {
+export type PostCheckListItem = {
   id: number;
+  checked: boolean;
+  shopId?: number;
+  sectionId?: number;
 };
 
 export const getLists = (): Promise<ApiData<ListPreview[]>> =>
@@ -79,5 +82,8 @@ export const checkItem = (body: PostCheckListItem): Promise<ApiData> =>
   connectApi({
     endpoint: 'list/item/check',
     method: 'POST',
-    body,
+    body: {
+      id: body.id,
+      checked: body.checked,
+    },
   });

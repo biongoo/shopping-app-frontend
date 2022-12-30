@@ -5,7 +5,9 @@ import {
   Unstable_Grid2 as Grid,
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import Lottie from 'lottie-react';
 import { getLists } from '~/api';
+import tumbleweed from '~/assets/lotties/tumbleweed.json';
 import { Breadcrumbs, TranslatedText } from '~/bits';
 import { QueryKey } from '~/enums';
 import { generateOnError } from '~/utils';
@@ -34,6 +36,28 @@ export const HomePage = () => {
     <Card key={`list-${x.id}-${i}`} list={x} />
   ));
 
+  const content =
+    lists.length > 0 ? (
+      <Grid container spacing={2}>
+        {cards}
+      </Grid>
+    ) : (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '70%',
+        }}
+      >
+        <Lottie
+          loop={true}
+          animationData={tumbleweed}
+          style={{ width: '80%', maxWidth: 600 }}
+        />
+      </Box>
+    );
+
   return (
     <Stack sx={{ flexGrow: 1 }}>
       <Stack
@@ -48,9 +72,7 @@ export const HomePage = () => {
         </Box>
         <AddList />
       </Stack>
-      <Grid container spacing={2}>
-        {cards}
-      </Grid>
+      {content}
     </Stack>
   );
 };

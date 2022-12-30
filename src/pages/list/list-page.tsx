@@ -1,23 +1,25 @@
 import {
   Box,
   CircularProgress,
-  List,
+  List as ListMui,
   ListSubheader,
   Paper,
   Stack,
   Typography,
 } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Navigate, useParams } from 'react-router-dom';
-import { getList } from '~/api';
+import { checkItem, getList, PostCheckListItem } from '~/api';
 import { Breadcrumbs, TranslatedText } from '~/bits';
 import { QueryKey } from '~/enums';
-import { ListItem, ModifyData } from '~/types';
+import { ApiData } from '~/models';
+import { List, ListItem, ModifyData } from '~/types';
 import { generateOnError, useModal } from '~/utils';
 import { AddListItem, Item, ModifyListItem } from './components';
 
 export const ListPage = () => {
   const { listId } = useParams();
+  const queryClient = useQueryClient();
   const [options, setOpenOptions, setCloseOptions, setHideOptions] =
     useModal<ModifyData>();
 
@@ -26,6 +28,36 @@ export const ListPage = () => {
   }
 
   const listIdAsNumber = Number(listId);
+
+  const mutation = useMutation({
+    mutationFn: checkItem,
+    onMutate: async (item) => {
+      await queryClient.cancelQueries({ queryKey: [QueryKey.lists] });
+      await queryClient.cancelQueries({
+        queryKey: [QueryKey.lists, listIdAsNumber],
+      });
+
+      queryClient.setQueryData<ApiData<List>>(
+        [QueryKey.lists, listIdAsNumber],
+        (old) => {
+          const oldItem = old?.data.shops
+            .find((shop) => shop.id === item.shopId)
+            ?.sections.find((section) => section.id === item.sectionId)
+            ?.items.find((x) => x.id === item.id);
+
+          if (oldItem) {
+            oldItem.checked = item.checked;
+          }
+
+          return old;
+        }
+      );
+    },
+    onError: generateOnError(),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.lists] });
+    },
+  });
 
   const { data, isInitialLoading } = useQuery({
     queryKey: [QueryKey.lists, listIdAsNumber],
@@ -52,7 +84,16 @@ export const ListPage = () => {
     { key: list.name, ignoreTranslation: true },
   ];
 
-  const handleToggle = (value: number) => {};
+  const handleToggle = (item: ListItem) => {
+    const preparedData = {
+      id: item.id,
+      shopId: item.shopId,
+      checked: !item.checked,
+      sectionId: item.sectionId,
+    } satisfies PostCheckListItem;
+
+    mutation.mutate(preparedData);
+  };
 
   const listItems: ListItem[] = [];
 
@@ -97,19 +138,19 @@ export const ListPage = () => {
 
   const content =
     listItems.length > 0 ? (
-      <List
+      <ListMui
         sx={{
           width: '100%',
           bgcolor: 'background.paper',
           position: 'relative',
           overflow: 'auto',
-          borderRadius: 2,
+          borderRadius: 1,
           '& ul': { padding: 0 },
         }}
         subheader={<li />}
       >
         {shops}
-      </List>
+      </ListMui>
     ) : (
       <Paper
         sx={{

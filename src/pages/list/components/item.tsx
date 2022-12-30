@@ -12,7 +12,7 @@ import { useConvertUnit } from '~/utils';
 
 type Props = {
   item: ListItem;
-  onCheck: (id: number) => void;
+  onCheck: (id: ListItem) => void;
   setOpenOptions: (data: ModifyData) => void;
 };
 
@@ -43,7 +43,7 @@ export const Item = (props: Props) => {
     >
       <ListItemButton
         role={undefined}
-        onClick={() => onCheck(item.id)}
+        onClick={() => onCheck(item)}
         dense={true}
       >
         <ListItemIcon sx={{ minWidth: 45 }}>
