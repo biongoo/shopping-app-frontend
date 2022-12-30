@@ -65,5 +65,9 @@ export const useModal = <T = never>() => {
     }));
   };
 
-  return [state, setOpen, setClose, setHide] as const;
+  const setData = (data?: T) => {
+    setState((x) => ({ ...x, data }));
+  };
+
+  return [state, setOpen, setClose, setHide, setData] as const;
 };

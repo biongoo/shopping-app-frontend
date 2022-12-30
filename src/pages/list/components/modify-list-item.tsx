@@ -1,6 +1,7 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { ListItemIcon, MenuItem, Popover } from '@mui/material';
+import { useEffect } from 'react';
 import { TranslatedText } from '~/bits';
 import { ListItemModal } from '~/partials';
 import { ListItem, ModifyData } from '~/types';
@@ -18,11 +19,17 @@ type Props = {
 
 export const ModifyListItem = (props: Props) => {
   const { data, listId, isOpen, listItems, onHide, onClose } = props;
-  const [editModal, setOpenEdit, setCloseEdit, setHideEdit] =
+  const [editModal, setOpenEdit, setCloseEdit, setHideEdit, setEditData] =
     useModal<ListItem>();
   const [deleteModal, setOpenDelete, setCloseDelete] = useModal<ListItem>();
 
   const listItem = listItems.find((x) => x.id === data.id);
+
+  useEffect(() => {
+    if (editModal.isRender) {
+      setEditData(listItem);
+    }
+  }, [listItem?.sectionId]);
 
   if (!listItem) {
     return null;

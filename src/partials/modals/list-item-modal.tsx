@@ -132,7 +132,7 @@ export const ListItemModal = (props: Props) => {
     });
 
     setIsOnceEditing(false);
-  }, [productId, product?.shopId, product?.sectionId]);
+  }, [productId, listItem?.sectionId, product?.sectionId]);
 
   useEffect(() => {
     if (product?.id === listItem?.productId && unit === listItem?.unit) {
@@ -316,7 +316,7 @@ export const ListItemModal = (props: Props) => {
     mutation.mutate(preparedData, {
       onSuccess: generateOnSuccess({
         alertTime: 5,
-        message: 'successfullyAdded',
+        message: listItem ? 'successfullyEdited' : 'successfullyAdded',
         reset,
         fn: () => {
           clearCache();
