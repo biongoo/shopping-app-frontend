@@ -3,13 +3,14 @@ import {
   CircularProgress,
   List,
   ListSubheader,
+  Paper,
   Stack,
   Typography,
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { Navigate, useParams } from 'react-router-dom';
 import { getList } from '~/api';
-import { Breadcrumbs } from '~/bits';
+import { Breadcrumbs, TranslatedText } from '~/bits';
 import { QueryKey } from '~/enums';
 import { ListItem, ModifyData } from '~/types';
 import { generateOnError, useModal } from '~/utils';
@@ -94,6 +95,36 @@ export const ListPage = () => {
       />
     ) : null;
 
+  const content =
+    listItems.length > 0 ? (
+      <List
+        sx={{
+          width: '100%',
+          bgcolor: 'background.paper',
+          position: 'relative',
+          overflow: 'auto',
+          borderRadius: 2,
+          '& ul': { padding: 0 },
+        }}
+        subheader={<li />}
+      >
+        {shops}
+      </List>
+    ) : (
+      <Paper
+        sx={{
+          px: 2,
+          py: 1.5,
+          width: 1,
+          display: 'flex',
+          justifyContent: 'center',
+          backgroundImage: 'none',
+        }}
+      >
+        <TranslatedText textKey="emptyList" />
+      </Paper>
+    );
+
   return (
     <>
       <Stack sx={{ flexGrow: 1, overflow: 'hidden' }}>
@@ -111,19 +142,7 @@ export const ListPage = () => {
           </Box>
           <AddListItem listId={listIdAsNumber} />
         </Stack>
-        <List
-          sx={{
-            width: '100%',
-            bgcolor: 'background.paper',
-            position: 'relative',
-            overflow: 'auto',
-            borderRadius: 2,
-            '& ul': { padding: 0 },
-          }}
-          subheader={<li />}
-        >
-          {shops}
-        </List>
+        {content}
       </Stack>
       {optionsContent}
     </>
