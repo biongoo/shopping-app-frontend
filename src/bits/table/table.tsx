@@ -285,7 +285,12 @@ const TableComponent = <T,>(props: Props<T>) => {
     <Stack
       elevation={4}
       component={Paper}
-      sx={{ display: 'flex', overflow: 'auto', m: 1 }}
+      sx={{
+        m: 1,
+        display: 'flex',
+        overflow: 'auto',
+        backgroundImage: 'none',
+      }}
     >
       <Toolbar
         search={search}

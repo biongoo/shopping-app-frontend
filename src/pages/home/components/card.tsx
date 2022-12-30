@@ -43,7 +43,8 @@ export const Card = ({ list }: Props) => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          mt: 0.5,
+          height: 1,
+          py: 1,
         }}
       >
         <TranslatedText textKey="emptyList" />
@@ -63,6 +64,7 @@ export const Card = ({ list }: Props) => {
           flexDirection: 'column',
           alignItems: 'stretch',
           justifyContent: 'flex-start',
+          backgroundImage: 'none',
         }}
         component={Button}
         onClick={handleClick}

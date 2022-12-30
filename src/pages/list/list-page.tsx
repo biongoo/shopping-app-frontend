@@ -117,6 +117,7 @@ export const ListPage = () => {
             bgcolor: 'background.paper',
             position: 'relative',
             overflow: 'auto',
+            borderRadius: 2,
             '& ul': { padding: 0 },
           }}
           subheader={<li />}
