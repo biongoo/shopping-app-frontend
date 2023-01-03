@@ -132,6 +132,7 @@
   "assignProduct": "Przypisz produkt do wybranego działu:",
   "count": "Ilość",
   "description": "Opis (Opcjonalnie)",
+  "refreshingNow": "Aktualnie trwa odświeżanie tokenu. Spróbuj ponownie za chwilę",
   "orderType": {
     "0": "Na początku",
     "1": "Po pozycji",

@@ -132,6 +132,7 @@
   "assignProduct": "Assign the product to the selected section:",
   "count": "Count",
   "description": "Description (Optional)",
+  "refreshingNow": "The token is currently being refreshed. Please try again in a moment",
   "orderType": {
     "0": "At the top",
     "1": "After item",
