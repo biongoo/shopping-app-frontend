@@ -83,12 +83,16 @@ export const SectionPage = () => {
     onError: generateOnError(),
   });
 
-  if (isInitialLoading || !data) {
+  if (isInitialLoading) {
     return (
       <Box textAlign="center">
         <CircularProgress />
       </Box>
     );
+  }
+
+  if (!data) {
+    return <Navigate to="/404" />;
   }
 
   const res = data.data;

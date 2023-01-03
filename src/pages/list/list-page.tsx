@@ -76,7 +76,7 @@ export const ListPage = () => {
   const list = data?.data;
 
   if (!list) {
-    return <Navigate to="home" />;
+    return <Navigate to="/404" />;
   }
 
   const breadcrumbs = [
