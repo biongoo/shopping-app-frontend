@@ -485,6 +485,9 @@ export const ListItemModal = (props: Props) => {
                 flexDirection: 'row',
                 '& .MuiToggleButtonGroup-root': {
                   margin: 0,
+                  '& > button': {
+                    height: 1,
+                  },
                   '& > button:first-of-type': {
                     borderTopLeftRadius: 0,
                     borderBottomLeftRadius: 0,

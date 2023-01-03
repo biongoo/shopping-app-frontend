@@ -38,6 +38,7 @@ export const FormModal = (props: Props) => {
       PaperProps={{
         sx: {
           width: '100%',
+          minWidth: '250px',
           m: { xs: 2, sm: 4 },
           backgroundImage: 'none',
         },
