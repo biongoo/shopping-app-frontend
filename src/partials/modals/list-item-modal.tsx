@@ -523,7 +523,7 @@ export const ListItemModal = (props: Props) => {
           control={control}
           name="description"
           labelKey="description"
-          rules={{ required: false }}
+          rules={{ required: false, minLength: 0 }}
         />
       </>
     ) : null;
