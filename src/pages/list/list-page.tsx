@@ -15,7 +15,7 @@ import { QueryKey } from '~/enums';
 import { ApiData } from '~/models';
 import { List, ListItem, ModifyData } from '~/types';
 import { generateOnError, useModal } from '~/utils';
-import { AddListItem, Item, ModifyListItem } from './components';
+import { AddListItem, Item, ModifyList, ModifyListItem } from './components';
 
 export const ListPage = () => {
   const { listId } = useParams();
@@ -181,7 +181,10 @@ export const ListPage = () => {
             </Typography>
             <Breadcrumbs elements={breadcrumbs} />
           </Box>
-          <AddListItem listId={listIdAsNumber} />
+          <Box>
+            <ModifyList list={list} />
+            <AddListItem listId={listIdAsNumber} />
+          </Box>
         </Stack>
         {content}
       </Stack>

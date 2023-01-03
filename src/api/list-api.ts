@@ -4,7 +4,8 @@ import { ApiData } from '~/models';
 import { List, ListPreview } from '~/types';
 import { connectApi } from './connect-api';
 
-type PostListDto = {
+type PutListDto = {
+  id?: number;
   name?: string;
 };
 
@@ -42,10 +43,10 @@ export const getLists = (): Promise<ApiData<ListPreview[]>> =>
     endpoint: `list?lang=${i18n.resolvedLanguage}`,
   });
 
-export const addList = (body: PostListDto): Promise<ApiData> =>
+export const putList = (body: PutListDto): Promise<ApiData> =>
   connectApi({
     endpoint: 'list',
-    method: 'POST',
+    method: 'PUT',
     body: {
       ...body,
       lang: i18n.resolvedLanguage,
