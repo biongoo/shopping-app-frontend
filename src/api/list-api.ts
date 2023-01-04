@@ -31,6 +31,11 @@ type DeleteListItemDto = {
   id: number;
 };
 
+type PostShareList = {
+  id: number;
+  email: string;
+};
+
 export type PostCheckListItem = {
   id: number;
   checked: boolean;
@@ -87,4 +92,11 @@ export const checkItem = (body: PostCheckListItem): Promise<ApiData> =>
       id: body.id,
       checked: body.checked,
     },
+  });
+
+export const shareList = (body: PostShareList): Promise<ApiData> =>
+  connectApi({
+    endpoint: 'list/share',
+    method: 'POST',
+    body: body,
   });

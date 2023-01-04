@@ -133,6 +133,8 @@
   "count": "Count",
   "description": "Description (Optional)",
   "refreshingNow": "The token is currently being refreshed. Please try again in a moment",
+  "share": "Share",
+  "shareList": "Share list",
   "orderType": {
     "0": "At the top",
     "1": "After item",

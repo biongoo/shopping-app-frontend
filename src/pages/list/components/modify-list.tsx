@@ -1,12 +1,14 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ShareIcon from '@mui/icons-material/Share';
 import { ListItemIcon, MenuItem, Popover } from '@mui/material';
 import { IconButton, TranslatedText } from '~/bits';
 import { ListModal } from '~/partials';
 import { List, ModifyData } from '~/types';
 import { useModal } from '~/utils';
 import { DeleteListModal } from './delete-list-modal';
+import { ShareListModal } from './share-list-modal';
 
 type Props = {
   list: List;
@@ -15,12 +17,18 @@ type Props = {
 export const ModifyList = (props: Props) => {
   const [options, setOpenOptions, setCloseOptions] =
     useModal<Omit<ModifyData, 'id'>>();
-  const [editModal, setOpenEdit, setCloseEdit] = useModal();
+  const [editModal, setOpenEdit, setCloseEdit] = useModal<List>();
+  const [shareModal, setOpenShare, setCloseShare] = useModal<List>();
   const [deleteModal, setOpenDelete, setCloseDelete] = useModal<List>();
 
   const handleOpenEdit = () => {
     setCloseOptions();
-    setOpenEdit();
+    setOpenEdit(props.list);
+  };
+
+  const handleOpenShare = () => {
+    setCloseOptions();
+    setOpenShare(props.list);
   };
 
   const handleOpenDelete = () => {
@@ -47,6 +55,12 @@ export const ModifyList = (props: Props) => {
           },
         }}
       >
+        <MenuItem onClick={handleOpenShare}>
+          <ListItemIcon>
+            <ShareIcon />
+          </ListItemIcon>
+          <TranslatedText ml={1} textKey="share" />
+        </MenuItem>
         <MenuItem onClick={handleOpenEdit}>
           <ListItemIcon>
             <EditIcon />
@@ -62,20 +76,30 @@ export const ModifyList = (props: Props) => {
       </Popover>
     ) : null;
 
-  const editContent = editModal.isRender ? (
-    <ListModal
-      isOpen={editModal.isOpen}
-      list={props.list}
-      onClose={setCloseEdit}
-    />
-  ) : null;
+  const editContent =
+    editModal.isRender && editModal.data ? (
+      <ListModal
+        list={editModal.data}
+        isOpen={editModal.isOpen}
+        onClose={setCloseEdit}
+      />
+    ) : null;
 
   const deleteContent =
     deleteModal.isRender && deleteModal.data ? (
       <DeleteListModal
-        isOpen={deleteModal.isOpen}
         list={deleteModal.data}
+        isOpen={deleteModal.isOpen}
         onClose={setCloseDelete}
+      />
+    ) : null;
+
+  const shareContent =
+    shareModal.isRender && shareModal.data ? (
+      <ShareListModal
+        list={shareModal.data}
+        isOpen={shareModal.isOpen}
+        onClose={setCloseShare}
       />
     ) : null;
 
@@ -95,6 +119,7 @@ export const ModifyList = (props: Props) => {
       {optionsContent}
       {editContent}
       {deleteContent}
+      {shareContent}
     </>
   );
 };
