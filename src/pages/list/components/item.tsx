@@ -12,35 +12,34 @@ import { useConvertUnit } from '~/utils';
 
 type Props = {
   item: ListItem;
+  isOwner: boolean;
   onCheck: (id: ListItem) => void;
   setOpenOptions: (data: ModifyData) => void;
 };
 
 export const Item = (props: Props) => {
-  const { item, onCheck, setOpenOptions } = props;
+  const { item, isOwner, onCheck, setOpenOptions } = props;
   const convertedItem = useConvertUnit(item.count, item.unit);
 
-  return (
-    <ListItemMui
-      secondaryAction={
-        <IconButton
-          scale={0.9}
-          placement="left"
-          titleKey="options"
-          open={false}
-          onClick={(e) =>
-            setOpenOptions({
-              id: item.id,
-              element: e.currentTarget,
-            })
-          }
-        >
-          <MoreVertIcon />
-        </IconButton>
+  const action = isOwner ? (
+    <IconButton
+      scale={0.9}
+      placement="left"
+      titleKey="options"
+      open={false}
+      onClick={(e) =>
+        setOpenOptions({
+          id: item.id,
+          element: e.currentTarget,
+        })
       }
-      disablePadding
-      dense={true}
     >
+      <MoreVertIcon />
+    </IconButton>
+  ) : null;
+
+  return (
+    <ListItemMui secondaryAction={action} disablePadding dense={true}>
       <ListItemButton
         role={undefined}
         onClick={() => onCheck(item)}

@@ -135,6 +135,8 @@
   "refreshingNow": "The token is currently being refreshed. Please try again in a moment",
   "share": "Share",
   "shareList": "Share list",
+  "existingShare": "The specified user already has a shared list",
+  "sharedBy": "From: {{email}}",
   "orderType": {
     "0": "At the top",
     "1": "After item",

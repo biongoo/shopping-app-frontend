@@ -51,6 +51,15 @@ export const Card = ({ list }: Props) => {
       </Box>
     );
 
+  const ownerContent = list.ownerEmail ? (
+    <TranslatedText
+      textKey="sharedBy"
+      variant="subtitle2"
+      options={{ email: list.ownerEmail }}
+      sx={{ textAlign: 'left' }}
+    />
+  ) : null;
+
   return (
     <Grid xs={12} sm={6} lg={4}>
       <Paper
@@ -93,6 +102,7 @@ export const Card = ({ list }: Props) => {
             })}
           </Typography>
         </Box>
+        {ownerContent}
         {productsContent}
       </Paper>
     </Grid>

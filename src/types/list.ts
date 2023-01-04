@@ -5,6 +5,8 @@ export type List = {
   name: string;
   updatedAt: string;
   shops: ListShop[];
+  shareUsers: string[];
+  ownerEmail?: string;
 };
 
 type ListShop = {

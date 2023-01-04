@@ -41,6 +41,10 @@ export const connectApi = async <Res = unknown, Req = unknown>(
     const { status, data, message, error } = await response.json();
 
     if (!response.ok) {
+      if (response.status === 401) {
+        await checkTokens();
+      }
+
       if (
         Array.isArray(message) &&
         message.every((x): x is string => typeof x === 'string')

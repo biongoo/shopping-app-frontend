@@ -5,6 +5,7 @@ export type ListPreview = {
   name: string;
   updatedAt: string;
   items: ListItemPreview[];
+  ownerEmail?: string;
 };
 
 export type ListItemPreview = {

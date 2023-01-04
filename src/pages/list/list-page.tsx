@@ -109,6 +109,7 @@ export const ListPage = () => {
       <Item
         key={`item-${item.id}-${index}`}
         item={item}
+        isOwner={list.ownerEmail === undefined}
         onCheck={handleToggle}
         setOpenOptions={setOpenOptions}
       />
@@ -166,6 +167,10 @@ export const ListPage = () => {
       </Paper>
     );
 
+  const addContent = list.ownerEmail ? null : (
+    <AddListItem listId={listIdAsNumber} />
+  );
+
   return (
     <>
       <Stack sx={{ flexGrow: 1, overflow: 'hidden' }}>
@@ -183,7 +188,7 @@ export const ListPage = () => {
           </Box>
           <Box>
             <ModifyList list={list} />
-            <AddListItem listId={listIdAsNumber} />
+            {addContent}
           </Box>
         </Stack>
         {content}

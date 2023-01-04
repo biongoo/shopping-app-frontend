@@ -55,18 +55,22 @@ export const ModifyList = (props: Props) => {
           },
         }}
       >
-        <MenuItem onClick={handleOpenShare}>
-          <ListItemIcon>
-            <ShareIcon />
-          </ListItemIcon>
-          <TranslatedText ml={1} textKey="share" />
-        </MenuItem>
-        <MenuItem onClick={handleOpenEdit}>
-          <ListItemIcon>
-            <EditIcon />
-          </ListItemIcon>
-          <TranslatedText ml={1} textKey="edit" />
-        </MenuItem>
+        {props.list.ownerEmail ? null : (
+          <>
+            <MenuItem onClick={handleOpenShare}>
+              <ListItemIcon>
+                <ShareIcon />
+              </ListItemIcon>
+              <TranslatedText ml={1} textKey="share" />
+            </MenuItem>
+            <MenuItem onClick={handleOpenEdit}>
+              <ListItemIcon>
+                <EditIcon />
+              </ListItemIcon>
+              <TranslatedText ml={1} textKey="edit" />
+            </MenuItem>
+          </>
+        )}
         <MenuItem onClick={handleOpenDelete}>
           <ListItemIcon>
             <DeleteIcon />
