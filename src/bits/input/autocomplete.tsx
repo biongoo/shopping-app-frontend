@@ -228,7 +228,14 @@ export const Autocomplete = <T extends FieldValues>(props: Props<T>) => {
                 label: t(dynamicAdd.emptyAddKey),
               });
             } else {
-              if (!options.some((x) => inputValue === x.label)) {
+              if (
+                !options.some(
+                  (x) =>
+                    inputValue.localeCompare(x.label, undefined, {
+                      sensitivity: 'accent',
+                    }) === 0
+                )
+              ) {
                 filtered.push({
                   inputValue,
                   value: dynamicAdd.defaultValue,
