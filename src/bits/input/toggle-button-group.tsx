@@ -27,6 +27,7 @@ type ToggleButtonGroupProps<T extends FieldValues> = {
   disabled?: boolean;
   fullWidth?: boolean;
   withoutLabel?: boolean;
+  position?: 'vertical' | 'horizontal';
   onChange?: (value: number, prev: number) => void;
 };
 
@@ -45,13 +46,14 @@ export const ToggleButtonGroup = <T extends FieldValues>(props: Props<T>) => {
     control,
     multiple,
     disabled,
+    position,
     fullWidth,
     withoutLabel,
     translationKey,
     onChange,
   } = props;
 
-  const orientation = isSm ? 'vertical' : 'horizontal';
+  const orientation = position ?? (isSm ? 'vertical' : 'horizontal');
 
   const content = options.map((x) => (
     <ToggleButton key={`${name}-${x}`} value={x}>

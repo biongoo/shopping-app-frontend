@@ -510,6 +510,7 @@ export const ListItemModal = (props: Props) => {
                   control={control}
                   name="unitSizeType"
                   withoutLabel={true}
+                  position="horizontal"
                   options={unitOptions}
                   translationKey={`enumUnitShort.${unit}`}
                   onChange={handleChangeUnitType}
