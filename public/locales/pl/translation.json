@@ -137,6 +137,10 @@
   "shareList": "Udostępnij listę",
   "existingShare": "Podany użytkownik ma już udostępnioną listę",
   "sharedBy": "Od: {{email}}",
+  "changePassword": "Zmień hasło:",
+  "oldPassword": "Aktualne hasło",
+  "deleteAccount": "Usuń konto",
+  "areYouSureDeleteAccount": "Czy na pewno chcesz usunąć swoje konto?",
   "orderType": {
     "0": "Na początku",
     "1": "Po pozycji",

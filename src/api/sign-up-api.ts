@@ -22,6 +22,7 @@ export const createRegistrationUser = (body: FirstStepDto): Promise<ApiData> =>
     tokenType: false,
     method: 'POST',
     body,
+    omitCheckTokens: true,
   });
 
 export const verifyRegistrationKey = (body: SecondStepDto): Promise<ApiData> =>
@@ -30,6 +31,7 @@ export const verifyRegistrationKey = (body: SecondStepDto): Promise<ApiData> =>
     tokenType: false,
     method: 'POST',
     body,
+    omitCheckTokens: true,
   });
 
 export const createUser = (body: ThirdStepDto): Promise<ApiData> =>
@@ -38,6 +40,7 @@ export const createUser = (body: ThirdStepDto): Promise<ApiData> =>
     tokenType: false,
     method: 'POST',
     body,
+    omitCheckTokens: true,
   });
 
 export const createForgotUser = (body: FirstStepDto): Promise<ApiData> =>
@@ -46,6 +49,7 @@ export const createForgotUser = (body: FirstStepDto): Promise<ApiData> =>
     tokenType: false,
     method: 'POST',
     body,
+    omitCheckTokens: true,
   });
 
 export const verifyForgotKey = (body: SecondStepDto): Promise<ApiData> =>
@@ -54,6 +58,7 @@ export const verifyForgotKey = (body: SecondStepDto): Promise<ApiData> =>
     tokenType: false,
     method: 'POST',
     body,
+    omitCheckTokens: true,
   });
 
 export const updateUser = (body: ThirdStepDto): Promise<ApiData> =>
@@ -62,4 +67,5 @@ export const updateUser = (body: ThirdStepDto): Promise<ApiData> =>
     tokenType: false,
     method: 'POST',
     body,
+    omitCheckTokens: true,
   });

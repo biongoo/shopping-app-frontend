@@ -8,6 +8,7 @@ import {
   ProductPage,
   SectionPage,
   SectionProductPage,
+  SettingsPage,
   ShopPage,
   SignUpPage,
 } from './pages';
@@ -129,6 +130,10 @@ export const router = createBrowserRouter([
       {
         path: 'product',
         element: <ProductPage />,
+      },
+      {
+        path: 'settings',
+        element: <SettingsPage />,
       },
     ],
   },

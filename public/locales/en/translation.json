@@ -137,6 +137,10 @@
   "shareList": "Share list",
   "existingShare": "The specified user already has a shared list",
   "sharedBy": "From: {{email}}",
+  "changePassword": "Change password:",
+  "oldPassword": "Old password",
+  "deleteAccount": "Delete account",
+  "areYouSureDeleteAccount": "Are you sure you want to delete your account?",
   "orderType": {
     "0": "At the top",
     "1": "After item",

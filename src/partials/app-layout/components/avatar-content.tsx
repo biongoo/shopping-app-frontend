@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import jwtDecode from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 import { logOut as logOutApi } from '~/api';
 import { Button, TranslatedText } from '~/bits';
 import { useAuthStore } from '~/stores';
@@ -19,6 +20,7 @@ type Props = {
 };
 
 export const AvatarContent = (props: Props) => {
+  const navigate = useNavigate();
   const mutation = useMutation(logOutApi);
   const logOut = useAuthStore((store) => store.logOut);
   const accessToken = useAuthStore((store) => store.accessToken);
@@ -43,6 +45,11 @@ export const AvatarContent = (props: Props) => {
     });
   };
 
+  const handleGoSettings = () => {
+    navigate('/app/settings');
+    props.onClose();
+  };
+
   return (
     <Box minWidth={200}>
       <Box sx={{ my: 1.5, px: 2.5 }}>
@@ -52,7 +59,7 @@ export const AvatarContent = (props: Props) => {
       </Box>
       <Divider />
       <Box sx={{ py: 1 }}>
-        <MenuItem sx={{ paddingY: 1 }} onClick={props.onClose}>
+        <MenuItem sx={{ paddingY: 1 }} onClick={handleGoSettings}>
           <ListItemIcon>
             <SettingsIcon sx={{ color: 'icon.primary' }} />
           </ListItemIcon>

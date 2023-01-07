@@ -42,7 +42,7 @@ export const connectApi = async <Res = unknown, Req = unknown>(
 
     if (!response.ok) {
       if (response.status === 401) {
-        await checkTokens();
+        await checkTokens(true);
       }
 
       if (
@@ -63,7 +63,7 @@ export const connectApi = async <Res = unknown, Req = unknown>(
   }
 };
 
-const checkTokens = async () => {
+const checkTokens = async (hardRefresh?: boolean) => {
   const { accessToken, refreshToken } = useAuthStore.getState();
 
   if (!refreshToken || jwtDecode<Jwt>(refreshToken).exp * 1000 <= Date.now()) {
@@ -72,7 +72,8 @@ const checkTokens = async () => {
 
   if (
     !accessToken ||
-    (jwtDecode<Jwt>(accessToken).exp - 10) * 1000 <= Date.now()
+    (jwtDecode<Jwt>(accessToken).exp - 10) * 1000 <= Date.now() ||
+    hardRefresh
   ) {
     await tryRefreshToken();
   }

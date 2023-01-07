@@ -5,5 +5,6 @@ export * from './log-in';
 export * from './product';
 export * from './section';
 export * from './section-product';
+export * from './settings';
 export * from './shop';
 export * from './sign-up';
