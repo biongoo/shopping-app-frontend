@@ -183,7 +183,11 @@ export const SectionProductPage = () => {
           mb={4}
         >
           <Box>
-            <TranslatedText variant="h5" gutterBottom textKey="sections" />
+            <TranslatedText
+              variant="h5"
+              gutterBottom
+              textKey="sectionProducts"
+            />
             <Breadcrumbs elements={breadcrumbs} />
           </Box>
           <AddSectionProduct

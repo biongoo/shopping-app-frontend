@@ -103,6 +103,7 @@
   "addProduct": "Add product",
   "editProduct": "Edit product",
   "deleteProduct": "Delete product",
+  "sectionProducts": "Section products",
   "addSectionProduct": "Add product to section",
   "editSectionProduct": "Edit product from section",
   "deleteSectionProduct": "Delete product from section",
