@@ -29,7 +29,6 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    debug: true,
     saveMissing: true,
     fallbackLng: 'en',
     load: 'languageOnly',
