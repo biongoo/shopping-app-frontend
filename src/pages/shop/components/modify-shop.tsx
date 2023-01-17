@@ -26,7 +26,6 @@ export const ModifyShop = (props: Props) => {
   const shop = props.shops.find((x) => x.id === props.data.id);
 
   if (!shop) {
-    props.onClose();
     return null;
   }
 
