@@ -51,7 +51,7 @@ export const DeleteAccount = () => {
       <IconButton
         open={true}
         color="error.main"
-        titleKey="close"
+        titleKey="deleteAccount"
         onClick={() => setOpen()}
       >
         <DeleteForeverIcon />
