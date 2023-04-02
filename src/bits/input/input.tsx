@@ -111,7 +111,11 @@ export const Input = <T extends FieldValues>(props: Props<T>) => {
           onChange={(x) => {
             const value = x.target.value;
 
-            if (rules?.maxLength && value.length > rules?.maxLength) {
+            if (
+              rules?.maxLength &&
+              typeof rules.maxLength === 'number' &&
+              value.length > rules.maxLength
+            ) {
               return;
             }
 
