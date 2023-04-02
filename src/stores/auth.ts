@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import { queryClient } from '~/main';
 
 type Auth = {

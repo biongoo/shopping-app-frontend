@@ -1,6 +1,6 @@
 import { Color, PaletteMode, AlertColor } from '@mui/material';
 import { orange } from '@mui/material/colors';
-import create from 'zustand';
+import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 type Alert = {
