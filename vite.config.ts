@@ -5,6 +5,10 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [react()],
+  define: {
+    VITE_APP_TITLE: JSON.stringify(process.env.VITE_APP_TITLE),
+    VITE_BACKEND_URL: JSON.stringify(process.env.VITE_BACKEND_URL),
+  },
   resolve: {
     alias: [
       {

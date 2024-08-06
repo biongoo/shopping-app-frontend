@@ -1,0 +1,10 @@
+name: shopping-app
+services:
+  frontend:
+    build:
+      context: .
+      args:
+        - VITE_APP_TITLE=Shopping App
+        - VITE_BACKEND_URL=https://ts4ever.pl:3000/api
+    ports:
+      - 80:80
