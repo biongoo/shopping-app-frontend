@@ -13,8 +13,8 @@ type Props = {
 
 export const DeleteSectionProductModal = (props: Props) => {
   const { product, isOpen, onClose } = props;
-  const mutation = useMutation(deleteSectionProduct);
   const clearCache = useClearCache(QueryKey.sectionProducts);
+  const mutation = useMutation({ mutationFn: deleteSectionProduct });
 
   const handleSubmit = () => {
     const data = {
@@ -39,7 +39,7 @@ export const DeleteSectionProductModal = (props: Props) => {
     <AlertModal
       titleKey="deleteSectionProduct"
       isOpen={isOpen}
-      isLoading={mutation.isLoading}
+      isLoading={mutation.isPending}
       onClose={onClose}
       onOk={handleSubmit}
     >

@@ -13,7 +13,7 @@ type DeleteShopModalProps = {
 
 export const DeleteShopModal = (props: DeleteShopModalProps) => {
   const { shop, isOpen, onClose } = props;
-  const mutation = useMutation(deleteShop);
+  const mutation = useMutation({ mutationFn: deleteShop });
   const clearCache = useClearCache(QueryKey.shops);
 
   const handleSubmit = () => {
@@ -36,7 +36,7 @@ export const DeleteShopModal = (props: DeleteShopModalProps) => {
     <AlertModal
       titleKey="deleteShop"
       isOpen={isOpen}
-      isLoading={mutation.isLoading}
+      isLoading={mutation.isPending}
       onClose={onClose}
       onOk={handleSubmit}
     >

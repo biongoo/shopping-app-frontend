@@ -13,7 +13,7 @@ type DeleteSectionModalProps = {
 
 export const DeleteSectionModal = (props: DeleteSectionModalProps) => {
   const { section, isOpen, onClose } = props;
-  const mutation = useMutation(deleteSection);
+  const mutation = useMutation({ mutationFn: deleteSection });
   const clearCache = useClearCache(QueryKey.sections);
 
   const handleSubmit = () => {
@@ -36,7 +36,7 @@ export const DeleteSectionModal = (props: DeleteSectionModalProps) => {
     <AlertModal
       titleKey="deleteSection"
       isOpen={isOpen}
-      isLoading={mutation.isLoading}
+      isLoading={mutation.isPending}
       onClose={onClose}
       onOk={handleSubmit}
     >

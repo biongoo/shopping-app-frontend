@@ -20,8 +20,8 @@ type ListInputs = {
 export const ListModal = (props: Props) => {
   const { list, isOpen, onClose } = props;
   const navigate = useNavigate();
-  const mutation = useMutation(putList);
   const clearCache = useClearCache(QueryKey.lists);
+  const mutation = useMutation({ mutationFn: putList });
   const { control, reset, setError, handleSubmit } = useForm<ListInputs>({
     defaultValues: {
       name: list?.name ?? '',
@@ -58,7 +58,7 @@ export const ListModal = (props: Props) => {
       isOpen={isOpen}
       saveKey={list ? undefined : 'create'}
       titleKey={list ? 'editList' : 'addList'}
-      isLoading={mutation.isLoading}
+      isLoading={mutation.isPending}
       reset={reset}
       onClose={onClose}
       handleSubmit={handleSubmit(onSubmit)}

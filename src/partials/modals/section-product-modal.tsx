@@ -36,8 +36,8 @@ type SectionProductInputs = {
 export const SectionProductModal = (props: Props) => {
   const { isOpen, product, sectionId, onClose, onHide, onOpen } = props;
   const isProduct = product !== undefined;
-  const mutation = useMutation(putSectionProduct);
   const clearCache = useClearCache(QueryKey.sectionProducts);
+  const mutation = useMutation({ mutationFn: putSectionProduct });
   const [productModal, setOpenProduct, setCloseProduct, setHideProduct] =
     useModal<string>();
 
@@ -159,7 +159,7 @@ export const SectionProductModal = (props: Props) => {
     <>
       <FormModal
         isOpen={isOpen}
-        isLoading={mutation.isLoading}
+        isLoading={mutation.isPending}
         titleKey={product ? 'editSectionProduct' : 'addSectionProduct'}
         reset={reset}
         onClose={onClose}
@@ -192,13 +192,11 @@ const useQueries = (sectionId: number, isProduct: boolean) => {
   const sectionProductsQuery = useQuery({
     queryKey: [QueryKey.sectionProducts, sectionId, { withShop: true }],
     queryFn: () => getSectionProductsWithShop({ sectionId }),
-    onError: generateOnError(),
   });
 
   const availableSectionProductsQuery = useQuery({
     queryKey: [QueryKey.products, sectionId],
     queryFn: () => getAvailableProducts({ sectionId }),
-    onError: generateOnError(),
     enabled: !isProduct,
   });
 
@@ -208,11 +206,11 @@ const useQueries = (sectionId: number, isProduct: boolean) => {
   return {
     sectionProducts: {
       data: sectionProducts,
-      isInitialLoading: sectionProductsQuery.isInitialLoading,
+      isInitialLoading: sectionProductsQuery.isLoading,
     },
     availableProducts: {
       data: availableProducts,
-      isInitialLoading: availableSectionProductsQuery.isInitialLoading,
+      isInitialLoading: availableSectionProductsQuery.isLoading,
     },
   };
 };

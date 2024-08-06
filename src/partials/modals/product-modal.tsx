@@ -56,7 +56,7 @@ type ProductModalProps = Props & {
 };
 
 export const AddProductModal = (props: Props) => {
-  const mutation = useMutation(addProduct);
+  const mutation = useMutation({ mutationFn: addProduct });
 
   const handleSubmit = (onSubmitProps: OnSubmitProps) => {
     mutation.mutate(onSubmitProps.data, {
@@ -74,14 +74,14 @@ export const AddProductModal = (props: Props) => {
     <ProductModal
       {...props}
       onSubmitForm={handleSubmit}
-      isLoading={mutation.isLoading}
+      isLoading={mutation.isPending}
     />
   );
 };
 
 export const EditProductModal = (props: Props) => {
   const { product, listItemId, onClose } = props;
-  const mutation = useMutation(editProduct);
+  const mutation = useMutation({ mutationFn: editProduct });
 
   if (product === undefined) {
     onClose();
@@ -111,7 +111,7 @@ export const EditProductModal = (props: Props) => {
     <ProductModal
       {...props}
       onSubmitForm={handleSubmit}
-      isLoading={mutation.isLoading}
+      isLoading={mutation.isPending}
     />
   );
 };
@@ -410,21 +410,18 @@ const useQueries = (
   const shopsQuery = useQuery({
     queryKey: [QueryKey.shops],
     queryFn: getShops,
-    onError: generateOnError(),
     enabled: withoutShop !== true,
   });
 
   const sectionsQuery = useQuery({
     queryKey: [QueryKey.sections, shopId],
     queryFn: () => (isShop ? getSections({ shopId }) : undefined),
-    onError: generateOnError(),
     enabled: isShop,
   });
 
   const sectionProductsQuery = useQuery({
     queryKey: [QueryKey.sectionProducts, sectionId],
     queryFn: () => (isSection ? getSectionProducts({ sectionId }) : undefined),
-    onError: generateOnError(),
     enabled: isSection,
   });
 
@@ -435,15 +432,15 @@ const useQueries = (
   return {
     shops: {
       data: shops,
-      isInitialLoading: shopsQuery.isInitialLoading,
+      isInitialLoading: shopsQuery.isLoading,
     },
     sections: {
       data: sections,
-      isInitialLoading: sectionsQuery.isInitialLoading,
+      isInitialLoading: sectionsQuery.isLoading,
     },
     sectionProducts: {
       data: sectionProducts,
-      isInitialLoading: sectionProductsQuery.isInitialLoading,
+      isInitialLoading: sectionProductsQuery.isLoading,
     },
   };
 };

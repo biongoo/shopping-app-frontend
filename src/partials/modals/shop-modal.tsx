@@ -34,7 +34,7 @@ type ShopModalProps = Props & {
 };
 
 export const AddShopModal = (props: Props) => {
-  const mutation = useMutation(addShop);
+  const mutation = useMutation({ mutationFn: addShop });
 
   const handleSubmit = (onSubmitProps: OnSubmitProps) => {
     mutation.mutate(onSubmitProps.data, {
@@ -52,14 +52,14 @@ export const AddShopModal = (props: Props) => {
     <ShopModal
       {...props}
       onSubmitForm={handleSubmit}
-      isLoading={mutation.isLoading}
+      isLoading={mutation.isPending}
     />
   );
 };
 
 export const EditShopModal = (props: Props) => {
   const { shop, onClose } = props;
-  const mutation = useMutation(editShop);
+  const mutation = useMutation({ mutationFn: editShop });
 
   if (shop === undefined) {
     onClose();
@@ -87,7 +87,7 @@ export const EditShopModal = (props: Props) => {
     <ShopModal
       {...props}
       onSubmitForm={handleSubmit}
-      isLoading={mutation.isLoading}
+      isLoading={mutation.isPending}
     />
   );
 };
@@ -190,7 +190,6 @@ const useQueries = () => {
   const shopsQuery = useQuery({
     queryKey: [QueryKey.shops],
     queryFn: getShops,
-    onError: generateOnError(),
   });
 
   const shops = shopsQuery.data?.data ?? [];
@@ -198,7 +197,7 @@ const useQueries = () => {
   return {
     shops: {
       data: shops,
-      isInitialLoading: shopsQuery.isInitialLoading,
+      isInitialLoading: shopsQuery.isLoading,
     },
   };
 };

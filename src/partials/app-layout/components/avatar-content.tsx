@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { logOut as logOutApi } from '~/api';
 import { Button, TranslatedText } from '~/bits';
@@ -21,8 +21,8 @@ type Props = {
 
 export const AvatarContent = (props: Props) => {
   const navigate = useNavigate();
-  const mutation = useMutation(logOutApi);
   const logOut = useAuthStore((store) => store.logOut);
+  const mutation = useMutation({ mutationFn: logOutApi });
   const accessToken = useAuthStore((store) => store.accessToken);
 
   if (!accessToken) {
@@ -72,7 +72,7 @@ export const AvatarContent = (props: Props) => {
           fullWidth
           textKey="logout"
           onClick={handleLogout}
-          loading={mutation.isLoading}
+          loading={mutation.isPending}
         />
       </Box>
     </Box>

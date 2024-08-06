@@ -15,7 +15,7 @@ type LoginInputs = {
 
 export const LogInPage = () => {
   const navigate = useNavigate();
-  const mutation = useMutation(logIn);
+  const mutation = useMutation({ mutationFn: logIn });
   const logInStore = useAuthStore((state) => state.logIn);
   const { control, handleSubmit, reset, setError } = useForm<LoginInputs>({
     defaultValues: {
@@ -76,7 +76,7 @@ export const LogInPage = () => {
         patternErrorMessage="invalidEmail"
         rules={{
           pattern:
-            // eslint-disable-next-line unicorn/no-unsafe-regex, unicorn/better-regex
+            // eslint-disable-next-line unicorn/better-regex
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         }}
       />
@@ -102,7 +102,7 @@ export const LogInPage = () => {
         type="submit"
         textKey="logIn"
         variant="contained"
-        loading={mutation.isLoading}
+        loading={mutation.isPending}
       />
       <Divider>
         <TranslatedText variant="body2" textKey="orUpperCase" />

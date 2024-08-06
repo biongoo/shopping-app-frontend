@@ -18,9 +18,9 @@ type FirstSubInputs = {
 
 export const FirstSubPage = ({ type }: Props) => {
   const navigate = useNavigate();
-  const mutation = useMutation(
-    type === 'signUp' ? createRegistrationUser : createForgotUser
-  );
+  const mutation = useMutation({
+    mutationFn: type === 'signUp' ? createRegistrationUser : createForgotUser,
+  });
   const { control, handleSubmit, setError, reset } = useForm<FirstSubInputs>({
     defaultValues: {
       email: '',
@@ -67,7 +67,7 @@ export const FirstSubPage = ({ type }: Props) => {
         patternErrorMessage="invalidEmail"
         rules={{
           pattern:
-            // eslint-disable-next-line unicorn/no-unsafe-regex, unicorn/better-regex
+            // eslint-disable-next-line unicorn/better-regex
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         }}
       />
@@ -75,7 +75,7 @@ export const FirstSubPage = ({ type }: Props) => {
         type="submit"
         textKey="continue"
         variant="contained"
-        loading={mutation.isLoading}
+        loading={mutation.isPending}
       />
       <Stepper activeStep={1} />
     </Stack>

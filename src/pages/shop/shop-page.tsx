@@ -64,20 +64,19 @@ const getColumns = (
   ]);
 
 export const ShopPage = () => {
-  const mutation = useMutation(reorderShops);
+  const mutation = useMutation({ mutationFn: reorderShops });
   const [reorderedShops, setReorderedShops] = useState<Shop[]>();
   const isReordering = Boolean(reorderedShops);
   const [options, setOpenOptions, setCloseOptions, setHideOptions] =
     useModal<ModifyData>();
 
-  const { data, isInitialLoading, refetch } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: [QueryKey.shops],
     queryFn: getShops,
     enabled: !isReordering,
-    onError: generateOnError(),
   });
 
-  if (isInitialLoading) {
+  if (isLoading) {
     return (
       <Box textAlign="center">
         <CircularProgress />
@@ -96,7 +95,7 @@ export const ShopPage = () => {
   };
 
   const handleEndReorder = async () => {
-    if (!reorderedShops || mutation.isLoading) {
+    if (!reorderedShops || mutation.isPending) {
       return;
     }
 
@@ -160,7 +159,7 @@ export const ShopPage = () => {
         isReordering={isReordering}
         data={reorderedShops ?? shops}
         isShowingActions={options.isOpen}
-        isFetchingReorder={mutation.isLoading}
+        isFetchingReorder={mutation.isPending}
         columns={getColumns(setOpenOptions, optionsId)}
         onDrag={handleDrag}
         onEndReorder={handleEndReorder}

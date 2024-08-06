@@ -12,8 +12,8 @@ type DeleteAccountModalProps = {
 
 const DeleteAccountModal = (props: DeleteAccountModalProps) => {
   const { isOpen, onClose } = props;
-  const mutation = useMutation(deleteAccount);
   const logOut = useAuthStore((store) => store.logOut);
+  const mutation = useMutation({ mutationFn: deleteAccount });
 
   const handleSubmit = () => {
     mutation.mutate(undefined, {
@@ -30,7 +30,7 @@ const DeleteAccountModal = (props: DeleteAccountModalProps) => {
     <AlertModal
       titleKey="deleteAccount"
       isOpen={isOpen}
-      isLoading={mutation.isLoading}
+      isLoading={mutation.isPending}
       onClose={onClose}
       onOk={handleSubmit}
     >

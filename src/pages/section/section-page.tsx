@@ -64,7 +64,7 @@ const getColumns = (
 
 export const SectionPage = () => {
   const { shopId } = useParams();
-  const mutation = useMutation(reorderSections);
+  const mutation = useMutation({ mutationFn: reorderSections });
   const [reorderedSections, setReorderedSections] = useState<Section[]>();
   const isReordering = Boolean(reorderedSections);
   const [options, setOpenOptions, setCloseOptions, setHideOptions] =
@@ -76,14 +76,13 @@ export const SectionPage = () => {
 
   const shopIdAsNumber = +shopId;
 
-  const { data, isInitialLoading, refetch } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: [QueryKey.sections, shopIdAsNumber, { withShop: true }],
     queryFn: () => getSectionsWithShop({ shopId: shopIdAsNumber }),
     enabled: !isReordering,
-    onError: generateOnError(),
   });
 
-  if (isInitialLoading) {
+  if (isLoading) {
     return (
       <Box textAlign="center">
         <CircularProgress />
@@ -111,7 +110,7 @@ export const SectionPage = () => {
   };
 
   const handleEndReorder = async () => {
-    if (!reorderedSections || mutation.isLoading) {
+    if (!reorderedSections || mutation.isPending) {
       return;
     }
 
@@ -176,7 +175,7 @@ export const SectionPage = () => {
           emptyKey="addYourSections"
           isReordering={isReordering}
           isShowingActions={options.isOpen}
-          isFetchingReorder={mutation.isLoading}
+          isFetchingReorder={mutation.isPending}
           data={reorderedSections ?? res.sections}
           columns={getColumns(setOpenOptions, optionsId)}
           onDrag={handleDrag}

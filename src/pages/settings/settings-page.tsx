@@ -17,7 +17,7 @@ type ChangePasswordInputs = {
 };
 
 export const SettingsPage = () => {
-  const mutation = useMutation(changePassword);
+  const mutation = useMutation({ mutationFn: changePassword });
   const logOut = useAuthStore((store) => store.logOut);
   const { control, handleSubmit, setError } = useForm<ChangePasswordInputs>({
     defaultValues: {
@@ -116,7 +116,7 @@ export const SettingsPage = () => {
               textKey="save"
               variant="contained"
               fullWidth={false}
-              loading={mutation.isLoading}
+              loading={mutation.isPending}
             />
           </Box>
         </Stack>

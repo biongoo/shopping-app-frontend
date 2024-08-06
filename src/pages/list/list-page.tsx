@@ -59,13 +59,12 @@ export const ListPage = () => {
     },
   });
 
-  const { data, isInitialLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [QueryKey.lists, listIdAsNumber],
     queryFn: () => getList({ id: listIdAsNumber }),
-    onError: generateOnError(),
   });
 
-  if (isInitialLoading) {
+  if (isLoading) {
     return (
       <Box textAlign="center">
         <CircularProgress />

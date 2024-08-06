@@ -10,7 +10,6 @@ import { getLists } from '~/api';
 import tumbleweed from '~/assets/lotties/tumbleweed.json';
 import { Breadcrumbs, TranslatedText } from '~/bits';
 import { QueryKey } from '~/enums';
-import { generateOnError } from '~/utils';
 import { AddList, Card } from './components';
 
 const breadcrumbs = [{ key: 'home' }];
@@ -19,12 +18,11 @@ export const HomePage = () => {
   const listsQuery = useQuery({
     queryKey: [QueryKey.lists],
     queryFn: getLists,
-    onError: generateOnError(),
   });
 
   const lists = listsQuery.data?.data ?? [];
 
-  if (listsQuery.isInitialLoading) {
+  if (listsQuery.isLoading) {
     return (
       <Box textAlign="center">
         <CircularProgress />

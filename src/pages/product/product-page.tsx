@@ -5,7 +5,7 @@ import { getProducts } from '~/api';
 import { Breadcrumbs, IconButton, Table, TranslatedText } from '~/bits';
 import { QueryKey } from '~/enums';
 import { ModifyData, Product } from '~/types';
-import { generateOnError, useModal } from '~/utils';
+import { useModal } from '~/utils';
 import { AddProduct, ModifyProduct } from './components';
 
 const breadcrumbs = [{ key: 'home' }, { key: 'products' }];
@@ -59,13 +59,12 @@ export const ProductPage = () => {
   const [options, setOpenOptions, setCloseOptions, setHideOptions] =
     useModal<ModifyData>();
 
-  const { data, isInitialLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [QueryKey.products],
     queryFn: getProducts,
-    onError: generateOnError(),
   });
 
-  if (isInitialLoading) {
+  if (isLoading) {
     return (
       <Box textAlign="center">
         <CircularProgress />

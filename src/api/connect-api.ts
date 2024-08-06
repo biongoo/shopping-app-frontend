@@ -1,4 +1,4 @@
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { ApiData, ApiError } from '~/models';
 import { useAuthStore } from '~/stores';
 import { Jwt } from '~/types';
@@ -20,7 +20,7 @@ export const connectApi = async <Res = unknown, Req = unknown>(
     }
 
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}${props.endpoint}`,
+      `${import.meta.env.VITE_BACKEND_URL}/${props.endpoint}`,
       {
         method: props.method ?? 'GET',
         headers: {

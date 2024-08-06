@@ -17,7 +17,7 @@ type ListInputs = {
 
 export const ShareListModal = (props: Props) => {
   const { list, isOpen, onClose } = props;
-  const mutation = useMutation(shareList);
+  const mutation = useMutation({ mutationFn: shareList });
   const { control, reset, setError, handleSubmit } = useForm<ListInputs>({
     defaultValues: {
       email: '',
@@ -45,7 +45,7 @@ export const ShareListModal = (props: Props) => {
     <FormModal
       isOpen={isOpen}
       titleKey="shareList"
-      isLoading={mutation.isLoading}
+      isLoading={mutation.isPending}
       reset={reset}
       onClose={onClose}
       handleSubmit={handleSubmit(onSubmit)}
@@ -58,7 +58,7 @@ export const ShareListModal = (props: Props) => {
         patternErrorMessage="invalidEmail"
         rules={{
           pattern:
-            // eslint-disable-next-line unicorn/no-unsafe-regex, unicorn/better-regex
+            // eslint-disable-next-line unicorn/better-regex
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         }}
       />

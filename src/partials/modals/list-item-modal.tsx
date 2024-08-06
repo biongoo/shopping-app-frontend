@@ -64,8 +64,8 @@ type ListItemInputs = {
 
 export const ListItemModal = (props: Props) => {
   const { listId, isOpen, listItem, onClose, onHide, onOpen } = props;
-  const mutation = useMutation(putListItem);
   const clearCache = useClearCache(QueryKey.lists);
+  const mutation = useMutation({ mutationFn: putListItem });
   const [isOnceEditing, setIsOnceEditing] = useState(false);
   const [productModal, setOpenProduct, setCloseProduct, setHideProduct] =
     useModal<string | Product>();
@@ -613,7 +613,7 @@ export const ListItemModal = (props: Props) => {
     <>
       <FormModal
         isOpen={isOpen}
-        isLoading={mutation.isLoading}
+        isLoading={mutation.isPending}
         titleKey={listItem ? 'editProduct' : 'addProduct'}
         reset={reset}
         onClose={onClose}
@@ -655,19 +655,16 @@ const useQueries = (shopId: number | null) => {
   const productsQuery = useQuery({
     queryKey: [QueryKey.products],
     queryFn: getProducts,
-    onError: generateOnError(),
   });
 
   const shopsQuery = useQuery({
     queryKey: [QueryKey.shops],
     queryFn: getShops,
-    onError: generateOnError(),
   });
 
   const sectionsQuery = useQuery({
     queryKey: [QueryKey.sections, shopId],
     queryFn: () => (isShop ? getSections({ shopId }) : undefined),
-    onError: generateOnError(),
     enabled: isShop,
   });
 
@@ -678,15 +675,15 @@ const useQueries = (shopId: number | null) => {
   return {
     products: {
       data: products,
-      isInitialLoading: productsQuery.isInitialLoading,
+      isInitialLoading: productsQuery.isLoading,
     },
     shops: {
       data: shops,
-      isInitialLoading: shopsQuery.isInitialLoading,
+      isInitialLoading: shopsQuery.isLoading,
     },
     sections: {
       data: sections,
-      isInitialLoading: sectionsQuery.isInitialLoading,
+      isInitialLoading: sectionsQuery.isLoading,
     },
   };
 };

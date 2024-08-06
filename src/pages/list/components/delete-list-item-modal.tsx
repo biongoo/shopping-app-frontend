@@ -13,7 +13,7 @@ type Props = {
 
 export const DeleteListItemModal = (props: Props) => {
   const { listItem, isOpen, onClose } = props;
-  const mutation = useMutation(deleteListItem);
+  const mutation = useMutation({ mutationFn: deleteListItem });
   const clearCache = useClearCache(QueryKey.lists);
 
   const handleSubmit = () => {
@@ -36,7 +36,7 @@ export const DeleteListItemModal = (props: Props) => {
     <AlertModal
       titleKey="deleteProduct"
       isOpen={isOpen}
-      isLoading={mutation.isLoading}
+      isLoading={mutation.isPending}
       onClose={onClose}
       onOk={handleSubmit}
     >

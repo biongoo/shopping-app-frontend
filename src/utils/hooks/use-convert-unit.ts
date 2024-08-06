@@ -34,7 +34,7 @@ export const useConvertUnit = (count: number, unit: Unit) => {
   }
 };
 
-const toLocalNumber = (count: number, lang: string) => {
+const toLocalNumber = (count: number, lang?: string) => {
   return count.toLocaleString(lang, {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,

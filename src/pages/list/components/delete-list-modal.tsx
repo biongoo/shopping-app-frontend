@@ -60,7 +60,7 @@ export const DeleteListModal = (props: Props) => {
     <AlertModal
       titleKey="deleteList"
       isOpen={isOpen}
-      isLoading={mutation.isLoading}
+      isLoading={mutation.isPending}
       onClose={onClose}
       onOk={handleSubmit}
     >

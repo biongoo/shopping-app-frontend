@@ -38,17 +38,14 @@ i18n
     interpolation: {
       escapeValue: false,
     },
-    missingKeyHandler(langs, ns, key) {
-      langs;
-      ns;
-
+    missingKeyHandler(_, __, key) {
       if (missingKeys.has(key)) {
         return;
       }
 
       missingKeys.add(key);
 
-      fetch(`${import.meta.env.VITE_BACKEND_URL}translation/report`, {
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/translation/report`, {
         method: 'POST',
         body: JSON.stringify({ key }),
         headers: {

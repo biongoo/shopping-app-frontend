@@ -13,7 +13,7 @@ type DeleteProductModalProps = {
 
 export const DeleteProductModal = (props: DeleteProductModalProps) => {
   const { product, isOpen, onClose } = props;
-  const mutation = useMutation(deleteProduct);
+  const mutation = useMutation({ mutationFn: deleteProduct });
   const clearCache = useClearCache(QueryKey.products);
 
   const handleSubmit = () => {
@@ -36,7 +36,7 @@ export const DeleteProductModal = (props: DeleteProductModalProps) => {
     <AlertModal
       titleKey="deleteProduct"
       isOpen={isOpen}
-      isLoading={mutation.isLoading}
+      isLoading={mutation.isPending}
       onClose={onClose}
       onOk={handleSubmit}
     >

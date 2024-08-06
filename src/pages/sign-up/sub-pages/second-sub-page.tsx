@@ -2,7 +2,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { Box, CircularProgress, Stack } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import Lottie from 'lottie-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import {
@@ -51,17 +51,22 @@ const SecondStep = ({ type, onNext }: SecondStepProps) => {
       : () => verifyForgotKey({ email, key });
 
   const url = type === 'signUp' ? '/sign-up' : '/forgot';
-  const { isInitialLoading } = useQuery({
+  const initQuery = useQuery({
     retry: 0,
     queryKey: [type, email, key],
     queryFn,
-    onError: generateOnError({ fn: () => navigate(url) }),
   });
 
   const mutationFn = type === 'signUp' ? createUser : updateUser;
-  const mutation = useMutation(mutationFn);
+  const mutation = useMutation({ mutationFn });
 
-  if (isInitialLoading) {
+  useEffect(() => {
+    if (initQuery.error) {
+      generateOnError({ fn: () => navigate(url) });
+    }
+  }, [initQuery.error]);
+
+  if (initQuery.isLoading) {
     return <CircularProgress />;
   }
 
@@ -130,7 +135,7 @@ const SecondStep = ({ type, onNext }: SecondStepProps) => {
         type="submit"
         textKey="continue"
         variant="contained"
-        loading={mutation.isLoading}
+        loading={mutation.isPending}
       />
       <Stepper activeStep={2} />
     </Stack>

@@ -35,7 +35,7 @@ type SectionModalProps = Props & {
 };
 
 export const AddSectionModal = (props: Props) => {
-  const mutation = useMutation(addSection);
+  const mutation = useMutation({ mutationFn: addSection });
 
   const handleSubmit = (onSubmitProps: OnSubmitProps) => {
     mutation.mutate(onSubmitProps.data, {
@@ -53,14 +53,14 @@ export const AddSectionModal = (props: Props) => {
     <SectionModal
       {...props}
       onSubmitForm={handleSubmit}
-      isLoading={mutation.isLoading}
+      isLoading={mutation.isPending}
     />
   );
 };
 
 export const EditSectionModal = (props: Props) => {
   const { section, onClose } = props;
-  const mutation = useMutation(editSection);
+  const mutation = useMutation({ mutationFn: editSection });
 
   if (section === undefined) {
     onClose();
@@ -88,7 +88,7 @@ export const EditSectionModal = (props: Props) => {
     <SectionModal
       {...props}
       onSubmitForm={handleSubmit}
-      isLoading={mutation.isLoading}
+      isLoading={mutation.isPending}
     />
   );
 };
@@ -200,7 +200,6 @@ const useQueries = (shopId: number) => {
   const sectionsQuery = useQuery({
     queryKey: [QueryKey.sections, shopId],
     queryFn: () => getSections({ shopId }),
-    onError: generateOnError(),
   });
 
   const sections = sectionsQuery.data?.data ?? [];
@@ -208,7 +207,7 @@ const useQueries = (shopId: number) => {
   return {
     sections: {
       data: sections,
-      isInitialLoading: sectionsQuery.isInitialLoading,
+      isInitialLoading: sectionsQuery.isLoading,
     },
   };
 };
